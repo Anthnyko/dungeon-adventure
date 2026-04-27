@@ -1,27 +1,52 @@
 package dungeon.characters;
 
+/**
+ * Abstract base class representing any character in the dungeon.
+ * Both heroes and monsters share these core combat attributes.
+ *
+ * This class defines the common structure for all character types
+ * but does not implement combat logic in Iteration 1.
+ *
+ * @author Anthony
+ * @version 1.0
+ */
 public abstract class DungeonCharacter {
 
+    /** The character's name. */
     protected String myCharName;
 
+    /** Current hit points of the character. */
     protected int myHP;
 
+    /** Minimum damage the character can deal. */
     protected int myMinDamage;
 
+    /** Maximum damage the character can deal. */
     protected int myMaxDamage;
 
+    /** Number of actions the character can perform per round. */
     protected int myAttackSpeed;
 
+    /** Probability that the character successfully lands an attack. */
     protected double myHitChance;
 
+    /** Probability that the character dodges an incoming attack. */
     protected double myDodgeChance;
 
-    protected int myMinHeal;
+    /**
+     * Constructs a new DungeonCharacter with the given combat attributes.
+     *
+     * @param theName        the character's name
+     * @param theHP          starting hit points
+     * @param theMinDamage   minimum attack damage
+     * @param theMaxDamage   maximum attack damage
+     * @param theAttackSpeed number of actions per round
+     * @param theHitChance   probability of landing an attack
+     * @param theDodgeChance probability of dodging an incoming attack
+     */
+    protected DungeonCharacter(String theName, int theHP, int theMinDamage, int theMaxDamage,
+                               int theAttackSpeed, double theHitChance, double theDodgeChance) {
 
-    protected int myMaxHeal;
-
-    protected DungeonCharacter(String theName, int theHP, int theMinDamage, int theMaxDamage, int theAttackSpeed,
-                               double theHitChance, double theDodgeChance, int theMinHeal, int theMaxHeal) {
         myCharName = theName;
         myHP = theHP;
         myMinDamage = theMinDamage;
@@ -29,57 +54,68 @@ public abstract class DungeonCharacter {
         myAttackSpeed = theAttackSpeed;
         myHitChance = theHitChance;
         myDodgeChance = theDodgeChance;
-        myMinHeal = theMinHeal;
-        myMaxHeal = theMaxHeal;
     }
 
+    /**
+     * Performs an attack on the target character.
+     *
+     * @param target the character being attacked
+     */
     public void attack(DungeonCharacter target) {
         // TODO: implement in later iteration.
     }
 
+    /**
+     * Determines whether the character is still alive.
+     *
+     * @return true if HP is above zero, false otherwise
+     */
     public boolean isAlive() {
         // TODO: implement in later iteration.
         return false;
     }
 
+    /**
+     * Applies damage to the character.
+     *
+     * @param damage the amount of damage taken
+     */
     public void takeDamage(int damage) {
         // TODO: implement in later iteration.
     }
 
-
+    /** @return the character's name */
     public String getCharName() {
         return myCharName;
     }
 
-    public int getMyHP() {
+    /** @return the character's current hit points */
+    public int getHP() {
         return myHP;
     }
 
-    public int getMyMinDamage() {
+    /** @return the minimum damage value */
+    public int getMinDamage() {
         return myMinDamage;
     }
 
-    public int getMyMaxDamage() {
+    /** @return the maximum damage value */
+    public int getMaxDamage() {
         return myMaxDamage;
     }
 
-    public int getMyAttackSpeed() {
+    /** @return the character's attack speed */
+    public int getAttackSpeed() {
         return myAttackSpeed;
     }
 
-    public double getMyHitChance() {
+    /** @return the probability of landing an attack */
+    public double getHitChance() {
         return myHitChance;
     }
 
-    public double getMyDodgeChance() {
+    /** @return the probability of dodging an attack */
+    public double getDodgeChance() {
         return myDodgeChance;
-    }
-
-    public int getMyMinHeal() {
-        return myMinHeal;
-    }
-
-    public int getMyMaxHeal() {
-        return myMaxHeal;
     }
 }
