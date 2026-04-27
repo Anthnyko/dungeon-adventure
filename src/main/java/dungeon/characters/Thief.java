@@ -3,7 +3,7 @@ package dungeon.characters;
 public class Thief extends Hero {
 
     public Thief(String theName) {
-        super(theName, 75, 20, 40, 5, 0.7, 0.3);
+        super(theName, 75, 20, 40, 6, 0.8, 0.4);
     }
 
     @Override
