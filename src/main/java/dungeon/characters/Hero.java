@@ -37,12 +37,12 @@ public abstract class Hero extends DungeonCharacter {
      * @param theMaxDamage     maximum attack damage
      * @param theAttackSpeed   number of actions per round
      * @param theHitChance     probability of landing an attack
-     * @param theDodgeChance   probability of dodging an incoming attack
+     * @param theBlockChance   probability of dodging an incoming attack
      */
 
     public Hero(String theName, int theHP, int theMinDamage, int theMaxDamage, int theAttackSpeed,
-                double theHitChance, double theDodgeChance) {
-        super(theName, theHP, theMinDamage, theMaxDamage, theAttackSpeed, theHitChance, theDodgeChance);
+                double theHitChance, double theBlockChance) {
+        super(theName, theHP, theMinDamage, theMaxDamage, theAttackSpeed, theHitChance, theBlockChance);
         myHealingPotions = 0;
         myVisionPotions = 0;
         myPillarsFound = new ArrayList<Pillar>();

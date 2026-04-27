@@ -30,8 +30,8 @@ public abstract class DungeonCharacter {
     /** Probability that the character successfully lands an attack. */
     protected double myHitChance;
 
-    /** Probability that the character dodges an incoming attack. */
-    protected double myDodgeChance;
+    /** Probability that the character blocks an incoming attack. */
+    protected double myBlockChance;
 
     /**
      * Constructs a new DungeonCharacter with the given combat attributes.
@@ -42,10 +42,10 @@ public abstract class DungeonCharacter {
      * @param theMaxDamage   maximum attack damage
      * @param theAttackSpeed number of actions per round
      * @param theHitChance   probability of landing an attack
-     * @param theDodgeChance probability of dodging an incoming attack
+     * @param theBlockChance probability of blocking an incoming attack
      */
     protected DungeonCharacter(String theName, int theHP, int theMinDamage, int theMaxDamage,
-                               int theAttackSpeed, double theHitChance, double theDodgeChance) {
+                               int theAttackSpeed, double theHitChance, double theBlockChance) {
 
         myCharName = theName;
         myHP = theHP;
@@ -53,7 +53,7 @@ public abstract class DungeonCharacter {
         myMaxDamage = theMaxDamage;
         myAttackSpeed = theAttackSpeed;
         myHitChance = theHitChance;
-        myDodgeChance = theDodgeChance;
+        myBlockChance = theBlockChance;
     }
 
     /**
@@ -114,8 +114,8 @@ public abstract class DungeonCharacter {
         return myHitChance;
     }
 
-    /** @return the probability of dodging an attack */
-    public double getDodgeChance() {
-        return myDodgeChance;
+    /** @return the probability of blocking an attack */
+    public double getBlockChance() {
+        return myBlockChance;
     }
 }
