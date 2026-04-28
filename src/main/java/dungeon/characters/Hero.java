@@ -91,6 +91,10 @@ public abstract class Hero extends DungeonCharacter {
         // TODO: implement in later iteration.
     }
 
+    /** @return the probability of blocking an attack */
+    public double getBlockChance() {
+        return myBlockChance;
+    }
 
     /**
      * Returns the number of healing potions the hero currently holds.

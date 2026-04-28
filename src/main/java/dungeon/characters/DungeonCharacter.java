@@ -109,9 +109,4 @@ public abstract class DungeonCharacter {
     public double getHitChance() {
         return myHitChance;
     }
-
-    /** @return the probability of blocking an attack */
-    public double getBlockChance() {
-        return myBlockChance;
-    }
 }
