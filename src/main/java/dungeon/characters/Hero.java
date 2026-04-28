@@ -28,6 +28,9 @@ public abstract class Hero extends DungeonCharacter {
     /** Tracks cooldown time for the Hero's ultimate ability. */
     protected int myCDTimer;
 
+    /** Probability that the character blocks an incoming attack. */
+    protected double myBlockChance;
+
     /**
      * Constructs a new Hero with the given combat attributes.
      *
@@ -42,7 +45,8 @@ public abstract class Hero extends DungeonCharacter {
 
     public Hero(String theName, int theHP, int theMinDamage, int theMaxDamage, int theAttackSpeed,
                 double theHitChance, double theBlockChance) {
-        super(theName, theHP, theMinDamage, theMaxDamage, theAttackSpeed, theHitChance, theBlockChance);
+        super(theName, theHP, theMinDamage, theMaxDamage, theAttackSpeed, theHitChance);
+        myBlockChance = theBlockChance;
         myHealingPotions = 0;
         myVisionPotions = 0;
         myPillarsFound = new ArrayList<Pillar>();
