@@ -36,6 +36,7 @@ public abstract class Hero extends DungeonCharacter {
      *
      * @param theName          the hero's name
      * @param theHP            starting hit points
+     * @param theMaxHP         max hit points
      * @param theMinDamage     minimum attack damage
      * @param theMaxDamage     maximum attack damage
      * @param theAttackSpeed   number of actions per round
@@ -43,9 +44,9 @@ public abstract class Hero extends DungeonCharacter {
      * @param theBlockChance   probability of dodging an incoming attack
      */
 
-    public Hero(String theName, int theHP, int theMinDamage, int theMaxDamage, int theAttackSpeed,
+    public Hero(String theName, int theHP, int theMaxHP, int theMinDamage, int theMaxDamage, int theAttackSpeed,
                 double theHitChance, double theBlockChance) {
-        super(theName, theHP, theMinDamage, theMaxDamage, theAttackSpeed, theHitChance);
+        super(theName, theHP, theMaxHP,theMinDamage, theMaxDamage, theAttackSpeed, theHitChance);
         myBlockChance = theBlockChance;
         myHealingPotions = 0;
         myVisionPotions = 0;

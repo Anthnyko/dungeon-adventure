@@ -15,6 +15,9 @@ public abstract class DungeonCharacter {
     /** The character's name. */
     protected String myCharName;
 
+    /** Max hit points of the character. */
+    protected int myMaxHP;
+
     /** Current hit points of the character. */
     protected int myHP;
 
@@ -35,16 +38,18 @@ public abstract class DungeonCharacter {
      * Constructs a new DungeonCharacter with the given combat attributes.
      *
      * @param theName        the character's name
+     * @param theMaxHP       max hit points
      * @param theHP          starting hit points
      * @param theMinDamage   minimum attack damage
      * @param theMaxDamage   maximum attack damage
      * @param theAttackSpeed number of actions per round
      * @param theHitChance   probability of landing an attack
      */
-    protected DungeonCharacter(String theName, int theHP, int theMinDamage, int theMaxDamage,
+    protected DungeonCharacter(String theName, int theHP, int theMaxHP, int theMinDamage, int theMaxDamage,
                                int theAttackSpeed, double theHitChance) {
 
         myCharName = theName;
+        myMaxHP = theMaxHP;
         myHP = theHP;
         myMinDamage = theMinDamage;
         myMaxDamage = theMaxDamage;
@@ -89,6 +94,9 @@ public abstract class DungeonCharacter {
     public int getHP() {
         return myHP;
     }
+
+    /** @return the character's max hit points */
+    public int getMaxHP() { return myMaxHP; }
 
     /** @return the minimum damage value */
     public int getMinDamage() {

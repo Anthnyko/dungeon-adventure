@@ -25,6 +25,7 @@ public class Thief extends Hero {
     public Thief(String theName) {
         super(theName,
                 75,   // HP
+                75,   // max HP
                 20,   // min damage
                 40,   // max damage
                 6,    // attack speed

@@ -35,6 +35,7 @@ public class Ogre extends Monster {
     public Ogre() {
         super("Ogre",
                 200,  // HP
+                200,  // max HP
                 30,   // min damage
                 60,   // max damage
                 2,    // attack speed

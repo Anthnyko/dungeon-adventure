@@ -34,6 +34,7 @@ public class Gremlin extends Monster {
     public Gremlin() {
         super("Gremlin",
                 70,   // HP
+                70,   // max HP
                 15,   // min damage
                 30,   // max damage
                 5,    // attack speed

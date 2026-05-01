@@ -33,6 +33,7 @@ public class Skeleton extends Monster {
     public Skeleton() {
         super("Skeleton",
                 100, // HP
+                100, // max HP
                 30,  // min damage
                 50,  // max damage
                 3,   // attack speed

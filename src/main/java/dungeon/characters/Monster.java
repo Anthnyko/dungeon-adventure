@@ -40,6 +40,7 @@ public abstract class Monster extends DungeonCharacter {
      *
      * @param theName        the name of the monster
      * @param theHP          the monster's starting hit points
+     * @param theMaxHP       the monster's max hit points
      * @param theMinDamage   the minimum damage the monster can deal
      * @param theMaxDamage   the maximum damage the monster can deal
      * @param theAttackSpeed the monster's attack speed
@@ -48,11 +49,11 @@ public abstract class Monster extends DungeonCharacter {
      * @param theMinHeal     the minimum amount of HP restored when healing
      * @param theMaxHeal     the maximum amount of HP restored when healing
      */
-    public Monster(String theName, int theHP, int theMinDamage, int theMaxDamage,
+    public Monster(String theName, int theHP, int theMaxHP,int theMinDamage, int theMaxDamage,
                    int theAttackSpeed, double theHitChance,
                    double theHealChance, int theMinHeal, int theMaxHeal) {
 
-        super(theName, theHP, theMinDamage, theMaxDamage, theAttackSpeed, theHitChance);
+        super(theName, theHP, theMaxHP, theMinDamage, theMaxDamage, theAttackSpeed, theHitChance);
 
         myHealChance = theHealChance;
         myMinHeal = theMinHeal;

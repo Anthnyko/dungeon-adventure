@@ -25,6 +25,7 @@ public class Warrior extends Hero {
     public Warrior(String theName) {
         super(theName,
                 125,  // HP
+                125,  // max HP
                 35,   // min damage
                 60,   // max damage
                 4,    // attack speed

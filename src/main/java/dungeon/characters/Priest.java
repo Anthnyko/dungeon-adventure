@@ -25,6 +25,7 @@ public class Priest extends Hero {
     public Priest(String theName) {
         super(theName,
                 75,   // HP
+                75,   // max HP
                 25,   // min damage
                 45,   // max damage
                 5,    // attack speed
