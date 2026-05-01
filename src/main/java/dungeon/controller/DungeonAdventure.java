@@ -1,5 +1,5 @@
 
-package main.java.dungeon.controller;
+package dungeon.controller;
 
 import java.util.Scanner;
 

@@ -1,5 +1,5 @@
 
-package main.java.dungeon.view;
+package dungeon.view;
 
 /**
  * 
