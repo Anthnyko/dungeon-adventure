@@ -1,6 +1,8 @@
 
 package dungeon.view;
 
+import dungeon.characters.Hero;
+
 /**
  * 
  * @author Jackson Steger
@@ -26,12 +28,8 @@ public class DungeonView {
     public static void main(String[] args) {
         DungeonView test = new DungeonView();
         test.displayMenu();
-;
     }
 
-    public static final void makeNewline() {
-        System.out.println(NEWLINE);
-    }
     // ============================== Begin Intro display section ==============================
 
     public final void displayIntro() {
@@ -71,13 +69,14 @@ public class DungeonView {
 
     // ============================== Begin Game Loop display section ==============================
 
-    public final void displayPlayerStatus() {
+    public final void displayPlayerStatus(Hero theHero) {
         System.out.println(
             SEPERATOR_STRAIGHT 
             + NEWLINE
-            + TEXT_YELLOW + "Name" + TEXT_COLOR_RESET + " | " // character name
-            + TEXT_GREEN + "HP: " + TEXT_COLOR_RESET + " | " // Character hp count
-            + TEXT_PURPLE + "Potions: Hx" + " " + "Vx" + TEXT_COLOR_RESET + " | " // number of player hp potions and vision potions
+            + TEXT_YELLOW + theHero.getCharName() + TEXT_COLOR_RESET + " | " // character name
+            + TEXT_GREEN + "HP: " + theHero.getHP() + theHero.getMaxHP() + TEXT_COLOR_RESET + " | " // Character hp count
+            + TEXT_PURPLE + "Potions: Hx" + theHero.getHealingPotion() + " " 
+            + "Vx" + theHero.getVisionPotion() + TEXT_COLOR_RESET + " | " // number of player hp potions and vision potions
             + TEXT_BLUE + "Pillars: " + TEXT_COLOR_RESET
             + NEWLINE 
             + SEPERATOR_STRAIGHT 
