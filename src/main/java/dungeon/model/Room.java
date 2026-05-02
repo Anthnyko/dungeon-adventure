@@ -1,8 +1,7 @@
 package dungeon.model;
 
-import dungeon.items.HealingPotion;
 import dungeon.items.Item;
-import dungeon.items.Pit;
+import dungeon.items.HealingPotion;
 import dungeon.items.VisionPotion;
 
 import java.util.ArrayList;
@@ -38,6 +37,9 @@ public class Room {
     /** Tracks if this room is the Exit */
     private boolean myExit;
 
+    /** Tracks if this room has a pit */
+    private boolean hasPit;
+
     /** Tracks if this room has a pillar */
     private boolean hasPillar;
     /** The Pillar of OO this room contains */
@@ -59,6 +61,8 @@ public class Room {
         myItems = new ArrayList<Item>();
 
         generateRandomItems();
+
+        hasPit = myRandom.nextInt(100) < myChance;
 
         myEntrance = false;
         myExit = false;
@@ -91,28 +95,6 @@ public class Room {
      */
     public void setSouthDoor(boolean value) { mySouthDoor = value;}
 
-    //---GETTERS---\\
-
-    /**
-     * @return true if the room has a north door
-     */
-    public boolean hasNorthDoor() {return myNorthDoor;}
-
-    /**
-     * @return true if the room has an east door
-     */
-    public boolean hasEastDoor() {return myEastDoor;}
-
-    /**
-     * @return true if the room has a west door
-     */
-    public boolean hasWestDoor() {return myWestDoor;}
-
-    /**
-     * @return true if the room has a south door
-     */
-    public boolean hasSouthDoor() {return mySouthDoor;}
-
     /**
      * Marks this room as the entrance.
      * Entrance rooms contain no items.
@@ -140,6 +122,65 @@ public class Room {
         pillarType = thePillarType;
     }
 
+    //---GETTERS---\\
+
+    /**
+     * @return true if the room has a north door
+     */
+    public boolean hasNorthDoor() {return myNorthDoor;}
+
+    /**
+     * @return true if the room has an east door
+     */
+    public boolean hasEastDoor() {return myEastDoor;}
+
+    /**
+     * @return true if the room has a west door
+     */
+    public boolean hasWestDoor() {return myWestDoor;}
+
+    /**
+     * @return true if the room has a south door
+     */
+    public boolean hasSouthDoor() {return mySouthDoor;}
+
+    /**
+     * @return true if the room is the entrance
+     */
+    public boolean isEntrance() {return myEntrance;}
+
+    /**
+     * @return true if the room is the exit
+     */
+    public boolean isExit() {return myExit;}
+
+    /**
+     * @return true if the room has a pillar
+     */
+    public boolean hasPillar() {return hasPillar;}
+
+    /**
+     * Removes the list of items in the room and returns them
+     * @return A list of all the items in the room
+     */
+    public List<Item> pickUpItems() {
+        List<Item> items = new ArrayList<>();
+        myItems.clear();
+        return items;
+    }
+
+    /**
+     * Removes the pillar in the room and returns it
+     * @return the pillar in the room
+     */
+    public char pickUpPillar() {
+        if (!hasPillar) return ' ';
+        hasPillar = false;
+        char temp = pillarType;
+        pillarType = ' '; //So a pillar is not shown in the room anymore
+        return temp;
+    }
+
     /**
      * Returns a string representation of the room.
      * Walls are represented with '*' and doors with '-' or '|'.
@@ -149,51 +190,32 @@ public class Room {
      */
     @Override
     public String toString() {
-        String top;
-        String middle;
-        String bottom;
+        StringBuilder sb = new StringBuilder();
 
-        //Top row
-        if (myNorthDoor) {
-            top = "*-*";
-        } else {
-            top = "***";
-        }
+        // Top row
+        sb.append(myNorthDoor ? "*-*" : "***").append("\n");
 
-        //Middle row
-        String westWall;
-        String eastWall;
-        if (myWestDoor) {
-            westWall = "|";
-        } else {
-            westWall = "*";
-        }
-        if (myEastDoor) {
-            eastWall = "|";
-        } else {
-            eastWall = "*";
-        }
-        middle = westWall + getRoomSymbol() + eastWall;
+        // Middle row
+        sb.append(myWestDoor ? "|" : "*");
+        sb.append(getRoomSymbol());
+        sb.append(myEastDoor ? "|" : "*").append("\n");
 
-        //Bottom row
-        if (mySouthDoor) {
-            bottom = "*-*";
-        } else {
-            bottom = "***";
-        }
+        // Bottom row
+        sb.append(mySouthDoor ? "*-*" : "***");
 
-        return top + "\n" + middle + "\n" + bottom;
+        return sb.toString();
     }
 
     // Private helpers
     private char getRoomSymbol() {
         if (myEntrance) return 'i';
         if (myExit) return 'O';
+        if (hasPillar) return pillarType;
+
+        if (hasPit) return 'X';
 
         if(myItems.size() > 1) return 'M';
         if(myItems.size() == 1) return myItems.getFirst().getSymbol();
-
-        if (hasPillar) return pillarType;
 
         return ' ';
     }
@@ -203,7 +225,6 @@ public class Room {
     }
 
     private void generateRandomItems() {
-        if (myRandom.nextInt(100) < myChance) myItems.add(new Pit());
         if (myRandom.nextInt(100) < myChance) myItems.add(new HealingPotion());
         if (myRandom.nextInt(100) < myChance) myItems.add(new VisionPotion());
     }
