@@ -3,7 +3,7 @@ package dungeon.items;
 public class HealingPotion extends Item{
     @Override
     public void applyEffect() {
-
+        // implement later
     }
 
     @Override

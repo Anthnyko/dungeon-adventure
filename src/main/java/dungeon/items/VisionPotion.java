@@ -3,7 +3,7 @@ package dungeon.items;
 public class VisionPotion extends Item{
     @Override
     public void applyEffect() {
-
+        // implement later
     }
 
     @Override
