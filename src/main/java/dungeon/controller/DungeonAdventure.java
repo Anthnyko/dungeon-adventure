@@ -4,7 +4,9 @@ package dungeon.controller;
 import java.util.Scanner;
 
 import dungeon.model.Dungeon;
+import dungeon.model.Room;
 import dungeon.model.characters.Hero;
+import dungeon.model.characters.Monster;
 import dungeon.model.characters.Priest;
 import dungeon.model.characters.Thief;
 import dungeon.model.characters.Warrior;
@@ -28,12 +30,12 @@ public final class DungeonAdventure {
 
     private Scanner myScanner = new Scanner(System.in);
 
-    private boolean myActiveGame = false;
-    private boolean myWinCondition = false;
+    private boolean myActiveGame;
+    private boolean myWinCondition;
 
     public static void main(String[] args) {
         DungeonAdventure game = new DungeonAdventure();
-        game.startGame();
+        game.createGame();
     }
 
     DungeonAdventure() {
@@ -44,7 +46,7 @@ public final class DungeonAdventure {
      * Starts the game by initializing the game setup and running the main game loop.
      * Orchestrates the overall flow of the dungeon adventure game.
      */
-    private final void startGame() {
+    private final void createGame() {
         // call gameSetup
         gameSetup();
         // call gameLoop
@@ -113,14 +115,15 @@ public final class DungeonAdventure {
 
         while(myActiveGame) {
             myDungeonView.displayPlayerStatus(myHero);
-            myDungeonView.displayMenu();
+            myDungeonView.displayRoom(myDungeon.getCurrentRoom());
+            evaluateRoomEvents(myDungeon.getCurrentRoom());
+            myDungeonView.displayInGameMenu();
 
             String userInput = myScanner.nextLine().trim().toUpperCase();
 
             if(!userInput.isEmpty()) {
                 char userChoice = userInput.charAt(0);
                 handlePlayerChoice(userChoice);
-                evaluateRoomEffects();
             }
 
             if(checkWinCondidtion() || myHero.getHP() <= 0) {
@@ -131,11 +134,11 @@ public final class DungeonAdventure {
 
     /**
      * Evaluates and applies the effects of the current room on the player,
-     * such as finding items, encountering traps, or healing.
+     * such as finding items, encountering traps, or healing. 
      * 
      * @param room the room to evaluate
      */
-    private final void evaluateRoomEffects() { //parameter/s: room
+    private final void evaluateRoomEvents(Room theRoom) { //parameter/s: room
 
     }
 
@@ -149,6 +152,15 @@ public final class DungeonAdventure {
         if(theUserChoice == 'W' || theUserChoice == 'A' 
         || theUserChoice == 'S' || theUserChoice == 'D') {
             move(theUserChoice);
+        } else if(theUserChoice == 'H') {
+            myHero.useHealingPotion();
+        } else if(theUserChoice == 'V') {
+            myHero.useVisionPotion();
+        } else if(theUserChoice == 'B') {
+            // TODO: implement help menu
+        } else if(theUserChoice == 'Q') {
+            saveGame();
+            myActiveGame = false;
         }
         
     }
@@ -175,13 +187,13 @@ public final class DungeonAdventure {
      * 
      * @param monster the enemy monster to engage in combat
      */
-    private final void handleCombat() { //parameter/s: monster
-
+    private final void handleCombat(Monster theMonster) {
+        // TODO: add combat
     }
 
     /**
-     * Checks if the win condition has been met, such as reaching the exit
-     * or defeating all required objectives.
+     * Checks if the win condition has been met (reaching the exit
+     * with all 4 pillars).
      */
     private final boolean checkWinCondidtion() {
         return myWinCondition;
@@ -193,6 +205,16 @@ public final class DungeonAdventure {
      * @param theResult true if the player won, false if the player lost
      */
     private final void endGame(boolean theResult) {
+        if(theResult == true) {
+            myDungeonView.displayWin();
+        } else {
+            myDungeonView.displayLoss();
+        }
+        myDungeonView.displayPlayerStatus(myHero);
+        myDungeonView.displayFullDungeon(myDungeon);
+    }
+
+    private final void gameMenu() {
 
     }
 

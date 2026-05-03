@@ -1,6 +1,8 @@
 
 package dungeon.view;
 
+import dungeon.model.Dungeon;
+import dungeon.model.Room;
 import dungeon.model.characters.Hero;
 
 /**
@@ -27,12 +29,37 @@ public class DungeonView {
 
     public static void main(String[] args) {
         DungeonView test = new DungeonView();
-        test.displayMenu();
+        test.displayInGameMenu();
     }
 
     DungeonView() {
         // Default constructor
     }
+
+    // ============================== Begin Main Menu display section ==============================
+
+    public final void displayMainMenu() {
+        System.out.print(
+            TEXT_YELLOW + SEPERATOR_EQUALS + TEXT_COLOR_RESET
+            + NEWLINE
+            + "WELCOME TO DUNGEON ADVENTURE!"
+            + NEWLINE
+            + TEXT_YELLOW + SEPERATOR_EQUALS + TEXT_COLOR_RESET
+            + NEWLINE
+            + NEWLINE
+            + TEXT_BLUE 
+            + "[P] Start a new game "
+            + "[L] Load a saved game "
+            + "[B] Help menu "
+            + "[Z] About"
+            + TEXT_COLOR_RESET
+            + NEWLINE
+            + "> Enter choice: "
+        );
+    }
+
+    // ============================== Begin Main Menu display section ==============================
+
 
     // ============================== Begin Intro display section ==============================
 
@@ -40,7 +67,7 @@ public class DungeonView {
         System.out.println(
             TEXT_YELLOW + SEPERATOR_EQUALS + TEXT_COLOR_RESET 
             + NEWLINE
-            + "WELCOME TO BETTER NAME PENDING" 
+            + "You have entered ____!" //change to incorporate the dungeon name
             + NEWLINE
             + TEXT_BLACK + "Collect all 4 pillars and find the exit" + TEXT_COLOR_RESET 
             + NEWLINE
@@ -65,7 +92,7 @@ public class DungeonView {
     }
 
     public final void promptName() {
-        System.out.print("> Enter the name of your character: ");
+        System.out.print("> Enter the name of your character [Max 15 characters]: ");
     }
 
     // ============================== End Intro display section ==============================
@@ -88,20 +115,23 @@ public class DungeonView {
         );
     }
 
-    public final void displayMenu() {
+    public final void displayInGameMenu() {
         System.out.print(
             TEXT_BLUE
-            + "[W/A/S/D] Move"
-            + "[H] Use healing potion"
-            + "[V] Use vision potion"
-            + "[B] Help"
-            + "[Q] Quit"
+            + "[W/A/S/D] Move "
+            + "[H] Use healing potion "
+            + "[V] Use vision potion "
+            + "[B] Help "
+            + "[Q] Quit "
             + TEXT_COLOR_RESET
+            + NEWLINE
+            + "> Enter choice: "
         );
     }
 
-    public final void displayRoom() { //parameter/s: room
-    
+    public final void displayRoom(Room theRoom) { //parameter/s: room
+        System.out.println("Current room: ");
+        theRoom.toString();
     }
 
     // ============================== End Game Loop display section ==============================
@@ -128,8 +158,13 @@ public class DungeonView {
      * 
      * 
      */
-    public final void displayFullDungeon() { //parameter/s: dungeon (I think)
+    public final void displayFullDungeon(Dungeon theDungeon) {
         System.out.println("Full dungeon map: ");
+        theDungeon.toString();
+    }
+
+    public final void displayItemPickup() {
+
     }
 
     // ============================== End Extra Room Display Section ==============================
@@ -150,14 +185,13 @@ public class DungeonView {
 
     // ============================== Begin End Game Display Section ==============================
 
-    public final void displayDeath() {
+    public final void displayLoss() {
         System.out.println(
             TEXT_RED + " You are dead" + TEXT_COLOR_RESET
             + NEWLINE
             + TEXT_RED + "DEFEAT" + TEXT_COLOR_RESET
             + NEWLINE
         );
-        displayFullDungeon();
 
     }
 
@@ -168,7 +202,6 @@ public class DungeonView {
             + TEXT_YELLOW + "VICTORY" + TEXT_COLOR_RESET
             + NEWLINE
         );
-        displayFullDungeon();
     }
 
     // ==============================  End End Game Display Section  ==============================
