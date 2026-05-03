@@ -1,7 +1,7 @@
 
 package dungeon.view;
 
-import dungeon.characters.Hero;
+import dungeon.model.characters.Hero;
 
 /**
  * 
@@ -30,6 +30,10 @@ public class DungeonView {
         test.displayMenu();
     }
 
+    DungeonView() {
+        // Default constructor
+    }
+
     // ============================== Begin Intro display section ==============================
 
     public final void displayIntro() {
@@ -51,7 +55,7 @@ public class DungeonView {
             + NEWLINE 
             + TEXT_BLUE + "[1] Warrior - Special Skill: Crushing Blow, 125 HP" + TEXT_COLOR_RESET 
             + NEWLINE
-            + TEXT_PINK + "[2] Priestess - Special Skill: Heal, 75 HP" + TEXT_COLOR_RESET 
+            + TEXT_PINK + "[2] Priest - Special Skill: Heal, 75 HP" + TEXT_COLOR_RESET 
             + NEWLINE
             + TEXT_BLACK + "[3] Thief - Special Skill: Suprise Attack, 75 HP" + TEXT_COLOR_RESET 
             + NEWLINE 
@@ -61,7 +65,7 @@ public class DungeonView {
     }
 
     public final void promptName() {
-        System.out.print("> Enter the name of your character [max 15 characters]: ");
+        System.out.print("> Enter the name of your character: ");
     }
 
     // ============================== End Intro display section ==============================

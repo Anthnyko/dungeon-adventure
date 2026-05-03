@@ -1,4 +1,4 @@
-package dungeon.characters;
+package dungeon.model.characters;
 
 /**
  * The Warrior hero class. Warriors specialize in high-damage melee

@@ -1,4 +1,4 @@
-package dungeon.characters;
+package dungeon.model.characters;
 
 /**
  * The Thief hero class. Thieves specialize in agility-based combat

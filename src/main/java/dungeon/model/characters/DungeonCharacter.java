@@ -1,4 +1,4 @@
-package dungeon.characters;
+package dungeon.model.characters;
 
 /**
  * Abstract base class representing any character in the dungeon.

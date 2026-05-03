@@ -1,4 +1,4 @@
-package dungeon.characters;
+package dungeon.model.characters;
 
 /**
  * The Priest hero class. Priests specialize in supportive magic,
