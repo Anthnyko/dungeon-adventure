@@ -62,12 +62,23 @@ public abstract class Monster extends DungeonCharacter {
     }
 
     /**
-     * Attempts to heal the monster. Actual healing logic is implemented
-     * in later iterations. This method will be called during combat
+     * Attempts to heal the monster.
+     * This method will be called during combat
      * after the monster takes damage.
      */
     public void heal() {
-        // TODO: implement in later iteration.
+        if (!isAlive() || myHP == myMaxHP) {
+            return;
+        }
+        if (Math.random() < myHealChance) {
+            final int heal = myMinHeal + (int)(Math.random() * (myMaxHeal - myMinHeal + 1));
+            if (heal + myHP > myMaxHP) {
+                myHP = myMaxHP;
+            } else {
+                myHP += heal;
+            }
+            System.out.println(myCharName + " regenerates " + heal + " health!");
+        }
     }
 
     /**
