@@ -60,10 +60,29 @@ public abstract class DungeonCharacter {
     /**
      * Performs an attack on the target character.
      *
-     * @param target the character being attacked
+     * @param theTarget the character being attacked
      */
-    public void attack(DungeonCharacter target) {
-        // TODO: implement in later iteration.
+    public void attack(DungeonCharacter theTarget) {
+        if (theTarget == null || !theTarget.isAlive()) {
+            return;
+        }
+
+        int numAttacks = myAttackSpeed / theTarget.myAttackSpeed;
+        if (numAttacks < 1) numAttacks = 1;
+
+        for (int i = 0; i < numAttacks; i++) {
+            if (Math.random() < myHitChance) {
+                final int damage = myMinDamage + (int)(Math.random() * (myMaxDamage - myMinDamage + 1));
+                theTarget.takeDamage(damage);
+                System.out.println(myCharName + " attacks " + theTarget.getCharName() + " for " + damage + " damage!");
+            } else {
+                System.out.println(myCharName + " misses " + theTarget.myCharName + "...");
+            }
+            if (!theTarget.isAlive()) {
+                break;
+            }
+        }
+
     }
 
     /**
