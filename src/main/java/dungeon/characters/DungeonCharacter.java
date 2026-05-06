@@ -91,8 +91,7 @@ public abstract class DungeonCharacter {
      * @return true if HP is above zero, false otherwise
      */
     public boolean isAlive() {
-        // TODO: implement in later iteration.
-        return false;
+        return myHP > 0;
     }
 
     /**
@@ -101,8 +100,18 @@ public abstract class DungeonCharacter {
      * @param damage the amount of damage taken
      */
     public void takeDamage(int damage) {
-        // TODO: implement in later iteration.
+        myHP -= damage;
+        if (myHP <= 0) {
+            myHP = 0;
+        }
+        System.out.println(myCharName + " takes " + myHP + " damage! (HP: " + myHP + ")");
     }
+
+    /**
+     * Displays current combat status, including HP, potions,
+     * cooldown timers, and any other relevant combat information.
+     */
+    public abstract void displayStatus();
 
     /** @return the character's name */
     public String getCharName() {
