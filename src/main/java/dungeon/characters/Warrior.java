@@ -89,6 +89,18 @@ public class Warrior extends Hero {
         enrage();
     }
 
+    /** Returns Warrior's special skill name. */
+    @Override
+    public String getSpecialSkillName() {
+        return "Crushing Blow";
+    }
+
+    /** Returns Warrior's ultimate skill name. */
+    @Override
+    public String getUltimateName() {
+        return "Enrage";
+    }
+
     /**
      * Executes the Warrior's crushing blow ability.
      * Logic implemented in later iterations.

@@ -51,6 +51,18 @@ public class Priest extends Hero {
         smite(theTarget);
     }
 
+    /** Returns Priest's special skill name. */
+    @Override
+    public String getSpecialSkillName() {
+        return "Heal";
+    }
+
+    /** Returns Priest's ultimate skill name. */
+    @Override
+    public String getUltimateName() {
+        return "Smite";
+    }
+
     /**
      * Executes the Priest's healing ability.
      */

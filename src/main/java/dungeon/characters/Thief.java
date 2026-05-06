@@ -57,6 +57,30 @@ public class Thief extends Hero {
         garrote(theTarget);
     }
 
+    /** Returns Thief's special skill name. */
+    @Override
+    public String getSpecialSkillName() {
+        return "Surprise Attack";
+    }
+
+    /** Returns Thief's ultimate skill name. */
+    @Override
+    public String getUltimateName() {
+        return "Garrote";
+    }
+
+    /** Returns if Thief skill gained extra turn. */
+    @Override
+    public boolean hasExtraTurn() {
+        return myExtraTurn;
+    }
+
+    /** Sets extra turn to false. */
+    @Override
+    public void consumeExtraTurn() {
+        myExtraTurn = false;
+    }
+
     /**
      * Executes the Thief's surprise attack ability.
      *
