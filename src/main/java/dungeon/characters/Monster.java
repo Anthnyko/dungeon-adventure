@@ -35,6 +35,9 @@ public abstract class Monster extends DungeonCharacter {
     /** Tracks the number of turns remaining for bleed damage effects. */
     protected int myBleedTimer;
 
+    /** Amount of bleed damage per tick. */
+    protected final int myBleedDamage = 5;
+
     /**
      * Constructs a Monster with predefined combat and healing attributes.
      *
@@ -78,6 +81,33 @@ public abstract class Monster extends DungeonCharacter {
                 myHP += heal;
             }
             System.out.println(myCharName + " regenerates " + heal + " health!");
+        }
+    }
+
+    /**
+     * Applies a bleed effect to this monster for the given number of turns.
+     *
+     * @param theTimer number of turns the bleed should last
+     */
+    public void applyBleed(final int theTimer) {
+        myBleedTimer = theTimer;
+        System.out.println(myCharName + " starts bleeding!");
+    }
+
+    /**
+     * Processes bleed damage at the start of the monster's turn.
+     * Deals damage and reduces the bleed timer.
+     */
+    public void processBleed() {
+        if (myBleedTimer > 0) {
+            takeDamage(myBleedTimer);
+            myBleedTimer--;
+
+            System.out.println(myCharName + " takes " + myBleedTimer + " bleed damage!");
+
+            if (!isAlive()) {
+                System.out.println(myCharName + " dies from bleeding!");
+            }
         }
     }
 

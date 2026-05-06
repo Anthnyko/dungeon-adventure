@@ -101,7 +101,7 @@ public class Thief extends Hero {
         System.out.println(getCharName() + " uses Garrote!");
 
         if (theTarget instanceof Monster monster) {
-            monster.applyBleed(3);
+            monster.applyBleed(5);
         }
 
         myCDTimer = 3;
