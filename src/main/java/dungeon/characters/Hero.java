@@ -74,7 +74,17 @@ public abstract class Hero extends DungeonCharacter {
      * Uses a healing potion if available.
      */
     public void useHealingPotion() {
-        // TODO: implement in later iteration.
+        final int healPotionValue = 20;
+        if (myHealingPotions <= 0) {
+            System.out.println("You have no healing potions!");
+        }
+        myHealingPotions--;
+        if (healPotionValue + myHP > myMaxHP) {
+            myHP = myMaxHP;
+        } else {
+            myHP += healPotionValue;
+        }
+        System.out.println("You used healing potion! +20 HP");
     }
 
     /**
@@ -86,11 +96,59 @@ public abstract class Hero extends DungeonCharacter {
 
     /**
      * Reduces cooldown for ultimate abilities.
-     * Logic added in later iterations.
      */
     public void reduceCooldown() {
-        // TODO: implement in later iteration.
+        myCDTimer--;
     }
+
+    /**
+     * Displays the hero's current combat status, including HP, potions,
+     * cooldown timers, and any other relevant combat information.
+     */
+    @Override
+    public void displayStatus() {
+        System.out.println("=== HERO STATUS ===");
+        System.out.println("Name: " + myCharName);
+        System.out.println("HP: " + myHP + "/" + myMaxHP);
+        System.out.println("Healing Potions: " + myHealingPotions);
+        System.out.println("Vision Potions: " + myVisionPotions);
+        System.out.println("Ultimate Cooldown: " + myCDTimer);
+        System.out.println("====================");
+        System.out.println("Abilities:");
+        System.out.println("1. Basic Attack");
+        System.out.println("2. " + getSpecialSkillName());
+        System.out.println("3. " + getUltimateName() + " (CD: " + myCDTimer + ")");
+        System.out.println("====================");
+    }
+
+    /** Displays actions for the user to choose from.
+     *
+     * @param choice action chosen
+     * @param theTarget targeted monster of action
+     */
+    public void performAction(final int choice, final Monster theTarget) {
+        switch (choice) {
+            case 1:
+                attack(theTarget);
+                break;
+            case 2:
+                specialSkill(theTarget);
+                break;
+            case 3:
+                bigCooldown(theTarget);
+                break;
+            default:
+                System.out.println("Invalid choice. You lose your turn.");
+        }
+    }
+
+    /** Returns if Thief skill gained extra turn. */
+    public boolean hasExtraTurn() {
+        return false;
+    }
+
+    /** Sets extra turn to false. Logic is in Thief class. */
+    public void consumeExtraTurn() {}
 
     /** @return the probability of blocking an attack */
     public double getBlockChance() {
@@ -122,5 +180,22 @@ public abstract class Hero extends DungeonCharacter {
      */
     public int getCDTimer() {
         return myCDTimer;
+    }
+
+    /** @return the name of special skill */
+    public abstract String getSpecialSkillName();
+
+    /** @return the name of ultimate skill */
+    public abstract String getUltimateName();
+
+    @Override
+    public String toString() {
+        return "Hero {" +
+                "Name='" + myCharName + '\'' +
+                ", HP=" + myHP + "/" + myMaxHP +
+                ", HealingPotions=" + myHealingPotions +
+                ", VisionPotions=" + myVisionPotions +
+                ", UltimateCooldown=" + myCDTimer +
+                '}';
     }
 }

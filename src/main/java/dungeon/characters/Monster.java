@@ -100,7 +100,7 @@ public abstract class Monster extends DungeonCharacter {
      */
     public void processBleed() {
         if (myBleedTimer > 0) {
-            takeDamage(myBleedTimer);
+            takeDamage(myBleedDamage);
             myBleedTimer--;
 
             System.out.println(myCharName + " takes " + myBleedTimer + " bleed damage!");
@@ -109,6 +109,17 @@ public abstract class Monster extends DungeonCharacter {
                 System.out.println(myCharName + " dies from bleeding!");
             }
         }
+    }
+
+    /**
+     * Displays the monster's current combat status, including HP.
+     */
+    @Override
+    public void displayStatus() {
+        System.out.println("=== MONSTER STATUS ===");
+        System.out.println("Name: " + myCharName);
+        System.out.println("HP: " + myHP + "/" + myMaxHP);
+        System.out.println("====================");
     }
 
     /**
