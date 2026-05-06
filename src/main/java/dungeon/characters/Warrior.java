@@ -10,8 +10,6 @@ package dungeon.characters;
  * - crushingBlow: the Warrior's special skill
  * - enrage: the Warrior's ultimate cooldown ability
  *
- * Combat logic is added in future iterations.
- *
  * @author Anthony
  * @version 1.0
  */

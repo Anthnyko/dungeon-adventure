@@ -10,8 +10,6 @@ package dungeon.characters;
  * - surpriseAttack: the Thief's special skill
  * - garrote: the Thief's ultimate cooldown ability
  *
- * Combat logic is added in future iterations.
- *
  * @author Anthony
  * @version 1.0
  */
