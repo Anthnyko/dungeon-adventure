@@ -17,6 +17,9 @@ package dungeon.characters;
  */
 public class Thief extends Hero {
 
+    /** Track whether thief gains extra turn from special skill. */
+    protected boolean myExtraTurn;
+
     /**
      * Constructs a new Thief with predefined combat attributes.
      *
@@ -31,6 +34,7 @@ public class Thief extends Hero {
                 6,    // attack speed
                 0.8,  // hit chance
                 0.4); // block chance (or dodge if you keep it)
+        myExtraTurn = false;
     }
 
     /**
@@ -57,21 +61,51 @@ public class Thief extends Hero {
 
     /**
      * Executes the Thief's surprise attack ability.
-     * Logic implemented in later iterations.
      *
      * @param theTarget the target of the surprise attack
      */
     private void surpriseAttack(DungeonCharacter theTarget) {
-        // TODO: implement in later iteration.
+        if (theTarget == null || !theTarget.isAlive()) {
+            return;
+        }
+
+        final double roll = Math.random();
+
+        if (roll < 0.40) {
+            // 40%: Surprise success
+            System.out.println(getCharName() + " performs a Surprise Attack! Extra turn gained!");
+            attack(theTarget); // one normal attack
+            myExtraTurn = true;
+
+        } else if (roll < 0.80) {
+            // Next 40%: Normal attack, no extra turn
+            System.out.println(getCharName() + " attempts a Surprise Attack but only lands a normal hit.");
+            attack(theTarget);
+            myExtraTurn = false;
+
+        } else {
+            // Final 20%: Total failure
+            System.out.println(getCharName() + " fails the Surprise Attack completely!");
+            myExtraTurn = false;
+        }
     }
 
     /**
      * Executes the Thief's garrote ability, used as the ultimate attack.
-     * Logic implemented in later iterations.
      *
      * @param theTarget the target of the garrote attack
      */
     private void garrote(DungeonCharacter theTarget) {
-        // TODO: implement in later iteration.
+        if (theTarget == null || !theTarget.isAlive()) {
+            return;
+        }
+
+        System.out.println(getCharName() + " uses Garrote!");
+
+        if (theTarget instanceof Monster monster) {
+            monster.applyBleed(3);
+        }
+
+        myCDTimer = 3;
     }
 }
