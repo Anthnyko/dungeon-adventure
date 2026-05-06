@@ -36,7 +36,7 @@ public class Priest extends Hero {
      * This method delegates to the private heal method.
      */
     @Override
-    public void specialSkill(DungeonCharacter) {
+    public void specialSkill(DungeonCharacter theTarget) {
         heal();
     }
 
