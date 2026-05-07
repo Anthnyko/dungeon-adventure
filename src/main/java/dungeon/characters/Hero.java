@@ -23,7 +23,7 @@ public abstract class Hero extends DungeonCharacter {
     protected int myVisionPotions;
 
     /** Tracker for all Pillar items collected by the Hero. */
-    protected List<Pillar> myPillarsFound;
+    // protected List<Pillar> myPillarsFound;
 
     /** Tracks cooldown time for the Hero's ultimate ability. */
     protected int myCDTimer;
@@ -50,7 +50,7 @@ public abstract class Hero extends DungeonCharacter {
         myBlockChance = theBlockChance;
         myHealingPotions = 0;
         myVisionPotions = 0;
-        myPillarsFound = new ArrayList<Pillar>();
+        // myPillarsFound = new ArrayList<Pillar>();
         myCDTimer = 0;
     }
 
@@ -98,7 +98,9 @@ public abstract class Hero extends DungeonCharacter {
      * Reduces cooldown for ultimate abilities.
      */
     public void reduceCooldown() {
-        myCDTimer--;
+        if (myCDTimer > 0) {
+            myCDTimer--;
+        }
     }
 
     /**
