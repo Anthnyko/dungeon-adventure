@@ -73,8 +73,8 @@ public abstract class Monster extends DungeonCharacter {
         if (!isAlive() || myHP == myMaxHP) {
             return;
         }
-        if (Math.random() < myHealChance) {
-            final int heal = myMinHeal + (int)(Math.random() * (myMaxHeal - myMinHeal + 1));
+        if (rng.nextDouble() < myHealChance) {
+            final int heal = myMinHeal + (int)(rng.nextDouble() * (myMaxHeal - myMinHeal + 1));
             if (heal + myHP > myMaxHP) {
                 myHP = myMaxHP;
             } else {

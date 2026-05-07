@@ -62,6 +62,7 @@ public class Warrior extends Hero {
             // restore original values
             myMinDamage = originalMin;
             myMaxDamage = originalMax;
+            myEnrageTimer--;
         } else {
             super.attack(theTarget);
         }
@@ -101,6 +102,9 @@ public class Warrior extends Hero {
         return "Enrage";
     }
 
+    /** Return Warrior's Enrage timer. */
+    public int getMyEnrageTimer() {return myEnrageTimer;}
+
     /**
      * Executes the Warrior's crushing blow ability.
      * Logic implemented in later iterations.
@@ -112,11 +116,11 @@ public class Warrior extends Hero {
             return;
         }
 
-        if (Math.random() < 0.40) {
+        if (rng.nextDouble() < 0.40) {
 
             System.out.println(getCharName() + " uses Crushing Blow!");
 
-            final int damage = myMinCrushDamage + (int)(Math.random() * (myMaxCrushDamage - myMinCrushDamage + 1));
+            final int damage = myMinCrushDamage + (int) (rng.nextDouble() * (myMaxCrushDamage - myMinCrushDamage + 1));
             theTarget.takeDamage(damage);
         } else {
             System.out.println(getCharName() + " failed to use Crushing Blow!");
@@ -125,6 +129,8 @@ public class Warrior extends Hero {
 
     /**
      * Executes the Warrior's enrage ability, used as the ultimate move.
+     *
+     * On successful attack, the enrage buff is decremented by 1.
      */
     private void enrage() {
         System.out.println(getCharName() + " becomes enraged!");

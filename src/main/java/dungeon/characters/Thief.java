@@ -91,18 +91,18 @@ public class Thief extends Hero {
             return;
         }
 
-        final double roll = Math.random();
+        final double roll = rng.nextDouble();
 
         if (roll < 0.40) {
             // 40%: Surprise success
             System.out.println(getCharName() + " performs a Surprise Attack! Extra turn gained!");
-            attack(theTarget); // one normal attack
+            singleAttack(theTarget);
             myExtraTurn = true;
 
         } else if (roll < 0.80) {
             // Next 40%: Normal attack, no extra turn
             System.out.println(getCharName() + " attempts a Surprise Attack but only lands a normal hit.");
-            attack(theTarget);
+            singleAttack(theTarget);
             myExtraTurn = false;
 
         } else {
