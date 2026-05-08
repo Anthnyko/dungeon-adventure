@@ -26,13 +26,7 @@ public class DungeonView {
     private static final String SEPERATOR_STRAIGHT = "----------------------------------------------";
     private static final String NEWLINE = System.lineSeparator();
 
-
-    public static void main(String[] args) {
-        DungeonView test = new DungeonView();
-        test.displayInGameMenu();
-    }
-
-    DungeonView() {
+    public DungeonView() {
         // Default constructor
     }
 
@@ -48,17 +42,19 @@ public class DungeonView {
             + NEWLINE
             + NEWLINE
             + TEXT_BLUE 
-            + "[P] Start a new game "
-            + "[L] Load a saved game "
-            + "[B] Help menu "
-            + "[Z] About"
+            + "[1] Start a new game "
+            + "[2] Load a saved game "
+            + "[3] Help menu "
+            + "[4] About "
+            + "[5] Quit "
             + TEXT_COLOR_RESET
             + NEWLINE
             + "> Enter choice: "
         );
     }
 
-    // ============================== Begin Main Menu display section ==============================
+    // ============================== End Main Menu display section ==============================
+
 
 
     // ============================== Begin Intro display section ==============================
@@ -76,7 +72,11 @@ public class DungeonView {
         );
     }
 
-    public final void displayHeroSelection() {
+    public final void promptDungeonDifficulty() {
+
+    }
+
+    public final void promptHeroSelection() {
         System.out.print(
             "Choose your hero:" 
             + NEWLINE 
@@ -98,6 +98,7 @@ public class DungeonView {
     // ============================== End Intro display section ==============================
 
 
+
     // ============================== Begin Game Loop display section ==============================
 
     public final void displayPlayerStatus(Hero theHero) {
@@ -105,7 +106,7 @@ public class DungeonView {
             SEPERATOR_STRAIGHT 
             + NEWLINE
             + TEXT_YELLOW + theHero.getCharName() + TEXT_COLOR_RESET + " | " // character name
-            + TEXT_GREEN + "HP: " + theHero.getHP() + theHero.getMaxHP() + TEXT_COLOR_RESET + " | " // Character hp count
+            + TEXT_GREEN + "HP: " + theHero.getHP() + "/" + theHero.getMaxHP() + TEXT_COLOR_RESET + " | " // Character hp count
             + TEXT_PURPLE + "Potions: Hx" + theHero.getHealingPotion() + " " 
             + "Vx" + theHero.getVisionPotion() + TEXT_COLOR_RESET + " | " // number of player hp potions and vision potions
             + TEXT_BLUE + "Pillars: " + TEXT_COLOR_RESET
@@ -135,6 +136,7 @@ public class DungeonView {
     }
 
     // ============================== End Game Loop display section ==============================
+
  
 
     // ============================== Begin Extra Room display section ==============================
@@ -170,6 +172,7 @@ public class DungeonView {
     // ============================== End Extra Room Display Section ==============================
 
 
+
     // ============================== Begin Combat Display Section ==============================
 
     public final void displayCombat() { //parameter/s: hero, monster
@@ -181,6 +184,7 @@ public class DungeonView {
     }
 
     // ==============================   End Combat Display Section   ==============================
+
 
 
     // ============================== Begin End Game Display Section ==============================
@@ -205,6 +209,8 @@ public class DungeonView {
     }
 
     // ==============================  End End Game Display Section  ==============================
+
+
 
     // ==============================  Begin Debug Display Section  ==============================
 

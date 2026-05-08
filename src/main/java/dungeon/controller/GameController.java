@@ -2,7 +2,6 @@ package dungeon.controller;
 
 import dungeon.model.characters.Monster;
 import dungeon.model.characters.Hero;
-
 import java.util.Scanner;
 
 /**
