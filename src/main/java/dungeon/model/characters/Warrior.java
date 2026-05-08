@@ -10,12 +10,22 @@ package dungeon.model.characters;
  * - crushingBlow: the Warrior's special skill
  * - enrage: the Warrior's ultimate cooldown ability
  *
- * Combat logic is added in future iterations.
- *
  * @author Anthony
  * @version 1.0
  */
 public class Warrior extends Hero {
+
+    /** Minimum damage the character can deal on Crushing Blow. */
+    protected int myMinCrushDamage;
+
+    /** Maximum damage the character can deal on Crushing Blow. */
+    protected int myMaxCrushDamage;
+
+    /** Tracks turn duration of Enrage. */
+    protected int myEnrageTimer;
+
+    /** Tracks Enrage buff. */
+    protected boolean myHasEnrage;
 
     /**
      * Constructs a new Warrior with predefined combat attributes.
@@ -31,6 +41,31 @@ public class Warrior extends Hero {
                 4,    // attack speed
                 0.8,  // hit chance
                 0.2); // block chance (or dodge if you keep it)
+        myMinCrushDamage = 75;
+        myMaxCrushDamage = 175;
+        myEnrageTimer = 0;
+        myHasEnrage = false;
+    }
+
+    @Override
+    public void attack(final DungeonCharacter theTarget) {
+        if (myEnrageTimer > 0) {
+            // temporarily boost damage
+            int originalMin = myMinDamage;
+            int originalMax = myMaxDamage;
+
+            myMinDamage += 10;
+            myMaxDamage += 10;
+
+            super.attack(theTarget);
+
+            // restore original values
+            myMinDamage = originalMin;
+            myMaxDamage = originalMax;
+            myEnrageTimer--;
+        } else {
+            super.attack(theTarget);
+        }
     }
 
     /**
@@ -52,8 +87,23 @@ public class Warrior extends Hero {
      */
     @Override
     public void bigCooldown(DungeonCharacter theTarget) {
-        enrage(theTarget);
+        enrage();
     }
+
+    /** Returns Warrior's special skill name. */
+    @Override
+    public String getSpecialSkillName() {
+        return "Crushing Blow";
+    }
+
+    /** Returns Warrior's ultimate skill name. */
+    @Override
+    public String getUltimateName() {
+        return "Enrage";
+    }
+
+    /** Return Warrior's Enrage timer. */
+    public int getMyEnrageTimer() {return myEnrageTimer;}
 
     /**
      * Executes the Warrior's crushing blow ability.
@@ -62,16 +112,30 @@ public class Warrior extends Hero {
      * @param theTarget the target of the crushing blow
      */
     private void crushingBlow(DungeonCharacter theTarget) {
-        // TODO: implement in later iteration.
+        if (theTarget == null || !theTarget.isAlive()) {
+            return;
+        }
+
+        if (rng.nextDouble() < 0.40) {
+
+            System.out.println(getCharName() + " uses Crushing Blow!");
+
+            final int damage = myMinCrushDamage + (int) (rng.nextDouble() * (myMaxCrushDamage - myMinCrushDamage + 1));
+            theTarget.takeDamage(damage);
+        } else {
+            System.out.println(getCharName() + " failed to use Crushing Blow!");
+        }
     }
 
     /**
-     * Executes the Warrior's enrage ability, used as the ultimate attack.
-     * Logic implemented in later iterations.
+     * Executes the Warrior's enrage ability, used as the ultimate move.
      *
-     * @param theTarget the target of the enrage attack
+     * On successful attack, the enrage buff is decremented by 1.
      */
-    private void enrage(DungeonCharacter theTarget) {
-        // TODO: implement in later iteration.
+    private void enrage() {
+        System.out.println(getCharName() + " becomes enraged!");
+
+        myEnrageTimer = 3;
+        myCDTimer = 4;
     }
 }

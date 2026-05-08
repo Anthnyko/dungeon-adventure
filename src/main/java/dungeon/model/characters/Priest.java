@@ -10,8 +10,6 @@ package dungeon.model.characters;
  * - heal: the Priest's special skill (typically self-targeted)
  * - smite: the Priest's ultimate cooldown ability
  *
- * Combat logic is added in future iterations.
- *
  * @author Anthony
  * @version 1.0
  */
@@ -36,12 +34,10 @@ public class Priest extends Hero {
     /**
      * Performs the Priest's special skill.
      * This method delegates to the private heal method.
-     *
-     * @param theTarget the target of the special skill
      */
     @Override
     public void specialSkill(DungeonCharacter theTarget) {
-        heal(theTarget);
+        heal();
     }
 
     /**
@@ -55,23 +51,47 @@ public class Priest extends Hero {
         smite(theTarget);
     }
 
+    /** Returns Priest's special skill name. */
+    @Override
+    public String getSpecialSkillName() {
+        return "Heal";
+    }
+
+    /** Returns Priest's ultimate skill name. */
+    @Override
+    public String getUltimateName() {
+        return "Smite";
+    }
+
     /**
      * Executes the Priest's healing ability.
-     * Logic implemented in later iterations.
-     *
-     * @param theTarget the target of heal
      */
-    private void heal(DungeonCharacter theTarget) {
-        // TODO: implement in later iteration.
+    private void heal() {
+        final int heal = 20;
+
+        if (heal + myHP > myMaxHP) {
+            myHP = myMaxHP;
+        } else {
+            myHP += heal;
+        }
+        System.out.println(myCharName + " casts heal!\n Regenerates " + heal + " health!");
     }
 
     /**
      * Executes the Priest's smite ability, used as the ultimate attack.
-     * Logic implemented in later iterations.
      *
      * @param theTarget the target of the smite attack
      */
     private void smite(DungeonCharacter theTarget) {
-        // TODO: implement in later iteration.
+        if (theTarget == null || !theTarget.isAlive()) {
+            return;
+        }
+
+        final int smiteDmg = 50;
+
+        System.out.println(myCharName + " casts smite!");
+        myCDTimer = 3;
+
+        theTarget.takeDamage(smiteDmg);
     }
 }

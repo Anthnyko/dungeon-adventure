@@ -1,5 +1,7 @@
 package dungeon.model.characters;
 
+import java.util.Random;
+
 /**
  * Abstract base class representing any character in the dungeon.
  * Both heroes and monsters share these core combat attributes.
@@ -33,6 +35,9 @@ public abstract class DungeonCharacter {
     /** Probability that the character successfully lands an attack. */
     protected double myHitChance;
 
+    /** Rolls random value for abilities. */
+    protected Random rng = new Random();
+
 
     /**
      * Constructs a new DungeonCharacter with the given combat attributes.
@@ -60,11 +65,51 @@ public abstract class DungeonCharacter {
     /**
      * Performs an attack on the target character.
      *
-     * @param target the character being attacked
+     * @param theTarget the character being attacked
      */
-    public void attack(DungeonCharacter target) {
-        // TODO: implement in later iteration.
+    public void attack(DungeonCharacter theTarget) {
+        if (theTarget == null || !theTarget.isAlive()) {
+            return;
+        }
+
+        int numAttacks = myAttackSpeed / theTarget.myAttackSpeed;
+        if (numAttacks < 1) numAttacks = 1;
+
+        for (int i = 0; i < numAttacks; i++) {
+            if (rng.nextDouble() < myHitChance) {
+                final int damage = myMinDamage + (int)(rng.nextDouble() * (myMaxDamage - myMinDamage + 1));
+                theTarget.takeDamage(damage);
+                System.out.println(myCharName + " attacks " + theTarget.getCharName() + " for " + damage + " damage!");
+            } else {
+                System.out.println(myCharName + " misses " + theTarget.myCharName + "...");
+            }
+
+            if (!theTarget.isAlive()) {
+                break;
+            }
+        }
+
     }
+
+    /**
+     * Performs a single basic attack against the specified target.
+     * This method applies hit chance and damage calculation but does
+     * not use attack‑speed–based multi‑attack logic. It is intended
+     * for hero abilities that require exactly one attack.
+     *
+     * @param theTarget the character being attacked
+     */
+    public void singleAttack(DungeonCharacter theTarget) {
+        if (!isAlive() || theTarget == null || !theTarget.isAlive()) {
+            return;
+        }
+
+        if (rng.nextDouble() < myHitChance) {
+            int dmg = myMinDamage + rng.nextInt(myMaxDamage - myMinDamage + 1);
+            theTarget.takeDamage(dmg);
+        }
+    }
+
 
     /**
      * Determines whether the character is still alive.
@@ -72,8 +117,7 @@ public abstract class DungeonCharacter {
      * @return true if HP is above zero, false otherwise
      */
     public boolean isAlive() {
-        // TODO: implement in later iteration.
-        return false;
+        return myHP > 0;
     }
 
     /**
@@ -82,8 +126,18 @@ public abstract class DungeonCharacter {
      * @param damage the amount of damage taken
      */
     public void takeDamage(int damage) {
-        // TODO: implement in later iteration.
+        myHP -= damage;
+        if (myHP <= 0) {
+            myHP = 0;
+        }
+        System.out.println(myCharName + " takes " + damage + " damage! (HP: " + myHP + ")");
     }
+
+    /**
+     * Displays current combat status, including HP, potions,
+     * cooldown timers, and any other relevant combat information.
+     */
+    public abstract void displayStatus();
 
     /** @return the character's name */
     public String getCharName() {

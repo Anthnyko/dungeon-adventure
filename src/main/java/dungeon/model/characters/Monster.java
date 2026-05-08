@@ -35,6 +35,9 @@ public abstract class Monster extends DungeonCharacter {
     /** Tracks the number of turns remaining for bleed damage effects. */
     protected int myBleedTimer;
 
+    /** Amount of bleed damage per tick. */
+    protected final int myBleedDamage = 5;
+
     /**
      * Constructs a Monster with predefined combat and healing attributes.
      *
@@ -62,12 +65,61 @@ public abstract class Monster extends DungeonCharacter {
     }
 
     /**
-     * Attempts to heal the monster. Actual healing logic is implemented
-     * in later iterations. This method will be called during combat
+     * Attempts to heal the monster.
+     * This method will be called during combat
      * after the monster takes damage.
      */
     public void heal() {
-        // TODO: implement in later iteration.
+        if (!isAlive() || myHP == myMaxHP) {
+            return;
+        }
+        if (rng.nextDouble() < myHealChance) {
+            final int heal = myMinHeal + (int)(rng.nextDouble() * (myMaxHeal - myMinHeal + 1));
+            if (heal + myHP > myMaxHP) {
+                myHP = myMaxHP;
+            } else {
+                myHP += heal;
+            }
+            System.out.println(myCharName + " regenerates " + heal + " health!");
+        }
+    }
+
+    /**
+     * Applies a bleed effect to this monster for the given number of turns.
+     *
+     * @param theTimer number of turns the bleed should last
+     */
+    public void applyBleed(final int theTimer) {
+        myBleedTimer = theTimer;
+        System.out.println(myCharName + " starts bleeding!");
+    }
+
+    /**
+     * Processes bleed damage at the start of the monster's turn.
+     * Deals damage and reduces the bleed timer.
+     */
+    public void processBleed() {
+        if (myBleedTimer > 0) {
+            takeDamage(myBleedDamage);
+            myBleedTimer--;
+
+            System.out.println(myCharName + " takes " + myBleedTimer + " bleed damage!");
+
+            if (!isAlive()) {
+                System.out.println(myCharName + " dies from bleeding!");
+            }
+        }
+    }
+
+    /**
+     * Displays the monster's current combat status, including HP.
+     */
+    @Override
+    public void displayStatus() {
+        System.out.println("=== MONSTER STATUS ===");
+        System.out.println("Name: " + myCharName);
+        System.out.println("HP: " + myHP + "/" + myMaxHP);
+        System.out.println("====================");
     }
 
     /**
