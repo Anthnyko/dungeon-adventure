@@ -226,6 +226,15 @@ public class Dungeon {
     }
 
     /**
+     * Returns the room at the given row and column
+     *
+     * @return the room at the given row and column
+     */
+    public Room getRoom(int theRow, int theCol) {
+        return myRooms[theRow][theCol];
+    }
+
+    /**
      * Returns a string representation of the entire dungeon.
      *
      * @return the full dungeon as a formatted string

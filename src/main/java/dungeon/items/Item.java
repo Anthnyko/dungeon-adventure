@@ -1,5 +1,7 @@
 package dungeon.items;
 
+import dungeon.characters.Hero;
+
 /**
  * Abstract item class
  *
@@ -9,7 +11,7 @@ package dungeon.items;
 public abstract class Item {
 
     /**
-     * Applies the effect of the item onto the player
+     * Applies the effect of the item onto the hero
      */
     public abstract void applyEffect();
 

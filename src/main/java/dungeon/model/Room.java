@@ -160,11 +160,23 @@ public class Room {
     public boolean hasPillar() {return hasPillar;}
 
     /**
+     * @return true if the room has a pit
+     */
+    public boolean hasPit() {return hasPit;}
+
+    /**
+     * @return true if the room has items
+     */
+    public boolean hasItems() {
+        return !myItems.isEmpty();
+    }
+
+    /**
      * Removes the list of items in the room and returns them
      * @return A list of all the items in the room
      */
     public List<Item> pickUpItems() {
-        List<Item> items = new ArrayList<>();
+        List<Item> items = new ArrayList<>(myItems);
         myItems.clear();
         return items;
     }
@@ -179,6 +191,32 @@ public class Room {
         char temp = pillarType;
         pillarType = ' '; //So a pillar is not shown in the room anymore
         return temp;
+    }
+
+    /**
+     * Gives the amount of damage this rooms pit will do
+     *
+     * @return the amount of damage the pit will do
+     */
+    public int triggerPitDamage() {
+        if (!hasPit) return 0;
+
+        hasPit = false;
+        return myRandom.nextInt(20) +1;
+    }
+
+    /**
+     * Adds an item to the room
+     */
+    public void addItem(Item theItem) {
+        myItems.add(theItem);
+    }
+
+    /**
+     * Sets if this room has a pit or not
+     */
+    public void setPit(boolean value) {
+        hasPit = value;
     }
 
     /**
@@ -210,11 +248,16 @@ public class Room {
     private char getRoomSymbol() {
         if (myEntrance) return 'i';
         if (myExit) return 'O';
+
+        int count = 0;
+        if (hasPit) count++;
+        if (hasPillar) count++;
+        count += myItems.size();
+
+        if (count > 1) return 'M';
+
         if (hasPillar) return pillarType;
-
         if (hasPit) return 'X';
-
-        if(myItems.size() > 1) return 'M';
         if(myItems.size() == 1) return myItems.getFirst().getSymbol();
 
         return ' ';
@@ -222,6 +265,7 @@ public class Room {
 
     private void clearRoom() {
         myItems.clear();
+        hasPit = false;
     }
 
     private void generateRandomItems() {
