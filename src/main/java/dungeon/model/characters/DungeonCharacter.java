@@ -1,4 +1,4 @@
-package dungeon.characters;
+package dungeon.model.characters;
 
 import java.util.Random;
 

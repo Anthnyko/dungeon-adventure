@@ -1,4 +1,4 @@
-package dungeon.characters;
+package dungeon.model.characters;
 
 /**
  * The Skeleton class represents a balanced Monster type in the dungeon.

@@ -1,12 +1,12 @@
 package dungeon.model;
 
-import dungeon.items.Item;
-import dungeon.items.HealingPotion;
-import dungeon.items.VisionPotion;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import dungeon.model.items.HealingPotion;
+import dungeon.model.items.Item;
+import dungeon.model.items.VisionPotion;
 
 /**
  * Represents a single room in the dungeon

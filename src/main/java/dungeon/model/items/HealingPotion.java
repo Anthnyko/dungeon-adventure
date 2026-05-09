@@ -1,4 +1,4 @@
-package dungeon.items;
+package dungeon.model.items;
 
 import dungeon.characters.Hero;
 
