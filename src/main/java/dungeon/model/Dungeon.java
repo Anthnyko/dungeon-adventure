@@ -12,7 +12,7 @@ import java.util.*;
  * Keeping track of the hero
  *
  * @author Ibrahim Mohamud
- * @version 1.0
+ * @version 1.1
  */
 public class Dungeon {
     /** The 2D grid of rooms that make up the dungeon */
@@ -47,15 +47,15 @@ public class Dungeon {
      * Constructs a new dungeon given the dimensions and name then
      * generates a valid maze.
      *
-     * @param width the number of columns in the dungeon
-     * @param height the number of rows in the dungeon
-     * @param name the name of the dungeon
+     * @param theWidth the number of columns in the dungeon
+     * @param theHeight the number of rows in the dungeon
+     * @param theName the name of the dungeon
      */
-    public Dungeon(int width, int height, String name) {
+    public Dungeon(int theWidth, int theHeight, String theName) {
         myRandom = new Random();
-        myWidth = width;
-        myHeight = height;
-        myName = name;
+        myWidth = theWidth;
+        myHeight = theHeight;
+        myName = theName;
 
         mazeGeneration();
     }
@@ -70,6 +70,7 @@ public class Dungeon {
             myHeroRow = myEntranceRow;
             myHeroCol = myEntranceCol;
             myRooms[myEntranceRow][myEntranceCol].setEntrance();
+            myRooms[myEntranceRow][myEntranceCol].setRevealed(true); //sets the entrance room as revealed
 
             //Pick exit
             do {
@@ -83,6 +84,7 @@ public class Dungeon {
         } while (!isValidMaze());
 
         placePillars();
+        placeFountains();
     }
 
     private void initializeRooms() {
@@ -137,7 +139,7 @@ public class Dungeon {
         return true;
     }
 
-    private void placePillars(){
+    private void placePillars() {
         char[] pillars = {'A', 'E', 'I', 'P'};
 
         for (char pillar : pillars) {
@@ -151,21 +153,39 @@ public class Dungeon {
         }
     }
 
-    private boolean isSpecialRoom(int row, int col) {
-        Room room = myRooms[row][col];
-        return room.isEntrance() || room.isExit() || room.hasPillar();
+    private void placeFountains() {
+        int count = 2; //for now just have 2 fountains in the dungeon
+
+        for (int i = 0; i < count; i++) {
+            int row, col;
+            do {
+                row = myRandom.nextInt(myHeight);
+                col = myRandom.nextInt(myWidth);
+            } while (isSpecialRoom(row, col));
+
+            myRooms[row][col].setFountain(true);
+        }
+    }
+
+    private void placeMonsters() {
+        //Future implementation
+    }
+
+    private boolean isSpecialRoom(int theRow, int theCol) {
+        Room room = myRooms[theRow][theCol];
+        return room.isEntrance() || room.isExit() || room.hasPillar() || room.hasFountain();
     }
 
     // to prevent door mismatches between rooms
-    private void connectSouth(int row, int col) {
-        if (row >= myHeight - 1) return;
-        myRooms[row][col].setSouthDoor(true);
-        myRooms[row+1][col].setNorthDoor(true);
+    private void connectSouth(int theRow, int theCol) {
+        if (theRow >= myHeight - 1) return;
+        myRooms[theRow][theCol].setSouthDoor(true);
+        myRooms[theRow+1][theCol].setNorthDoor(true);
     }
-    private void connectEast(int row, int col) {
-        if (col >= myWidth - 1) return;
-        myRooms[row][col].setEastDoor(true);
-        myRooms[row][col+1].setWestDoor(true);
+    private void connectEast(int theRow, int theCol) {
+        if (theCol >= myWidth - 1) return;
+        myRooms[theRow][theCol].setEastDoor(true);
+        myRooms[theRow][theCol+1].setWestDoor(true);
     }
 
     /**
@@ -195,6 +215,7 @@ public class Dungeon {
             default:
                 return false;
         }
+        getCurrentRoom().setRevealed(true);
         return true;
     }
 
@@ -226,7 +247,25 @@ public class Dungeon {
     }
 
     /**
-     * Returns the room at the given row and column
+     * Returns true or false if the hero is in the exit room or not.
+     *
+     * @return true if the hero is in the exit room, false otherwise
+     */
+    public boolean isExitReached() {
+        return getCurrentRoom().isExit();
+    }
+
+    /**
+     * Returns true or false if the hero is in a pillar room or not.
+     *
+     * @return true if the hero is in a pillar room, false otherwise
+     */
+    public boolean isPillarReached() {
+        return getCurrentRoom().hasPillar();
+    }
+
+    /**
+     * Returns the room at the given row and column.
      *
      * @return the room at the given row and column
      */
@@ -235,12 +274,68 @@ public class Dungeon {
     }
 
     /**
-     * Returns a string representation of the entire dungeon.
+     * Reveals the contents of the rooms surrounding the current room.
+     * Sets the surrounding rooms revealed as true.
+     */
+    public void revealSurroundingRooms() {
+        for (int row = myHeroRow - 1; row <= myHeroRow + 1; row++) {
+            for (int col = myHeroCol - 1; col <= myHeroCol + 1; col++) {
+                if (isInBounds(row, col)) {
+                    myRooms[row][col].setRevealed(true);
+                }
+            }
+        }
+    }
+    //helper for getSurroundingRooms()
+    private boolean isInBounds(int theRow, int theCol) {
+        return theRow >= 0 && theRow < myHeight && theCol >= 0 && theCol < myWidth;
+    }
+
+    /**
+     * Returns a string representation of the dungeon, hiding unrevealed rooms.
      *
-     * @return the full dungeon as a formatted string
+     * @return the dungeon as a formatted string
      */
     @Override
     public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        for (int row = 0; row < myHeight; row++) {
+
+            StringBuilder top = new StringBuilder();
+            StringBuilder mid = new StringBuilder();
+            StringBuilder bot = new StringBuilder();
+
+            for (int col = 0; col < myWidth; col++) {
+
+                if (!myRooms[row][col].isRevealed()) {
+                    top.append("??? ");
+                    mid.append("??? ");
+                    bot.append("??? ");
+                    continue;
+                }
+
+                String[] parts = myRooms[row][col].toString().split("\n");
+
+                top.append(parts[0]).append(" ");
+                mid.append(parts[1]).append(" ");
+                bot.append(parts[2]).append(" ");
+            }
+
+            sb.append(top).append("\n");
+            sb.append(mid).append("\n");
+            sb.append(bot).append("\n");
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * Returns a string representation of the entire dungeon revealed.
+     *
+     * @return the fully revealed dungeon as a formatted string
+     */
+    public String toStringFullDungeon() {
         StringBuilder sb = new StringBuilder();
 
         for (int row = 0; row < myHeight; row++) {

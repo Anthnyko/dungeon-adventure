@@ -1,6 +1,5 @@
 package dungeon.model.items;
 
-import dungeon.characters.Hero;
 
 /**
  * Abstract item class

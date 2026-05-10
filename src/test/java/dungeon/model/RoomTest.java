@@ -1,6 +1,8 @@
 package dungeon.model;
 
-import dungeon.items.HealingPotion;
+import dungeon.model.characters.Hero;
+import dungeon.model.characters.Warrior;
+import dungeon.model.items.HealingPotion;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -52,10 +54,11 @@ public class RoomTest {
     @Test
     public void testTriggerPit() {
         Room room = new Room();
+        Warrior warrior = new Warrior("test");
         room.setPit(true);
 
-        int damage1 = room.triggerPitDamage();
-        int damage2 = room.triggerPitDamage(); //To test that the trap can't be triggered twice
+        int damage1 = room.triggerPitDamage(warrior);
+        int damage2 = room.triggerPitDamage(warrior); //To test that the trap can't be triggered twice
 
         assertTrue(damage1 >= 0);
         assertEquals(0, damage2);

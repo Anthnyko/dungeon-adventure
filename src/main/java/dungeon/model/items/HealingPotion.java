@@ -1,6 +1,6 @@
 package dungeon.model.items;
 
-import dungeon.characters.Hero;
+
 
 public class HealingPotion extends Item{
 
