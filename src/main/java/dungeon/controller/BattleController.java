@@ -1,6 +1,7 @@
 package dungeon.controller;
 
 import dungeon.model.characters.Monster;
+import dungeon.view.DungeonView;
 import dungeon.model.characters.Hero;
 import java.util.Scanner;
 
@@ -10,7 +11,7 @@ import java.util.Scanner;
  * bleed processing, and win/lose detection. It acts as the combat subsystem
  * controller and is invoked by the main game controller when combat begins.
  */
-public class GameController {
+public class BattleController {
 
     /** The hero participating in the battle. */
     private final Hero myHero;
@@ -21,6 +22,10 @@ public class GameController {
     /** Tracks whether the battle has ended. */
     private boolean myBattleOver;
 
+    private int myRound;
+
+    private final DungeonView myDungeonView;
+
     /**
      * Constructs a GameController to manage a combat encounter between
      * the given hero and monster.
@@ -28,10 +33,16 @@ public class GameController {
      * @param theHero the hero controlled by the player
      * @param theMonster the monster the hero is fighting
      */
-    public GameController(final Hero theHero, final Monster theMonster) {
+    public BattleController(final Hero theHero, final Monster theMonster) {
         myHero = theHero;
         myMonster = theMonster;
         myBattleOver = false;
+        myRound = 1;
+        myDungeonView = new DungeonView();
+    }
+
+    public int getMyRound() {
+        return myRound;
     }
 
     /**
@@ -42,6 +53,7 @@ public class GameController {
         System.out.println("A wild " + myMonster.getCharName() + " appears!");
 
         while (!myBattleOver) {
+            myDungeonView.displayCombatRound(myRound);
             heroTurn();
             if (isBattleOver()) break;
 
@@ -49,6 +61,7 @@ public class GameController {
             if (isBattleOver()) break;
 
             processEndOfRoundEffects();
+            myRound++;
         }
     }
 
@@ -58,24 +71,23 @@ public class GameController {
      * @return the validated action choice entered by the player
      */
     private int getHeroActionChoice() {
-        Scanner sc = new Scanner(System.in);
+        final Scanner sc = new Scanner(System.in);
         int choice = -1;
 
         while (choice < 1 || choice > 4) {
-            System.out.println("\nChoose an action:");
-            System.out.println("1. Basic Attack");
-            System.out.println("2. Special Skill");
-            System.out.println("3. Ultimate");
-            System.out.print("Enter choice: ");
+            try {
+                myDungeonView.promptActionChoice(myHero);
+                final String input = sc.nextLine().trim();
+                choice = Integer.parseInt(input);
 
-            if (sc.hasNextInt()) {
-                choice = sc.nextInt();
-            } else {
-                sc.next(); // consume invalid token
-                System.out.println("Invalid input. Please enter a number 1–3.");
+                if (choice < 1 || choice > 4) {
+                    System.out.println("Invalid input: Please enter a choice between 1-4.");
+                }
+            } catch (final NumberFormatException e) {
+                System.out.println("Invalid input: Please enter a number between 1-4.");
             }
         }
-
+        sc.close();
         return choice;
     }
 
@@ -89,7 +101,7 @@ public class GameController {
         myHero.displayStatus();
         myMonster.displayStatus();
 
-        int choice = getHeroActionChoice();
+        final int choice = getHeroActionChoice();
         myHero.performAction(choice, myMonster);
 
         // Extra turn mechanic (Thief only)
