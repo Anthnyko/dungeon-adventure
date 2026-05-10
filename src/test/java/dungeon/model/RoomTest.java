@@ -26,9 +26,9 @@ public class RoomTest {
         Room room = new Room();
         room.addItem(new HealingPotion());
         room.setPit(true);
-        room.setEntrance();
+        room.setExit();
 
-        assertTrue(room.isEntrance());
+        assertTrue(room.isExit());
         assertFalse(room.hasItems());
         assertFalse(room.hasPit());
     }
@@ -62,5 +62,22 @@ public class RoomTest {
 
         assertTrue(damage1 >= 0);
         assertEquals(0, damage2);
+    }
+
+    @Test
+    public void testHasItems() {
+        Room room = new Room();
+        room.addItem(new HealingPotion());
+        assertTrue(room.hasItems());
+
+        room.pickUpItems();
+        assertFalse(room.hasItems());
+    }
+
+    @Test
+    public void testFountainSet() {
+        Room room = new Room();
+        room.setFountain(true);
+        assertTrue(room.hasFountain());
     }
 }

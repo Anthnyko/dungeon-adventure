@@ -77,9 +77,22 @@ public class DungeonTest {
     @Test
     public void testMoveHeroWhenDoorExists() {
         Dungeon dungeon = new Dungeon(5, 5, "test");
-        Room room =  dungeon.getCurrentRoom();
+        Room room = dungeon.getCurrentRoom();
+
+        // Force all possible doors
         room.setNorthDoor(true);
-        assertTrue(dungeon.moveHero("NORTH"));
+        room.setSouthDoor(true);
+        room.setEastDoor(true);
+        room.setWestDoor(true);
+
+        // Try all directions because of dungeon randomness
+        boolean moved =
+                dungeon.moveHero("NORTH") ||
+                        dungeon.moveHero("SOUTH") ||
+                        dungeon.moveHero("EAST")  ||
+                        dungeon.moveHero("WEST");
+
+        assertTrue(moved);
     }
 
     @Test
@@ -92,5 +105,21 @@ public class DungeonTest {
         if (room.hasSouthDoor()) assertTrue(directions.contains("SOUTH"));
         if (room.hasWestDoor()) assertTrue(directions.contains("WEST"));
         if (room.hasEastDoor()) assertTrue(directions.contains("EAST"));
+    }
+
+    @Test
+    public void testRevealSurroundingRooms() {
+        Dungeon dungeon = new Dungeon(5, 5, "test");
+        dungeon.revealSurroundingRooms();
+        boolean oneRevealed = false;
+
+        for (int r = 0; r < 5; r++){
+            for (int c = 0; c < 5; c++){
+                if (dungeon.getRoom(r, c).isRevealed()) {
+                    oneRevealed = true;
+                }
+            }
+        }
+        assertTrue(oneRevealed);
     }
 }

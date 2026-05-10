@@ -197,19 +197,19 @@ public class Dungeon {
     public boolean moveHero(String theDirection){
         switch (theDirection.toUpperCase()){
             case "NORTH":
-                if (!getCurrentRoom().hasNorthDoor()) return false;
+                if (!getCurrentRoom().hasNorthDoor() || myHeroRow <= 0) return false;
                 myHeroRow--;
                 break;
             case "SOUTH":
-                if (!getCurrentRoom().hasSouthDoor()) return false;
+                if (!getCurrentRoom().hasSouthDoor() || myHeroRow >= myHeight) return false;
                 myHeroRow++;
                 break;
             case "EAST":
-                if (!getCurrentRoom().hasEastDoor()) return false;
+                if (!getCurrentRoom().hasEastDoor() || myHeroCol >= myWidth) return false;
                 myHeroCol++;
                 break;
             case "WEST":
-                if (!getCurrentRoom().hasWestDoor()) return false;
+                if (!getCurrentRoom().hasWestDoor() || myHeroCol <= 0) return false;
                 myHeroCol--;
                 break;
             default:
