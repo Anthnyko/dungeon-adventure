@@ -77,6 +77,7 @@ public abstract class Hero extends DungeonCharacter {
         final int healPotionValue = 20;
         if (myHealingPotions <= 0) {
             System.out.println("You have no healing potions!");
+            return;
         }
         myHealingPotions--;
         if (healPotionValue + myHP > myMaxHP) {
@@ -91,7 +92,13 @@ public abstract class Hero extends DungeonCharacter {
      * Uses a vision potion if available.
      */
     public void useVisionPotion() {
-        // TODO: implement in later iteration.
+        if (myVisionPotions <= 0) {
+            System.out.println("You have no vision potions!");
+            return;
+        }
+        myVisionPotions--;
+
+        System.out.println("You used a vision potion! The surrounding area becomes clear.");
     }
 
     /**
