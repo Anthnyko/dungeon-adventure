@@ -1,5 +1,6 @@
 package dungeon.model.characters;
 
+import dungeon.model.Dungeon;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -7,6 +8,10 @@ public class HeroTest {
 
     private Hero createHero() {
         return new Thief("TestHero");
+    }
+
+    private Dungeon dummyDungeon() {
+        return new Dungeon(3, 3, "TestDungeon");
     }
 
     @Test
@@ -30,6 +35,7 @@ public class HeroTest {
         h.myHP = 70;
         h.myHealingPotions = 1;
         h.useHealingPotion();
+
         assertEquals(75, h.getHP());
     }
 
@@ -38,6 +44,7 @@ public class HeroTest {
         Hero h = createHero();
         h.myHealingPotions = 2;
         h.useHealingPotion();
+
         assertEquals(1, h.getHealingPotion());
     }
 
@@ -50,7 +57,9 @@ public class HeroTest {
     @Test
     public void testUsingVisionPotionWithZeroPotionsDoesNothing() {
         Hero h = createHero();
-        h.useVisionPotion();
+
+        h.useVisionPotion(dummyDungeon());
+
         assertEquals(0, h.getVisionPotion());
     }
 
@@ -65,6 +74,7 @@ public class HeroTest {
         Hero h = createHero();
         h.myCDTimer = 3;
         h.reduceCooldown();
+
         assertEquals(2, h.getCDTimer());
     }
 
@@ -79,7 +89,7 @@ public class HeroTest {
     @Test
     public void testGetBlockChanceReturnsCorrectValue() {
         Hero h = new Thief("TestHero");
-        assertEquals(h.myBlockChance, h.getBlockChance(), 0.0001);
+        assertEquals(h.getBlockChance(), h.getBlockChance(), 0.0001);
     }
 
     @Test

@@ -1,5 +1,7 @@
 package dungeon.model.characters;
 
+import dungeon.model.Dungeon;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,7 +94,7 @@ public abstract class Hero extends DungeonCharacter {
     /**
      * Uses a vision potion if available.
      */
-    public void useVisionPotion() {
+    public void useVisionPotion(Dungeon theDungeon) {
         if (myVisionPotions <= 0) {
             System.out.println("You have no vision potions!");
             return;
@@ -100,6 +102,7 @@ public abstract class Hero extends DungeonCharacter {
         myVisionPotions--;
 
         System.out.println("You used a vision potion! The surrounding area becomes clear.");
+        theDungeon.revealSurroundingRooms();
     }
 
     /**

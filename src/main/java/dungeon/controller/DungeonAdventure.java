@@ -180,7 +180,7 @@ public final class DungeonAdventure {
         } else if(thePlayerChoice == 'H') {
             myHero.useHealingPotion();
         } else if(thePlayerChoice == 'V') {
-            myHero.useVisionPotion();
+            myHero.useVisionPotion(myDungeon);
         } else if(thePlayerChoice == 'B') {
             // TODO: implement help menu
         } else if(thePlayerChoice == 'Q') {
