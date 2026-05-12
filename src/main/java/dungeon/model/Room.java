@@ -60,7 +60,7 @@ public class Room {
     private char myPillarType; //put the letter of the pillar 'A', 'E', 'I', 'P'
 
     /** The list of items this room contains */
-    private List<Item> myItems;
+    private final List<Item> myItems;
 
     /** The chance that each item or event has to be placed */
     public int myChance = 10;//Players luck maybe?
@@ -91,25 +91,25 @@ public class Room {
      * Sets whether the room has a door to the north
      * @param theValue true if there is a door, false if not
      */
-    public void setNorthDoor(boolean theValue) { myNorthDoor = theValue;}
+    public void setNorthDoor(final boolean theValue) { myNorthDoor = theValue;}
 
     /**
      * Sets whether the room has a door to the east
      * @param theValue true if there is a door, false if not
      */
-    public void setEastDoor(boolean theValue) { myEastDoor = theValue;}
+    public void setEastDoor(final boolean theValue) { myEastDoor = theValue;}
 
     /**
      * Sets whether the room has a door to the west
      * @param theValue true if there is a door, false if not
      */
-    public void setWestDoor(boolean theValue) { myWestDoor = theValue;}
+    public void setWestDoor(final boolean theValue) { myWestDoor = theValue;}
 
     /**
      * Sets whether the room has a door to the south
      * @param theValue true if there is a door, false if not
      */
-    public void setSouthDoor(boolean theValue) { mySouthDoor = theValue;}
+    public void setSouthDoor(final boolean theValue) { mySouthDoor = theValue;}
 
     /**
      * Marks this room as the entrance.
@@ -132,7 +132,7 @@ public class Room {
     /**
      * Marks this room as revealed
      */
-    public void setRevealed(boolean theValue) {
+    public void setRevealed(final boolean theValue) {
         myRevealed = theValue;
     }
 
@@ -140,7 +140,7 @@ public class Room {
      * Places a pillar in this room.
      * @param thePillarType the type of the pillar ('A', 'E', 'I', 'P')
      */
-    public void setPillar(char thePillarType) {
+    public void setPillar(final char thePillarType) {
         myPillar = true;
         myPillarType = thePillarType;
     }
@@ -148,7 +148,7 @@ public class Room {
     /**
      * Places a fountain of chance in this room.
      */
-    public void setFountain(boolean theValue) {
+    public void setFountain(final boolean theValue) {
         myFountain = theValue;
     }
 
@@ -156,7 +156,7 @@ public class Room {
      * Places a monster in this room.
      * @param theMonster monster placed in this room
      */
-    public void setMonster(Monster theMonster) {
+    public void setMonster(final Monster theMonster) {
         myMonster = theMonster;
     }
 
@@ -229,7 +229,7 @@ public class Room {
      * @return A list of all the items in the room
      */
     public List<Item> pickUpItems() {
-        List<Item> items = new ArrayList<>(myItems);
+        final List<Item> items = new ArrayList<>(myItems);
         myItems.clear();
         return items;
     }
@@ -241,7 +241,7 @@ public class Room {
     public char pickUpPillar() {
         if (!myPillar) return ' ';
         myPillar = false;
-        char temp = myPillarType;
+        final char temp = myPillarType;
         myPillarType = ' '; //So a pillar is not shown in the room anymore
         return temp;
     }
@@ -252,10 +252,10 @@ public class Room {
      * @param theHero the hero to apply the pit damage on
      * @return the amount of damage the pit did
      */
-    public int triggerPitDamage(Hero theHero) {
+    public int triggerPitDamage(final Hero theHero) {
         if (!myPit) return 0;
 
-        int damage = myRandom.nextInt(20) + 1;
+        final int damage = myRandom.nextInt(20) + 1;
         theHero.takeDamage(damage);
         myPit = false;
         return damage;
@@ -267,9 +267,9 @@ public class Room {
      * @param theHero the hero to heal
      * @return the amount of health healed
      */
-    public int activateFountainHeal(Hero theHero) {
+    public int activateFountainHeal(final Hero theHero) {
         // Implement in later iteration
-        int heal = 40;
+        final int heal = 40;
         if (heal + theHero.getHP() > theHero.getMaxHP()) {
             //Need a way to set the heroes hp
         }
@@ -279,14 +279,14 @@ public class Room {
     /**
      * Adds an item to the room
      */
-    public void addItem(Item theItem) {
+    public void addItem(final Item theItem) {
         myItems.add(theItem);
     }
 
     /**
      * Sets if this room has a pit or not
      */
-    public void setPit(boolean theValue) {
+    public void setPit(final boolean theValue) {
         myPit = theValue;
     }
 
@@ -300,7 +300,7 @@ public class Room {
     @Override
     public String toString() {
 
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
         // Top row
         sb.append(myNorthDoor ? "*-*" : "***").append("\n");
@@ -347,4 +347,7 @@ public class Room {
         if (myRandom.nextInt(100) < myChance) myItems.add(new VisionPotion());
     }
 
+    public Monster getMonster() {
+        return myMonster;
+    }
 }

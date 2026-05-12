@@ -360,4 +360,7 @@ public class Dungeon {
         return sb.toString();
     }
 
+    public String getMyName() {
+        return myName;
+    }
 }
