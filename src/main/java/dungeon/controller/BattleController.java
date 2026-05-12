@@ -22,10 +22,20 @@ public class BattleController {
     /** Tracks whether the battle has ended. */
     private boolean myBattleOver;
 
+    /** Tracks round number during combat. */
     private int myRound;
 
+    /**
+     * Handles all combat-related text output, including round banners,
+     * action prompts, and status displays for both the hero and monster.
+     * This view is created at the start of each battle and used throughout
+     * the combat loop to present information to the player.
+     */
     private DungeonView myDungeonView;
 
+    /**
+     * Shared Scanner instance used to read player input during combat.
+     */
     private final Scanner myScanner = new Scanner(System.in);
 
 
