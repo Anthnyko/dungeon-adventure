@@ -118,6 +118,14 @@ public abstract class Hero extends DungeonCharacter {
     }
 
     /**
+     * Reduces all ability cooldowns by 1, to be used outside combat
+     * (e.g., when moving between rooms).
+     */
+    public void tickCooldowns() {
+        reduceCooldown(); // You already have this method
+    }
+
+    /**
      * Resets temporary combat-only status effects.
      * Called after combat ends.
      */

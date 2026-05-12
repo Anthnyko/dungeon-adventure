@@ -81,6 +81,40 @@ public class BattleController {
     }
 
     /**
+     * Returns whether the hero is still alive.
+     * This is a convenience wrapper used by external systems
+     * (such as DungeonAdventure) to check combat outcome without
+     * directly accessing the hero object.
+     *
+     * @return true if the hero's HP is above zero, false otherwise
+     */
+    public boolean heroIsAlive() {
+        return myHero.isAlive();
+    }
+
+    /**
+     * Returns whether the monster is still alive.
+     * This safely checks for null in case the monster has been removed
+     * from the room after combat or was never assigned.
+     *
+     * @return true if a monster exists and its HP is above zero, false otherwise
+     */
+    public boolean monsterIsAlive() {
+        return myMonster != null && myMonster.isAlive();
+    }
+
+    /**
+     * Returns a compact summary of the battle outcome.
+     * Useful for DungeonAdventure to display after combat ends.
+     */
+    public String getCombatSummary() {
+        if (!myHero.isAlive()) {
+            return "Hero defeated by " + myMonster.getCharName();
+        }
+        return "Hero defeated " + myMonster.getCharName();
+    }
+
+    /**
      * Prompts the player to choose a combat action using a Scanner.
      *
      * @return the validated action choice entered by the player
