@@ -1,4 +1,4 @@
-package dungeon.characters;
+package dungeon.model.characters;
 
 /**
  * Represents the special mini‑boss monster that guards each Pillar
