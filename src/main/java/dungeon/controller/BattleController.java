@@ -26,6 +26,9 @@ public class BattleController {
 
     private DungeonView myDungeonView;
 
+    private final Scanner myScanner = new Scanner(System.in);
+
+
     /**
      * Constructs a GameController to manage a combat encounter between
      * the given hero and monster.
@@ -73,13 +76,12 @@ public class BattleController {
      * @return the validated action choice entered by the player
      */
     private int getHeroActionChoice() {
-        final Scanner sc = new Scanner(System.in);
         int choice = -1;
 
         while (choice < 1 || choice > 4) {
             try {
                 myDungeonView.promptActionChoice(myHero);
-                final String input = sc.nextLine().trim();
+                final String input = myScanner.nextLine().trim();
                 choice = Integer.parseInt(input);
 
                 if (choice < 1 || choice > 4) {
@@ -89,7 +91,6 @@ public class BattleController {
                 System.out.println("Invalid input: Please enter a number between 1-4.");
             }
         }
-        sc.close();
         return choice;
     }
 
