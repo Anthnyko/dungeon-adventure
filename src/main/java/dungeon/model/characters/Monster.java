@@ -1,4 +1,4 @@
-package dungeon.characters;
+package dungeon.model.characters;
 
 /**
  * The Monster class represents all enemy characters encountered in the dungeon.

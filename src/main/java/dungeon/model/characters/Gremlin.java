@@ -1,4 +1,4 @@
-package dungeon.characters;
+package dungeon.model.characters;
 
 /**
  * The Gremlin class represents a fast but fragile Monster type in the dungeon.
