@@ -24,7 +24,7 @@ public class BattleController {
 
     private int myRound;
 
-    private final DungeonView myDungeonView;
+    private DungeonView myDungeonView;
 
     /**
      * Constructs a GameController to manage a combat encounter between

@@ -256,8 +256,8 @@ public final class DungeonAdventure {
      * @param monster the enemy monster to engage in combat
      */
     private final void handleCombat(final Monster theMonster) {
-        final BattleController battle = new BattleController(myHero, theMonster);
-        battle.startBattle();
+        final BattleController battle = new BattleController(myHero);
+        battle.startBattle(theMonster);
     }
 
     /**
