@@ -34,6 +34,9 @@ public abstract class Hero extends DungeonCharacter {
     /** Probability that the character blocks an incoming attack. */
     protected double myBlockChance;
 
+    /** Track whether thief gains extra turn from special skill. */
+    protected boolean myExtraTurn;
+
     /**
      * Constructs a new Hero with the given combat attributes.
      *
@@ -115,6 +118,14 @@ public abstract class Hero extends DungeonCharacter {
     }
 
     /**
+     * Resets temporary combat-only status effects.
+     * Called after combat ends.
+     */
+    public void resetStatusEffects() {
+        myExtraTurn = false;
+    }
+
+    /**
      * Displays the hero's current combat status, including HP, potions,
      * cooldown timers, and any other relevant combat information.
      */
@@ -157,7 +168,7 @@ public abstract class Hero extends DungeonCharacter {
 
     /** Returns if Thief skill gained extra turn. */
     public boolean hasExtraTurn() {
-        return false;
+        return myExtraTurn;
     }
 
     /** Sets extra turn to false. Logic is in Thief class. */

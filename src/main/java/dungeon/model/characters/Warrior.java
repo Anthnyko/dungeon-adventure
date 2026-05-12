@@ -24,9 +24,6 @@ public class Warrior extends Hero {
     /** Tracks turn duration of Enrage. */
     protected int myEnrageTimer;
 
-    /** Tracks Enrage buff. */
-    protected boolean myHasEnrage;
-
     /**
      * Constructs a new Warrior with predefined combat attributes.
      *
@@ -44,7 +41,6 @@ public class Warrior extends Hero {
         myMinCrushDamage = 75;
         myMaxCrushDamage = 175;
         myEnrageTimer = 0;
-        myHasEnrage = false;
     }
 
     @Override
@@ -88,6 +84,16 @@ public class Warrior extends Hero {
     @Override
     public void bigCooldown(DungeonCharacter theTarget) {
         enrage();
+    }
+
+    /**
+     * Resets temporary combat-only status effects.
+     * Called after combat ends.
+     */
+    @Override
+    public void resetStatusEffects() {
+        super.resetStatusEffects();
+        myEnrageTimer = 0;
     }
 
     /** Returns Warrior's special skill name. */

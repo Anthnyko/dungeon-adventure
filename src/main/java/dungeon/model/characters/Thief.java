@@ -15,9 +15,6 @@ package dungeon.model.characters;
  */
 public class Thief extends Hero {
 
-    /** Track whether thief gains extra turn from special skill. */
-    protected boolean myExtraTurn;
-
     /**
      * Constructs a new Thief with predefined combat attributes.
      *
@@ -67,12 +64,6 @@ public class Thief extends Hero {
     @Override
     public String getUltimateName() {
         return "Garrote";
-    }
-
-    /** Returns if Thief skill gained extra turn. */
-    @Override
-    public boolean hasExtraTurn() {
-        return myExtraTurn;
     }
 
     /** Sets extra turn to false. */

@@ -16,7 +16,7 @@ public class GameController {
     private final Hero myHero;
 
     /** The monster the hero is fighting. */
-    private final Monster myMonster;
+    private Monster myMonster;
 
     /** Tracks whether the battle has ended. */
     private boolean myBattleOver;
@@ -25,20 +25,21 @@ public class GameController {
      * Constructs a GameController to manage a combat encounter between
      * the given hero and monster.
      *
-     * @param theHero the hero controlled by the player
-     * @param theMonster the monster the hero is fighting
+     * @param theHero the hero controlled by the player.
      */
-    public GameController(final Hero theHero, final Monster theMonster) {
+    public GameController(final Hero theHero) {
         myHero = theHero;
-        myMonster = theMonster;
-        myBattleOver = false;
     }
 
     /**
      * Begins the combat loop and continues until either the hero or the monster
      * is defeated. Handles turn sequencing and end-of-round effects.
+     *
+     * @param theMonster the monster the hero is fighting
      */
-    public void startBattle() {
+    public void startBattle(final Monster theMonster) {
+        myMonster = theMonster;
+        myBattleOver = false;
         System.out.println("A wild " + myMonster.getCharName() + " appears!");
 
         while (!myBattleOver) {
@@ -50,6 +51,7 @@ public class GameController {
 
             processEndOfRoundEffects();
         }
+        myHero.resetStatusEffects();
     }
 
     /**
@@ -97,10 +99,7 @@ public class GameController {
             System.out.println(myHero.getCharName() + " gains an extra turn!");
             myHero.consumeExtraTurn();
             heroTurn();
-            return;
         }
-
-        myHero.reduceCooldown();
     }
 
     /**
@@ -115,6 +114,7 @@ public class GameController {
      * Processes end-of-round effects such as bleed damage on the monster.
      */
     private void processEndOfRoundEffects() {
+        myHero.reduceCooldown();
         myMonster.processBleed();
     }
 
@@ -130,8 +130,10 @@ public class GameController {
             myBattleOver = true;
         } else if (!myMonster.isAlive()) {
             System.out.println("You defeated the " + myMonster.getCharName() + "!");
+            myHero.reduceCooldown();
             myBattleOver = true;
         }
+
         return myBattleOver;
     }
 }
