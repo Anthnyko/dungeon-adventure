@@ -3,6 +3,9 @@ package dungeon.controller;
 import dungeon.model.characters.Monster;
 import dungeon.view.DungeonView;
 import dungeon.model.characters.Hero;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -38,6 +41,8 @@ public class BattleController {
      */
     private final Scanner myScanner = new Scanner(System.in);
 
+    private final List<String> myCombatLog = new ArrayList<>();
+
 
     /**
      * Constructs a GameController to manage a combat encounter between
@@ -64,10 +69,12 @@ public class BattleController {
         myBattleOver = false;
         myRound = 1;
         myDungeonView = new DungeonView();
+        myCombatLog.clear();
         System.out.println("A wild " + myMonster.getCharName() + " appears!");
 
         while (!myBattleOver) {
             myDungeonView.displayCombatRound(myRound);
+            log("=== Round " + myRound + " ===");
             heroTurn();
             if (isBattleOver()) break;
 
@@ -78,6 +85,8 @@ public class BattleController {
             myRound++;
         }
         myHero.resetStatusEffects();
+        log(getCombatSummary());
+        displayCombatLog();
     }
 
     /**
@@ -151,8 +160,32 @@ public class BattleController {
         final int choice = getHeroActionChoice();
         myHero.performAction(choice, myMonster);
 
+        switch (choice) {
+            case 1:
+                if (myHero.getLastDamageDealt() == 0) {
+                    log(myHero.getCharName() + " misses " + myMonster.getCharName());
+                } else {
+                    log(myHero.getCharName() + " → " + myMonster.getCharName() +
+                            " (-" + myHero.getLastDamageDealt() + ")");
+                }
+                break;
+
+            case 2:
+                logAbility(myHero.getSpecialSkillName());
+                break;
+
+            case 3:
+                logAbility(myHero.getUltimateName());
+                break;
+
+            case 4:
+                log(myHero.getCharName() + " +" + myHero.getLastHeal() + " HP");
+                break;
+        }
+
         // Extra turn mechanic (Thief only)
         if (myHero.hasExtraTurn()) {
+            log(myHero.getCharName() + "gains extra turn");
             System.out.println(myHero.getCharName() + " gains an extra turn!");
             myHero.consumeExtraTurn();
             heroTurn();
@@ -165,6 +198,21 @@ public class BattleController {
     private void monsterTurn() {
         System.out.println("\n--- Monster Turn ---");
         myMonster.attack(myHero);
+
+        int dmg = myMonster.getLastDamageDealt();
+
+        if (dmg > 0) {
+            log(myMonster.getCharName() + " → " + myHero.getCharName() + " (-" + dmg + ")");
+        } else {
+            log(myMonster.getCharName() + " misses " + myHero.getCharName());
+        }
+    }
+
+    private void bleedPhase() {
+        int bleed = myMonster.processBleed();
+        if (bleed > 0) {
+            log(myMonster.getCharName() + " • Bleed (-" + bleed + ")");
+        }
     }
 
     /**
@@ -172,7 +220,7 @@ public class BattleController {
      */
     private void processEndOfRoundEffects() {
         myHero.reduceCooldown();
-        myMonster.processBleed();
+        bleedPhase();
     }
 
     /**
@@ -183,13 +231,40 @@ public class BattleController {
      */
     private boolean isBattleOver() {
         if (!myHero.isAlive()) {
+            log(myHero.getCharName() + " falls in battle");
             System.out.println("You have been defeated...");
             myBattleOver = true;
         } else if (!myMonster.isAlive()) {
+            log(myMonster.getCharName() + " dies");
             System.out.println("You defeated the " + myMonster.getCharName() + "!");
             myHero.reduceCooldown();
             myBattleOver = true;
         }
         return myBattleOver;
+    }
+
+    private void log(final String theEntry) {
+        myCombatLog.add(theEntry);
+    }
+
+    private void displayCombatLog() {
+        System.out.println("\n=== Combat Log ===");
+        for (String entry : myCombatLog) {
+            System.out.println(entry);
+        }
+        System.out.println("==================\n");
+    }
+
+    private void logAbility(String abilityName) {
+        int dmg = myHero.getLastDamageDealt();
+        int heal = myHero.getLastHeal();
+
+        if (dmg > 0) {
+            log(myHero.getCharName() + " :: " + abilityName + " → " + myMonster.getCharName() + " (-" + dmg + ")");
+        } else if (heal > 0) {
+            log(myHero.getCharName() + " :: " + abilityName + " (+" + heal + " HP)");
+        } else {
+            log(myHero.getCharName() + " :: " + abilityName + " (effect applied)");
+        }
     }
 }

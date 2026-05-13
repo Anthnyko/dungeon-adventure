@@ -127,9 +127,11 @@ public class Warrior extends Hero {
             System.out.println(getCharName() + " uses Crushing Blow!");
 
             final int damage = myMinCrushDamage + (int) (rng.nextDouble() * (myMaxCrushDamage - myMinCrushDamage + 1));
+            myLastDamageDealt = damage;
             theTarget.takeDamage(damage);
         } else {
             System.out.println(getCharName() + " failed to use Crushing Blow!");
+            myLastDamageDealt = 0;
         }
     }
 
@@ -143,5 +145,8 @@ public class Warrior extends Hero {
 
         myEnrageTimer = 3;
         myCDTimer = 4;
+
+        myLastDamageDealt = 0;
+        myLastHeal = 0;
     }
 }

@@ -85,23 +85,24 @@ public class Thief extends Hero {
         final double roll = rng.nextDouble();
 
         if (roll < 0.40) {
-            // 40%: Surprise success
             System.out.println(getCharName() + " performs a Surprise Attack! Extra turn gained!");
             singleAttack(theTarget);
+            myLastDamageDealt = theTarget.getLastDamageDealt();
             myExtraTurn = true;
 
         } else if (roll < 0.80) {
-            // Next 40%: Normal attack, no extra turn
             System.out.println(getCharName() + " attempts a Surprise Attack but only lands a normal hit.");
             singleAttack(theTarget);
+            myLastDamageDealt = theTarget.getLastDamageDealt();
             myExtraTurn = false;
 
         } else {
-            // Final 20%: Total failure
             System.out.println(getCharName() + " fails the Surprise Attack completely!");
+            myLastDamageDealt = 0;
             myExtraTurn = false;
         }
     }
+
 
     /**
      * Executes the Thief's garrote ability, used as the ultimate attack.
@@ -120,5 +121,8 @@ public class Thief extends Hero {
         }
 
         myCDTimer = 3;
+
+        myLastDamageDealt = 0;
+        myLastHeal = 0;
     }
 }

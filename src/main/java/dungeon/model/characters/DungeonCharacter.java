@@ -35,6 +35,12 @@ public abstract class DungeonCharacter {
     /** Probability that the character successfully lands an attack. */
     protected double myHitChance;
 
+    /** Last damage value used. */
+    protected int myLastDamageDealt;
+
+    /** Last heal value used. */
+    protected int myLastHeal;
+
     /** Rolls random value for abilities. */
     protected Random rng = new Random();
 
@@ -60,6 +66,7 @@ public abstract class DungeonCharacter {
         myMaxDamage = theMaxDamage;
         myAttackSpeed = theAttackSpeed;
         myHitChance = theHitChance;
+        myLastDamageDealt = 0;
     }
 
     /**
@@ -78,8 +85,9 @@ public abstract class DungeonCharacter {
         for (int i = 0; i < numAttacks; i++) {
             if (rng.nextDouble() < myHitChance) {
                 final int damage = myMinDamage + (int)(rng.nextDouble() * (myMaxDamage - myMinDamage + 1));
-                theTarget.takeDamage(damage);
+                myLastDamageDealt = damage;
                 System.out.println(myCharName + " attacks " + theTarget.getCharName() + " for " + damage + " damage!");
+                theTarget.takeDamage(damage);
             } else {
                 System.out.println(myCharName + " misses " + theTarget.myCharName + "...");
             }
@@ -106,7 +114,11 @@ public abstract class DungeonCharacter {
 
         if (rng.nextDouble() < myHitChance) {
             int dmg = myMinDamage + rng.nextInt(myMaxDamage - myMinDamage + 1);
+            myLastDamageDealt = dmg;
             theTarget.takeDamage(dmg);
+        } else {
+            myLastDamageDealt = 0;
+            System.out.println(myCharName + " misses " + theTarget.getCharName() + "...");
         }
     }
 
@@ -138,6 +150,20 @@ public abstract class DungeonCharacter {
      * cooldown timers, and any other relevant combat information.
      */
     public abstract void displayStatus();
+
+    /**
+     * Returns last damage dealt by the character.
+     *
+     * Used for combat logging.
+     * @return last damage dealt
+     */
+    public int getLastDamageDealt() {
+        return myLastDamageDealt;
+    }
+
+    public int getLastHeal() {
+        return myLastHeal;
+    }
 
     /** @return the character's name */
     public String getCharName() {

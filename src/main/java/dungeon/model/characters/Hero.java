@@ -78,20 +78,25 @@ public abstract class Hero extends DungeonCharacter {
 
     /**
      * Uses a healing potion if available.
+     *
+     * @return amount of HP healed
      */
-    public void useHealingPotion() {
+    public int useHealingPotion() {
         final int healPotionValue = 20;
         if (myHealingPotions <= 0) {
             System.out.println("You have no healing potions!");
-            return;
+            return 0;
         }
         myHealingPotions--;
         if (healPotionValue + myHP > myMaxHP) {
+            int healValue = myMaxHP - myHP;
             myHP = myMaxHP;
+            return healValue;
         } else {
             myHP += healPotionValue;
         }
         System.out.println("You used healing potion! +20 HP");
+        return healPotionValue;
     }
 
     /**
@@ -169,6 +174,8 @@ public abstract class Hero extends DungeonCharacter {
             case 3:
                 bigCooldown(theTarget);
                 break;
+            case 4:
+                useHealingPotion();
             default:
                 System.out.println("Invalid choice. You lose your turn.");
         }

@@ -70,10 +70,13 @@ public class Priest extends Hero {
         final int heal = 20;
 
         if (heal + myHP > myMaxHP) {
+            myLastHeal = myMaxHP - myHP;
             myHP = myMaxHP;
         } else {
             myHP += heal;
+            myLastHeal = 0;
         }
+        myLastDamageDealt = 0;
         System.out.println(myCharName + " casts heal!\n Regenerates " + heal + " health!");
     }
 
@@ -91,6 +94,9 @@ public class Priest extends Hero {
 
         System.out.println(myCharName + " casts smite!");
         myCDTimer = 3;
+
+        myLastDamageDealt = smiteDmg;
+        myLastHeal = 0;
 
         theTarget.takeDamage(smiteDmg);
     }

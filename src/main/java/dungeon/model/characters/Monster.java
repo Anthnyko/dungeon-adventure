@@ -73,12 +73,15 @@ public abstract class Monster extends DungeonCharacter {
         if (!isAlive() || myHP == myMaxHP) {
             return;
         }
+        myLastHeal = 0;
         if (rng.nextDouble() < myHealChance) {
             final int heal = myMinHeal + (int)(rng.nextDouble() * (myMaxHeal - myMinHeal + 1));
             if (heal + myHP > myMaxHP) {
+                myLastHeal = myMaxHP - myHP;
                 myHP = myMaxHP;
             } else {
                 myHP += heal;
+                myLastHeal = heal;
             }
             System.out.println(myCharName + " regenerates " + heal + " health!");
         }
@@ -98,17 +101,19 @@ public abstract class Monster extends DungeonCharacter {
      * Processes bleed damage at the start of the monster's turn.
      * Deals damage and reduces the bleed timer.
      */
-    public void processBleed() {
+    public int processBleed() {
         if (myBleedTimer > 0) {
             takeDamage(myBleedDamage);
             myBleedTimer--;
 
-            System.out.println(myCharName + " takes " + myBleedTimer + " bleed damage!");
+            System.out.println(myCharName + " takes " + myBleedDamage + " bleed damage!");
 
             if (!isAlive()) {
                 System.out.println(myCharName + " dies from bleeding!");
             }
+            return myBleedDamage;
         }
+        return 0;
     }
 
     /**
