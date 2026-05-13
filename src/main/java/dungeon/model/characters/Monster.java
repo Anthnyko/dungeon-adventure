@@ -38,6 +38,9 @@ public abstract class Monster extends DungeonCharacter {
     /** Amount of bleed damage per tick. */
     protected final int myBleedDamage = 5;
 
+    /** Checks if monster died from bleed damage. */
+    protected boolean myDiedFromBleed;
+
     /**
      * Constructs a Monster with predefined combat and healing attributes.
      *
@@ -62,6 +65,7 @@ public abstract class Monster extends DungeonCharacter {
         myMinHeal = theMinHeal;
         myMaxHeal = theMaxHeal;
         myBleedTimer = 0;
+        myDiedFromBleed = false;
     }
 
     /**
@@ -109,6 +113,7 @@ public abstract class Monster extends DungeonCharacter {
             System.out.println(myCharName + " takes " + myBleedDamage + " bleed damage!");
 
             if (!isAlive()) {
+                myDiedFromBleed = true;
                 System.out.println(myCharName + " dies from bleeding!");
             }
             return myBleedDamage;
@@ -153,5 +158,12 @@ public abstract class Monster extends DungeonCharacter {
      */
     public int getMyBleedTimer() {
         return myBleedTimer;
+    }
+
+    /**
+     * @return if monster dies from bleed
+     */
+    public boolean diedFromBleed() {
+        return myDiedFromBleed;
     }
 }

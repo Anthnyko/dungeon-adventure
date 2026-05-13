@@ -235,7 +235,11 @@ public class BattleController {
             System.out.println("You have been defeated...");
             myBattleOver = true;
         } else if (!myMonster.isAlive()) {
-            log(myMonster.getCharName() + " dies");
+            if (myMonster.diedFromBleed()) {
+                log(myMonster.getCharName() + " dies from bleeding");
+            } else {
+                log(myMonster.getCharName() + " dies");
+            }
             System.out.println("You defeated the " + myMonster.getCharName() + "!");
             myHero.reduceCooldown();
             myBattleOver = true;
