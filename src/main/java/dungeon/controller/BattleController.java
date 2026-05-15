@@ -41,6 +41,9 @@ public class BattleController {
      */
     private final Scanner myScanner = new Scanner(System.in);
 
+    /**
+     * Logs all actions during combat allowing for better user readability during combat.
+     */
     private final List<String> myCombatLog = new ArrayList<>();
 
 
@@ -208,6 +211,9 @@ public class BattleController {
         }
     }
 
+    /**
+     * Helper method for logging bleed damage on monsters.
+     */
     private void bleedPhase() {
         int bleed = myMonster.processBleed();
         if (bleed > 0) {
@@ -247,10 +253,18 @@ public class BattleController {
         return myBattleOver;
     }
 
+    /**
+     * Logs a preset message from actions.
+     *
+     * @param theEntry preset log message
+     */
     private void log(final String theEntry) {
         myCombatLog.add(theEntry);
     }
 
+    /**
+     * Displays entire combat log during battle and when combat ends.
+     */
     private void displayCombatLog() {
         System.out.println("\n=== Combat Log ===");
         for (String entry : myCombatLog) {
@@ -259,6 +273,11 @@ public class BattleController {
         System.out.println("==================\n");
     }
 
+    /**
+     * Helper method for logging hero abilities, accounts for non-lethal abilities as well.
+     *
+     * @param abilityName name of the ability
+     */
     private void logAbility(String abilityName) {
         int dmg = myHero.getLastDamageDealt();
         int heal = myHero.getLastHeal();
