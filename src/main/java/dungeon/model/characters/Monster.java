@@ -1,4 +1,4 @@
-package dungeon.characters;
+package dungeon.model.characters;
 
 /**
  * The Monster class represents all enemy characters encountered in the dungeon.
@@ -35,6 +35,12 @@ public abstract class Monster extends DungeonCharacter {
     /** Tracks the number of turns remaining for bleed damage effects. */
     protected int myBleedTimer;
 
+    /** Amount of bleed damage per tick. */
+    protected final int myBleedDamage = 5;
+
+    /** Checks if monster died from bleed damage. */
+    protected boolean myDiedFromBleed;
+
     /**
      * Constructs a Monster with predefined combat and healing attributes.
      *
@@ -59,15 +65,71 @@ public abstract class Monster extends DungeonCharacter {
         myMinHeal = theMinHeal;
         myMaxHeal = theMaxHeal;
         myBleedTimer = 0;
+        myDiedFromBleed = false;
     }
 
     /**
-     * Attempts to heal the monster. Actual healing logic is implemented
-     * in later iterations. This method will be called during combat
+     * Attempts to heal the monster.
+     * This method will be called during combat
      * after the monster takes damage.
      */
     public void heal() {
-        // TODO: implement in later iteration.
+        if (!isAlive() || myHP == myMaxHP) {
+            return;
+        }
+        myLastHeal = 0;
+        if (rng.nextDouble() < myHealChance) {
+            final int heal = myMinHeal + (int)(rng.nextDouble() * (myMaxHeal - myMinHeal + 1));
+            if (heal + myHP > myMaxHP) {
+                myLastHeal = myMaxHP - myHP;
+                myHP = myMaxHP;
+            } else {
+                myHP += heal;
+                myLastHeal = heal;
+            }
+            System.out.println(myCharName + " regenerates " + heal + " health!");
+        }
+    }
+
+    /**
+     * Applies a bleed effect to this monster for the given number of turns.
+     *
+     * @param theTimer number of turns the bleed should last
+     */
+    public void applyBleed(final int theTimer) {
+        myBleedTimer = theTimer;
+        System.out.println(myCharName + " starts bleeding!");
+    }
+
+    /**
+     * Processes bleed damage at the start of the monster's turn.
+     * Deals damage and reduces the bleed timer.
+     */
+    public int processBleed() {
+        if (myBleedTimer > 0) {
+            takeDamage(myBleedDamage);
+            myBleedTimer--;
+
+            System.out.println(myCharName + " takes " + myBleedDamage + " bleed damage!");
+
+            if (!isAlive()) {
+                myDiedFromBleed = true;
+                System.out.println(myCharName + " dies from bleeding!");
+            }
+            return myBleedDamage;
+        }
+        return 0;
+    }
+
+    /**
+     * Displays the monster's current combat status, including HP.
+     */
+    @Override
+    public void displayStatus() {
+        System.out.println("=== MONSTER STATUS ===");
+        System.out.println("Name: " + myCharName);
+        System.out.println("HP: " + myHP + "/" + myMaxHP);
+        System.out.println("====================");
     }
 
     /**
@@ -96,5 +158,12 @@ public abstract class Monster extends DungeonCharacter {
      */
     public int getMyBleedTimer() {
         return myBleedTimer;
+    }
+
+    /**
+     * @return if monster dies from bleed
+     */
+    public boolean diedFromBleed() {
+        return myDiedFromBleed;
     }
 }

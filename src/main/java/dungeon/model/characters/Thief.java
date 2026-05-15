@@ -1,4 +1,4 @@
-package dungeon.characters;
+package dungeon.model.characters;
 
 /**
  * The Thief hero class. Thieves specialize in agility-based combat
@@ -9,8 +9,6 @@ package dungeon.characters;
  * The Thief has two unique abilities:
  * - surpriseAttack: the Thief's special skill
  * - garrote: the Thief's ultimate cooldown ability
- *
- * Combat logic is added in future iterations.
  *
  * @author Anthony
  * @version 1.0
@@ -31,6 +29,7 @@ public class Thief extends Hero {
                 6,    // attack speed
                 0.8,  // hit chance
                 0.4); // block chance (or dodge if you keep it)
+        myExtraTurn = false;
     }
 
     /**
@@ -55,23 +54,75 @@ public class Thief extends Hero {
         garrote(theTarget);
     }
 
+    /** Returns Thief's special skill name. */
+    @Override
+    public String getSpecialSkillName() {
+        return "Surprise Attack";
+    }
+
+    /** Returns Thief's ultimate skill name. */
+    @Override
+    public String getUltimateName() {
+        return "Garrote";
+    }
+
+    /** Sets extra turn to false. */
+    @Override
+    public void consumeExtraTurn() {
+        myExtraTurn = false;
+    }
+
     /**
      * Executes the Thief's surprise attack ability.
-     * Logic implemented in later iterations.
      *
      * @param theTarget the target of the surprise attack
      */
     private void surpriseAttack(DungeonCharacter theTarget) {
-        // TODO: implement in later iteration.
+        if (theTarget == null || !theTarget.isAlive()) {
+            return;
+        }
+
+        final double roll = rng.nextDouble();
+
+        if (roll < 0.40) {
+            System.out.println(getCharName() + " performs a Surprise Attack! Extra turn gained!");
+            singleAttack(theTarget);
+            myLastDamageDealt = theTarget.getLastDamageDealt();
+            myExtraTurn = true;
+
+        } else if (roll < 0.80) {
+            System.out.println(getCharName() + " attempts a Surprise Attack but only lands a normal hit.");
+            singleAttack(theTarget);
+            myLastDamageDealt = theTarget.getLastDamageDealt();
+            myExtraTurn = false;
+
+        } else {
+            System.out.println(getCharName() + " fails the Surprise Attack completely!");
+            myLastDamageDealt = 0;
+            myExtraTurn = false;
+        }
     }
+
 
     /**
      * Executes the Thief's garrote ability, used as the ultimate attack.
-     * Logic implemented in later iterations.
      *
      * @param theTarget the target of the garrote attack
      */
     private void garrote(DungeonCharacter theTarget) {
-        // TODO: implement in later iteration.
+        if (theTarget == null || !theTarget.isAlive()) {
+            return;
+        }
+
+        System.out.println(getCharName() + " uses Garrote!");
+
+        if (theTarget instanceof Monster monster) {
+            monster.applyBleed(5);
+        }
+
+        myCDTimer = 3;
+
+        myLastDamageDealt = 0;
+        myLastHeal = 0;
     }
 }

@@ -1,4 +1,4 @@
-package dungeon.characters;
+package dungeon.model.characters;
 
 /**
  * The Ogre class represents a specific type of Monster in the dungeon.
