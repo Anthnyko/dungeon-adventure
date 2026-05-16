@@ -225,6 +225,14 @@ public class Room {
     public boolean isRevealed() {return myRevealed;}
 
     /**
+     * @return the monster in this room, or null if non exists
+     */
+    public Monster getMonster() {
+        return myMonster;
+    }
+
+
+    /**
      * Removes the list of items in the room and returns them
      * @return A list of all the items in the room
      */
@@ -253,7 +261,7 @@ public class Room {
      * @return the amount of damage the pit did
      */
     public int triggerPitDamage(final Hero theHero) {
-        if (!myPit) return 0;
+        if (!hasPit()) return 0;
 
         final int damage = myRandom.nextInt(20) + 1;
         theHero.takeDamage(damage);
@@ -268,6 +276,8 @@ public class Room {
      * @return the amount of health healed
      */
     public int activateFountainHeal(final Hero theHero) {
+        if (!hasFountain()) return 0;
+
         // Implement in later iteration
         final int heal = 40;
         if (heal + theHero.getHP() > theHero.getMaxHP()) {
@@ -345,9 +355,5 @@ public class Room {
     private void generateRandomItems() {
         if (myRandom.nextInt(100) < myChance) myItems.add(new HealingPotion());
         if (myRandom.nextInt(100) < myChance) myItems.add(new VisionPotion());
-    }
-
-    public Monster getMonster() {
-        return myMonster;
     }
 }

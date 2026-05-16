@@ -41,6 +41,8 @@ public class Dungeon {
     /** The name of the dungeon */
     private final String myName;
 
+    private final MonsterGenerator myMonsterGenerator;
+
     private Random myRandom;
 
     /**
@@ -53,6 +55,7 @@ public class Dungeon {
      */
     public Dungeon(int theWidth, int theHeight, String theName) {
         myRandom = new Random();
+        myMonsterGenerator = new MonsterGenerator();
         myWidth = theWidth;
         myHeight = theHeight;
         myName = theName;
@@ -85,6 +88,7 @@ public class Dungeon {
 
         placePillars();
         placeFountains();
+        placeMonsters();
     }
 
     private void initializeRooms() {
@@ -168,7 +172,33 @@ public class Dungeon {
     }
 
     private void placeMonsters() {
-        //Future implementation
+        for (int row = 0; row < myHeight; row++) {
+            for (int col = 0; col < myWidth; col++) {
+                Room room = myRooms[row][col];
+
+                if (room.isEntrance() || room.isExit()) continue;
+
+                if (room.hasPillar()) {
+                    room.setMonster(myMonsterGenerator.createMonster("Pillar Guardian"));
+                    continue;
+                }
+
+                if (room.hasFountain()) {
+                    if (myRandom.nextInt(100) < 50) { // 50% chance for monster spawn in fountain room
+                        room.setMonster(myMonsterGenerator.createMonster(getRandomMonsterType()));
+                    }
+                }
+
+                if (myRandom.nextInt(100) < 30) { // 30% chance to spawn monster in room
+                    room.setMonster(myMonsterGenerator.createMonster(getRandomMonsterType()));
+                }
+            }
+        }
+    }
+
+    private String getRandomMonsterType() {
+        String[] types = {"Ogre", "Gremlin", "Skeleton"};
+        return  types[myRandom.nextInt(types.length)];
     }
 
     private boolean isSpecialRoom(int theRow, int theCol) {
@@ -201,11 +231,11 @@ public class Dungeon {
                 myHeroRow--;
                 break;
             case "SOUTH":
-                if (!getCurrentRoom().hasSouthDoor() || myHeroRow >= myHeight) return false;
+                if (!getCurrentRoom().hasSouthDoor() || myHeroRow >= myHeight - 1) return false;
                 myHeroRow++;
                 break;
             case "EAST":
-                if (!getCurrentRoom().hasEastDoor() || myHeroCol >= myWidth) return false;
+                if (!getCurrentRoom().hasEastDoor() || myHeroCol >= myWidth - 1) return false;
                 myHeroCol++;
                 break;
             case "WEST":
@@ -316,6 +346,10 @@ public class Dungeon {
                 }
 
                 String[] parts = myRooms[row][col].toString().split("\n");
+
+                if (row == myHeroRow && col == myHeroCol) {
+                    parts[1] = parts[1].charAt(0) + "@" + parts[1].charAt(2);
+                }
 
                 top.append(parts[0]).append(" ");
                 mid.append(parts[1]).append(" ");
