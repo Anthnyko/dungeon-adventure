@@ -41,9 +41,11 @@ public class Dungeon {
     /** The name of the dungeon */
     private final String myName;
 
+    /** For monster generation in the dungeon */
     private final MonsterGenerator myMonsterGenerator;
 
-    private Random myRandom;
+    /** Random object for random generation */
+    private final Random myRandom;
 
     /**
      * Constructs a new dungeon given the dimensions and name then
@@ -158,7 +160,7 @@ public class Dungeon {
     }
 
     private void placeFountains() {
-        int count = 2; //for now just have 2 fountains in the dungeon
+        int count = (myWidth * myHeight) / 10; // around 1 fountain per 10 rooms
 
         for (int i = 0; i < count; i++) {
             int row, col;
