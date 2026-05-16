@@ -5,6 +5,8 @@ import dungeon.model.Dungeon;
 import dungeon.model.Room;
 import dungeon.model.characters.Hero;
 import dungeon.model.characters.Thief;
+import dungeon.model.items.HealingPotion;
+import dungeon.model.items.VisionPotion;
 
 /**
  * 
@@ -196,8 +198,40 @@ public class DungeonView {
 
     // ============================== Begin Extra Room display section ==============================
 
-    public final void displayRoomEvent() { // Some parameter that indecates what is in the room
-
+    public final void displayRoomEvent(Room theRoom) { // Some parameter that indecates what is in the room
+        if (theRoom.hasMonster()) {
+            System.out.println(
+                TEXT_RED + "You encountered a " + theRoom.getMonster().getCharName() + TEXT_COLOR_RESET
+            );
+        }
+        if (theRoom.hasPit()) {
+            System.out.println(
+                TEXT_RED + "You fell into a pit!" + TEXT_COLOR_RESET
+            );
+        }
+        if (theRoom.hasFountain()) {
+            System.out.println(
+                TEXT_PINK + "You discovered a fountain!" + TEXT_COLOR_RESET
+            );
+        } 
+        if (theRoom.hasItems()) {
+            for (int i = 0; i < theRoom.getMyItems().size(); i++) {
+                if (theRoom.getMyItems().get(i) instanceof HealingPotion) {
+                    System.out.println(
+                        TEXT_GREEN + "You picked up a healing potion!" + TEXT_COLOR_RESET
+                    );
+                } else if (theRoom.getMyItems().get(i) instanceof VisionPotion) {
+                    System.out.println(
+                        TEXT_PURPLE + "You picked up a vision potion!" + TEXT_COLOR_RESET
+                    );
+                }
+            }
+        } 
+        if (theRoom.hasPillar()) {
+            System.out.println(
+                TEXT_BLUE + "You picked up a pillar!" + TEXT_COLOR_RESET
+            );
+        } 
     }
 
     /**
@@ -224,10 +258,6 @@ public class DungeonView {
             theDungeon.toString()
             + NEWLINE
         );
-    }
-
-    public final void displayItemPickup() {
-
     }
 
     // ============================== End Extra Room Display Section ==============================

@@ -212,6 +212,14 @@ public abstract class Hero extends DungeonCharacter {
         return myVisionPotions;
     }
 
+    public void gainHealingPotion() {
+        myHealingPotions += 1;
+    }
+
+    public void gainVisionPotion() {
+        myVisionPotions += 1;
+    }
+
     /**
      * Returns the remaining cooldown time for the hero's ultimate ability.
      *

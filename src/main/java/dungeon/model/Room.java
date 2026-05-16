@@ -228,10 +228,19 @@ public class Room {
      * Removes the list of items in the room and returns them
      * @return A list of all the items in the room
      */
-    public List<Item> pickUpItems() {
-        final List<Item> items = new ArrayList<>(myItems);
+    public void pickUpItems(final Hero theHero) {
+        for (int i = 0; i < myItems.size(); i++) {
+            if (myItems.get(i) instanceof HealingPotion) {
+                theHero.gainHealingPotion();
+            } else if (myItems.get(i) instanceof VisionPotion) {
+                theHero.gainVisionPotion();
+            }
+        }  
         myItems.clear();
-        return items;
+    }
+
+    public List<Item> getMyItems() {
+        return myItems;
     }
 
     /**
