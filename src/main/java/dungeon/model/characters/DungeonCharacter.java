@@ -145,6 +145,14 @@ public abstract class DungeonCharacter {
         System.out.println(myCharName + " takes " + damage + " damage! (HP: " + myHP + ")");
     }
 
+    public void applyHeal(int theHealAmount) {
+        myHP += theHealAmount;
+        if (myHP >= myMaxHP) {
+            myHP = myMaxHP;
+        }
+        System.out.println(myCharName + " heals " + theHealAmount + " health! (HP: " + myHP + ")");
+    }
+
     /**
      * Displays current combat status, including HP, potions,
      * cooldown timers, and any other relevant combat information.

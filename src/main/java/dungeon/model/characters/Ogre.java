@@ -1,5 +1,8 @@
 package dungeon.model.characters;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  * The Ogre class represents a specific type of Monster in the dungeon.
  * Ogres are slow but extremely durable enemies capable of dealing
@@ -29,8 +32,30 @@ package dungeon.model.characters;
 public class Ogre extends Monster {
 
     /**
-     * Constructs a new Ogre with predefined combat and healing attributes.
+     * Constructs a new Ogre by loading its stats from the database.
+     * This is the primary constructor used during normal dungeon generation.
+     *
+     * @param rs the ResultSet from the Monsters table containing this Ogre's stats
+     * @throws SQLException if any of the expected columns are missing or cannot be read from the ResultSet
+     */
+    public Ogre(ResultSet rs) throws SQLException {
+        super(rs.getString("Name"),
+                rs.getInt("HP"),
+                rs.getInt("MaxHP"),
+                rs.getInt("MinDamage"),
+                rs.getInt("MaxDamage"),
+                rs.getInt("AttackSpeed"),
+                rs.getInt("HitChance"),
+                rs.getInt("HealChance"),
+                rs.getInt("MinHeal"),
+                rs.getInt("MaxHeal")
+        );
+    }
+
+    /**
+     * Constructs a new Ogre with hardcoded standard stats.
      * All values are based on the standard Dungeon Adventure monster stats.
+     * This constructor is intended for testing purposes only.
      */
     public Ogre() {
         super("Ogre",
