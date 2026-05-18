@@ -32,6 +32,7 @@ public final class DungeonAdventure {
 
     private boolean myActiveGame;
     private boolean myWinCondition;
+    private static final String NEWLINE = System.lineSeparator();
 
     public static void main(final String[] args) {
         final DungeonAdventure game = new DungeonAdventure();
@@ -72,10 +73,18 @@ public final class DungeonAdventure {
                 playerChoice = Integer.parseInt(input);
 
                 if (playerChoice < 1 || playerChoice > 5) {
-                    System.out.println("Invalid input. Please enter a choice between 1-5.");
+                    System.out.print(
+                        "Invalid input. Please enter a choice between 1-5."
+                        + NEWLINE
+                        + "> Enter choice: "
+                    );
                 }
             } catch (final NumberFormatException e){
-                System.out.println("Invalid input. please enter a number between 1-5");
+                System.out.print(
+                    "Invalid input. please enter a number between 1-5"
+                    + NEWLINE
+                    + "> Enter choice: "
+                );
             }
         }
 
@@ -85,7 +94,7 @@ public final class DungeonAdventure {
             case 3 -> helpPage(); // help menu
             case 4 -> aboutPage(); // about info
             case 5 -> closeGame(); // quit game
-            default -> throw new IllegalArgumentException("Invlid choice: " + playerChoice);
+            default -> throw new IllegalArgumentException("Invalid choice: " + playerChoice);
         }
     }
 
@@ -99,19 +108,40 @@ public final class DungeonAdventure {
         myWinCondition = false;
 
         while(myActiveGame) {
-            evaluateRoomEvents(myDungeon.getCurrentRoom());
-            myDungeonView.displayPlayerStatus(myHero);
-            myDungeonView.displayRoom(myDungeon.getCurrentRoom());
-            myDungeonView.displayDungeon(myDungeon);
-            myDungeonView.displayInGameMenu();
-
-            final String userInput = myScanner.nextLine().trim().toUpperCase();
-
-            if(!userInput.isEmpty()) {
-                final char userChoice = userInput.charAt(0);
-                handlePlayerChoice(userChoice);
+            myDungeonView.turnSeperator();
+            if (myDungeon.getCurrentRoom().hasMonster()) {
+                evaluateRoomEvents(myDungeon.getCurrentRoom());
+                myDungeonView.displayRoom(myDungeon.getCurrentRoom());
+                myDungeonView.displayDungeon(myDungeon);
+                myDungeonView.displayPlayerStatus(myHero);
+                myDungeonView.displayInGameMenu();
+            } else {
+                myDungeonView.displayRoom(myDungeon.getCurrentRoom());
+                evaluateRoomEvents(myDungeon.getCurrentRoom());
+                myDungeonView.displayDungeon(myDungeon);
+                myDungeonView.displayPlayerStatus(myHero);
+                myDungeonView.displayInGameMenu();
             }
 
+            String userChoice;
+            boolean validInput = false;
+            do {
+                userChoice = myScanner.nextLine().trim().toUpperCase();
+                
+                if (userChoice.equals("W") || userChoice.equals("A") 
+                    || userChoice.equals("S") || userChoice.equals("D")
+                    || userChoice.equals("H") || userChoice.equals("V")
+                    || userChoice.equals("B") || userChoice.equals("Q")) {
+                    validInput = true;
+                } else {
+                    System.out.print(
+                        "Invalid input"
+                        + NEWLINE
+                        + "> Enter choice: "
+                    );
+                }
+            } while (!validInput);
+            handlePlayerChoice(userChoice);
             if(checkWinCondidtion() || myHero.getHP() <= 0) {
                 myActiveGame = false;
             }
@@ -121,17 +151,25 @@ public final class DungeonAdventure {
     private final int classChoice() {
         // Validate player class selection
         int playerChoice = -1;
+        myDungeonView.promptHeroSelection();
         while (playerChoice < 1 || playerChoice > 3) {
             try {
-                myDungeonView.promptHeroSelection();
                 final String input = myScanner.nextLine().trim();
                 playerChoice = Integer.parseInt(input);
 
                 if (playerChoice < 1 || playerChoice > 3) {
-                    System.out.println("Invalid input: Please enter a choice between 1-3.");
+                    System.out.print(
+                        "Invalid input: Please enter a choice between 1-3."
+                        + NEWLINE
+                        + "> Enter choice: "
+                    );
                 }
             } catch (final NumberFormatException e) {
-                System.out.println("Invalid input: Please enter a number between 1-3.");
+                System.out.print(
+                    "Invalid input: Please enter a number between 1-3."
+                    + NEWLINE
+                    + "> Enter choice: "
+                );
             }
         } 
         return playerChoice;
@@ -143,12 +181,20 @@ public final class DungeonAdventure {
         boolean validName = false;
         do {
             myDungeonView.promptName();
-            heroName = myScanner.nextLine().trim();
+            heroName = myScanner.nextLine();
             
             if(heroName.length() > 15) {
-                System.out.println("Name too long. Please enter a name with a max of 15 characters.");
+                System.out.println(
+                    "Name too long. Please enter a name with a max of 15 characters."
+                    + NEWLINE
+                    + "> Re-enter name: "
+                );
             } else if(heroName.isEmpty()) {
-                System.out.println("Name cannot be empty. Please enter a valid name.");
+                System.out.print(
+                    "Name cannot be empty. Please enter a valid name."
+                    + NEWLINE
+                    + "> Re-enter name: "
+                );
             } else {
                 validName = true;
             }
@@ -194,21 +240,26 @@ public final class DungeonAdventure {
      * 
      * @param room the room to evaluate
      */
-    private void evaluateRoomEvents(final Room theRoom) { //parameter/s: room
-        if (theRoom.hasMonster()) {
-            handleCombat(theRoom.getMonster());
-        }
+    private void evaluateRoomEvents(final Room theRoom) { 
         if (theRoom.hasPit()) {
+            myDungeonView.displayPitInteration();
             theRoom.triggerPitDamage(myHero);
         }
         if (theRoom.hasFountain()) {
+            myDungeonView.displayFountainInteraction();
             theRoom.activateFountainHeal(myHero);
         } 
         if (theRoom.hasItems()) {
-            theRoom.pickUpItems();
+            myDungeonView.displayPotionAcquisition(theRoom);
+            theRoom.pickUpItems(myHero);
         } 
+        if (theRoom.hasMonster()) {
+            myDungeonView.DisplayMonsterEncounter(theRoom);
+            handleCombat(theRoom.getMonster(), theRoom);
+        }
         if (theRoom.hasPillar()) {
-            theRoom.pickUpPillar();
+            myDungeonView.displayPillarAcquisition();
+            myHero.gainPillar(theRoom.pickUpPillar());
         } 
     }
 
@@ -217,18 +268,18 @@ public final class DungeonAdventure {
      * 
      * @param thePlayerChoice the character representing the player's choice
      */
-    private final void handlePlayerChoice(final char thePlayerChoice) {
+    private final void handlePlayerChoice(final String thePlayerChoice) {
 
-        if(thePlayerChoice == 'W' || thePlayerChoice == 'A' 
-        || thePlayerChoice == 'S' || thePlayerChoice == 'D') {
+        if(thePlayerChoice.equals("W") || thePlayerChoice.equals("A")
+        || thePlayerChoice.equals("S") || thePlayerChoice.equals("D")) {
             move(thePlayerChoice);
-        } else if(thePlayerChoice == 'H') {
+        } else if(thePlayerChoice.equals("H")) {
             myHero.useHealingPotion();
-        } else if(thePlayerChoice == 'V') {
+        } else if(thePlayerChoice.equals("V")) {
             myHero.useVisionPotion(myDungeon);
-        } else if(thePlayerChoice == 'B') {
+        } else if(thePlayerChoice.equals("B")) {
             // TODO: implement help menu
-        } else if(thePlayerChoice == 'Q') {
+        } else if(thePlayerChoice.equals("Q")) {
             saveGame();
             myActiveGame = false;
         }
@@ -239,12 +290,12 @@ public final class DungeonAdventure {
      * Handles the player's movement within the dungeon, updating position and
      * evaluating effects of the new room.
      */
-    private final void move(final char theDirection) {
+    private final void move(final String theDirection) {
         switch (theDirection) {
-            case 'W' -> myDungeon.moveHero("NORTH");
-            case 'A' -> myDungeon.moveHero("WEST");
-            case 'S' -> myDungeon.moveHero("SOUTH");
-            case 'D' -> myDungeon.moveHero("EAST");
+            case "W" -> myDungeon.moveHero("NORTH");
+            case "A" -> myDungeon.moveHero("WEST");
+            case "S" -> myDungeon.moveHero("SOUTH");
+            case "D" -> myDungeon.moveHero("EAST");
             default -> throw new IllegalArgumentException("Error: Invalid move input.");
         }
     }
@@ -255,9 +306,12 @@ public final class DungeonAdventure {
      * 
      * @param monster the enemy monster to engage in combat
      */
-    private final void handleCombat(final Monster theMonster) {
+    private final void handleCombat(final Monster theMonster, final Room theRoom) {
         final BattleController battle = new BattleController(myHero);
         battle.startBattle(theMonster);
+        if (!battle.monsterIsAlive()) {
+            theRoom.removeMonster();
+        }
     }
 
     /**
@@ -276,11 +330,16 @@ public final class DungeonAdventure {
     private final void endGame(final boolean theResult) {
         if(theResult == true) {
             myDungeonView.displayWin();
+            myDungeonView.displayPlayerStatus(myHero);
+            myDungeonView.displayDungeon(myDungeon);
+        } else if (myHero.getHP() > 0) {
+            System.out.println("Returning to Menu...");
+            mainMenu();
         } else {
             myDungeonView.displayLoss();
+            myDungeonView.displayPlayerStatus(myHero);
+            myDungeonView.displayDungeon(myDungeon);
         }
-        myDungeonView.displayPlayerStatus(myHero);
-        myDungeonView.displayDungeon(myDungeon);
     }
 
     private final void aboutPage() {
@@ -314,7 +373,34 @@ public final class DungeonAdventure {
      * Asks the player if they want to save the game
      */
     private final void saveGame() {
+        boolean validInput = false;
+        String userChoice;
+        myDungeonView.promptSave();
+        do {
+            userChoice = myScanner.nextLine().trim().toUpperCase();
 
+            if (userChoice.equals("Y") || userChoice.equals("N")) {
+                validInput = true;
+            } else {
+                System.out.print(
+                    "Invalid input"
+                    + NEWLINE
+                    + "> Enter choice"
+                );
+            }           
+        } while(!validInput);
+
+        // TODO: implement saveing
+        switch (userChoice) { 
+            case "Y":
+                
+                break;
+            case "N":
+                // do nothing
+                break;
+            default:
+                break;
+        }
     }
 
     /**

@@ -1,5 +1,8 @@
 package dungeon.model.characters;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  * Represents the special mini‑boss monster that guards each Pillar
  * in the dungeon. The Pillar Guardian is significantly stronger than
@@ -19,9 +22,33 @@ package dungeon.model.characters;
 public class PillarGuardian extends Monster {
 
     /**
-     * Constructs a new Pillar Guardian with predefined combat stats.
+     * Constructs a new Pillar Guardian by loading its stats from the database.
      * These stats are intentionally higher than those of regular
      * monsters to create a mini‑boss encounter.
+     * This is the primary constructor used during normal dungeon generation.
+     *
+     * @param rs the ResultSet from the Monsters table containing this Pillar Guardian's stats
+     * @throws SQLException if any of the expected columns are missing or cannot be read from the ResultSet
+     */
+    public PillarGuardian(ResultSet rs) throws SQLException {
+        super(rs.getString("Name"),
+                rs.getInt("HP"),
+                rs.getInt("MaxHP"),
+                rs.getInt("MinDamage"),
+                rs.getInt("MaxDamage"),
+                rs.getInt("AttackSpeed"),
+                rs.getInt("HitChance"),
+                rs.getInt("HealChance"),
+                rs.getInt("MinHeal"),
+                rs.getInt("MaxHeal")
+        );
+    }
+
+    /**
+     * Constructs a new Pillar Guardian with hardcoded standard stats.
+     * These stats are intentionally higher than those of regular
+     * monsters to create a mini‑boss encounter.
+     * This constructor is intended for testing purposes only.
      *
      * Stats:
      * - HP: 250

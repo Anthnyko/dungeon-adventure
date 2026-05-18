@@ -26,7 +26,7 @@ public abstract class Hero extends DungeonCharacter {
     protected int myVisionPotions;
 
     /** Tracker for all Pillar items collected by the Hero. */
-    // protected List<Pillar> myPillarsFound;
+    protected List<Character> myPillarsFound;
 
     /** Tracks cooldown time for the Hero's ultimate ability. */
     protected int myCDTimer;
@@ -56,7 +56,7 @@ public abstract class Hero extends DungeonCharacter {
         myBlockChance = theBlockChance;
         myHealingPotions = 0;
         myVisionPotions = 0;
-        // myPillarsFound = new ArrayList<Pillar>();
+        myPillarsFound = new ArrayList<>();
         myCDTimer = 0;
     }
 
@@ -203,6 +203,10 @@ public abstract class Hero extends DungeonCharacter {
         return myHealingPotions;
     }
 
+    public List<Character> getMyPillars() {
+        return myPillarsFound;
+    }
+
     /**
      * Returns the number of vision potions the hero currently holds.
      *
@@ -210,6 +214,18 @@ public abstract class Hero extends DungeonCharacter {
      */
     public int getVisionPotion() {
         return myVisionPotions;
+    }
+
+    public void gainHealingPotion() {
+        myHealingPotions += 1;
+    }
+
+    public void gainVisionPotion() {
+        myVisionPotions += 1;
+    }
+
+    public void gainPillar(final char thePillar) {
+        myPillarsFound.add(thePillar);
     }
 
     /**

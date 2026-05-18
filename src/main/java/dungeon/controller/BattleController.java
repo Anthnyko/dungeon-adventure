@@ -41,6 +41,9 @@ public class BattleController {
      */
     private final Scanner myScanner = new Scanner(System.in);
 
+    /**
+     * Logs all actions during combat allowing for better user readability during combat.
+     */
     private final List<String> myCombatLog = new ArrayList<>();
 
 
@@ -70,11 +73,10 @@ public class BattleController {
         myRound = 1;
         myDungeonView = new DungeonView();
         myCombatLog.clear();
-        System.out.println("A wild " + myMonster.getCharName() + " appears!");
 
         while (!myBattleOver) {
-            myDungeonView.displayCombatRound(myRound);
-            log("=== Round " + myRound + " ===");
+            System.out.println(myDungeonView.displayCombatRound(myRound));
+            log(myDungeonView.displayCombatRound(myRound));
             heroTurn();
             if (isBattleOver()) break;
 
@@ -153,9 +155,9 @@ public class BattleController {
      * cooldown reduction.
      */
     private void heroTurn() {
-        System.out.println("\n--- Hero Turn ---");
-        myHero.displayStatus();
-        myMonster.displayStatus();
+        myDungeonView.displayHeroTurn();
+        myDungeonView.displayHeroCombatStatus(myHero);
+        myDungeonView.displayMonsterStatus(myMonster);
 
         final int choice = getHeroActionChoice();
         myHero.performAction(choice, myMonster);
@@ -165,7 +167,7 @@ public class BattleController {
                 if (myHero.getLastDamageDealt() == 0) {
                     log(myHero.getCharName() + " misses " + myMonster.getCharName());
                 } else {
-                    log(myHero.getCharName() + " → " + myMonster.getCharName() +
+                    log(myHero.getCharName() + " -> " + myMonster.getCharName() +
                             " (-" + myHero.getLastDamageDealt() + ")");
                 }
                 break;
@@ -196,7 +198,7 @@ public class BattleController {
      * Executes the monster's turn by performing its attack on the hero.
      */
     private void monsterTurn() {
-        System.out.println("\n--- Monster Turn ---");
+        myDungeonView.displayMonsterTurn();
         myMonster.attack(myHero);
 
         int dmg = myMonster.getLastDamageDealt();
@@ -208,6 +210,9 @@ public class BattleController {
         }
     }
 
+    /**
+     * Helper method for logging bleed damage on monsters.
+     */
     private void bleedPhase() {
         int bleed = myMonster.processBleed();
         if (bleed > 0) {
@@ -247,28 +252,41 @@ public class BattleController {
         return myBattleOver;
     }
 
+    /**
+     * Logs a preset message from actions.
+     *
+     * @param theEntry preset log message
+     */
     private void log(final String theEntry) {
         myCombatLog.add(theEntry);
     }
 
+    /**
+     * Displays entire combat log during battle and when combat ends.
+     */
     private void displayCombatLog() {
-        System.out.println("\n=== Combat Log ===");
+        myDungeonView.displayCombatLog();
         for (String entry : myCombatLog) {
             System.out.println(entry);
         }
-        System.out.println("==================\n");
+        myDungeonView.endSectionBlue();
     }
 
+    /**
+     * Helper method for logging hero abilities, accounts for non-lethal abilities as well.
+     *
+     * @param abilityName name of the ability
+     */
     private void logAbility(String abilityName) {
         int dmg = myHero.getLastDamageDealt();
         int heal = myHero.getLastHeal();
 
         if (dmg > 0) {
-            log(myHero.getCharName() + " :: " + abilityName + " → " + myMonster.getCharName() + " (-" + dmg + ")");
+            log(myDungeonView.displayPlayerName(myHero) + " :: " + abilityName + " -> " + myMonster.getCharName() + " (-" + dmg + ")");
         } else if (heal > 0) {
-            log(myHero.getCharName() + " :: " + abilityName + " (+" + heal + " HP)");
+            log(myDungeonView.displayPlayerName(myHero) + " :: " + abilityName + " (+" + heal + " HP)");
         } else {
-            log(myHero.getCharName() + " :: " + abilityName + " (effect applied)");
+            log(myDungeonView.displayPlayerName(myHero) + " :: " + abilityName + " (effect applied)");
         }
     }
 }

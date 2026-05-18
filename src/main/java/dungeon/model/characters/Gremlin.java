@@ -1,5 +1,8 @@
 package dungeon.model.characters;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  * The Gremlin class represents a fast but fragile Monster type in the dungeon.
  * Gremlins rely on speed and unpredictability, attacking quickly but with
@@ -28,8 +31,30 @@ package dungeon.model.characters;
 public class Gremlin extends Monster {
 
     /**
-     * Constructs a new Gremlin with predefined combat and healing attributes.
+     * Constructs a new Gremlin by loading its stats from the database.
+     * This is the primary constructor used during normal dungeon generation.
+     *
+     * @param rs the ResultSet from the Monsters table containing this Gremlin's stats
+     * @throws SQLException if any of the expected columns are missing or cannot be read from the ResultSet
+     */
+    public Gremlin(ResultSet rs) throws SQLException {
+        super(rs.getString("Name"),
+                rs.getInt("HP"),
+                rs.getInt("MaxHP"),
+                rs.getInt("MinDamage"),
+                rs.getInt("MaxDamage"),
+                rs.getInt("AttackSpeed"),
+                rs.getInt("HitChance"),
+                rs.getInt("HealChance"),
+                rs.getInt("MinHeal"),
+                rs.getInt("MaxHeal")
+        );
+    }
+
+    /**
+     * Constructs a new Gremlin with hardcoded standard stats.
      * All values are based on the standard Dungeon Adventure monster stats.
+     * This constructor is intended for testing purposes only.
      */
     public Gremlin() {
         super("Gremlin",
