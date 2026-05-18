@@ -108,11 +108,20 @@ public final class DungeonAdventure {
         myWinCondition = false;
 
         while(myActiveGame) {
-            evaluateRoomEvents(myDungeon.getCurrentRoom());
-            myDungeonView.displayPlayerStatus(myHero);
-            myDungeonView.displayRoom(myDungeon.getCurrentRoom());
-            myDungeonView.displayDungeon(myDungeon);
-            myDungeonView.displayInGameMenu();
+            myDungeonView.turnSeperator();
+            if (myDungeon.getCurrentRoom().hasMonster()) {
+                evaluateRoomEvents(myDungeon.getCurrentRoom());
+                myDungeonView.displayRoom(myDungeon.getCurrentRoom());
+                myDungeonView.displayDungeon(myDungeon);
+                myDungeonView.displayPlayerStatus(myHero);
+                myDungeonView.displayInGameMenu();
+            } else {
+                myDungeonView.displayRoom(myDungeon.getCurrentRoom());
+                evaluateRoomEvents(myDungeon.getCurrentRoom());
+                myDungeonView.displayDungeon(myDungeon);
+                myDungeonView.displayPlayerStatus(myHero);
+                myDungeonView.displayInGameMenu();
+            }
 
             String userChoice;
             boolean validInput = false;
@@ -232,21 +241,25 @@ public final class DungeonAdventure {
      * @param room the room to evaluate
      */
     private void evaluateRoomEvents(final Room theRoom) { 
-        myDungeonView.displayRoomEvent(theRoom);
-        if (theRoom.hasMonster()) {
-            handleCombat(theRoom.getMonster());
-        }
         if (theRoom.hasPit()) {
+            myDungeonView.displayPitInteration();
             theRoom.triggerPitDamage(myHero);
         }
         if (theRoom.hasFountain()) {
+            myDungeonView.displayFountainInteraction();
             theRoom.activateFountainHeal(myHero);
         } 
         if (theRoom.hasItems()) {
+            myDungeonView.displayPotionAcquisition(theRoom);
             theRoom.pickUpItems(myHero);
         } 
+        if (theRoom.hasMonster()) {
+            myDungeonView.DisplayMonsterEncounter(theRoom);
+            handleCombat(theRoom.getMonster(), theRoom);
+        }
         if (theRoom.hasPillar()) {
-            theRoom.pickUpPillar();
+            myDungeonView.displayPillarAcquisition();
+            myHero.gainPillar(theRoom.pickUpPillar());
         } 
     }
 
@@ -293,9 +306,12 @@ public final class DungeonAdventure {
      * 
      * @param monster the enemy monster to engage in combat
      */
-    private final void handleCombat(final Monster theMonster) {
+    private final void handleCombat(final Monster theMonster, final Room theRoom) {
         final BattleController battle = new BattleController(myHero);
         battle.startBattle(theMonster);
+        if (!battle.monsterIsAlive()) {
+            theRoom.removeMonster();
+        }
     }
 
     /**
@@ -314,11 +330,16 @@ public final class DungeonAdventure {
     private final void endGame(final boolean theResult) {
         if(theResult == true) {
             myDungeonView.displayWin();
+            myDungeonView.displayPlayerStatus(myHero);
+            myDungeonView.displayDungeon(myDungeon);
+        } else if (myHero.getHP() > 0) {
+            System.out.println("Returning to Menu...");
+            mainMenu();
         } else {
             myDungeonView.displayLoss();
+            myDungeonView.displayPlayerStatus(myHero);
+            myDungeonView.displayDungeon(myDungeon);
         }
-        myDungeonView.displayPlayerStatus(myHero);
-        myDungeonView.displayDungeon(myDungeon);
     }
 
     private final void aboutPage() {
@@ -352,7 +373,34 @@ public final class DungeonAdventure {
      * Asks the player if they want to save the game
      */
     private final void saveGame() {
+        boolean validInput = false;
+        String userChoice;
+        myDungeonView.promptSave();
+        do {
+            userChoice = myScanner.nextLine().trim().toUpperCase();
 
+            if (userChoice.equals("Y") || userChoice.equals("N")) {
+                validInput = true;
+            } else {
+                System.out.print(
+                    "Invalid input"
+                    + NEWLINE
+                    + "> Enter choice"
+                );
+            }           
+        } while(!validInput);
+
+        // TODO: implement saveing
+        switch (userChoice) { 
+            case "Y":
+                
+                break;
+            case "N":
+                // do nothing
+                break;
+            default:
+                break;
+        }
     }
 
     /**

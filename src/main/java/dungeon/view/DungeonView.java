@@ -4,7 +4,7 @@ package dungeon.view;
 import dungeon.model.Dungeon;
 import dungeon.model.Room;
 import dungeon.model.characters.Hero;
-import dungeon.model.characters.Thief;
+import dungeon.model.characters.Monster;
 import dungeon.model.items.HealingPotion;
 import dungeon.model.items.VisionPotion;
 
@@ -27,6 +27,7 @@ public class DungeonView {
 
     private static final String SEPERATOR_EQUALS = "==================================================";
     private static final String SEPERATOR_EQUALS_HALF = "====================";
+    private static final String SEPERATOR_EQUALS_SHORT = "====";
     private static final String SEPERATOR_STRAIGHT = "--------------------------------------------------";
     private static final String NEWLINE = System.lineSeparator();
 
@@ -132,19 +133,67 @@ public class DungeonView {
 
 
 
+    // ============================== Begin Player Stats display section ==============================
+
+    public final String displayPlayerHP(final Hero theHero) {
+        return
+            TEXT_GREEN + "HP: " + TEXT_COLOR_RESET 
+            + playerHPColorHelper(theHero) 
+            + TEXT_GREEN + "/" + theHero.getMaxHP() + TEXT_COLOR_RESET;
+    }
+
+    public final String displayPlayerName(final Hero theHero) {
+        return TEXT_YELLOW + theHero.getCharName() + TEXT_COLOR_RESET;
+    }
+
+    public final String displayPotions(final Hero theHero) {
+        return 
+            TEXT_PURPLE + "Potions: Hx" + TEXT_COLOR_RESET
+            + healthPotionDisplayHelper(theHero)
+            + TEXT_PURPLE + " Vx" + TEXT_COLOR_RESET
+            + visionPotionDisplayHelper(theHero);
+    }
+
+    public final String displayHealingPotions(final Hero theHero) {
+        return TEXT_PURPLE + "HP Potions: Hx" + TEXT_COLOR_RESET + healthPotionDisplayHelper(theHero);
+    }
+
+    public final String displayPillars(final Hero theHero) {
+        return TEXT_BLUE + "Pillars: " + theHero.getMyPillars() + TEXT_COLOR_RESET;
+    }
+
+    // ==============================  End Player Stats display section  ==============================
+
+
+
+    // ============================== Begin Monster Stats display section ==============================
+    
+    public static String displayMonsterName(final Monster theMonster) {
+        return TEXT_YELLOW + theMonster.getCharName() + TEXT_COLOR_RESET;
+    }
+
+    public final String displayMonsterHP(final Monster theMonster) {
+        return
+            TEXT_GREEN + "HP: " + TEXT_COLOR_RESET 
+            + monsterHpColorHelper(theMonster) 
+            + TEXT_GREEN + "/" + theMonster.getMaxHP() + TEXT_COLOR_RESET;
+    }
+
+    // ==============================  End Monster Stats display section  ==============================
+
+
+
+
     // ============================== Begin Game Loop display section ==============================
 
     public final void displayPlayerStatus(final Hero theHero) {
         System.out.println(
             SEPERATOR_STRAIGHT 
             + NEWLINE
-            + TEXT_YELLOW + theHero.getCharName() + TEXT_COLOR_RESET + " | " // character name
-            + TEXT_GREEN + "HP: " + TEXT_COLOR_RESET 
-            + hpColorStatusHelper(theHero) 
-            + TEXT_GREEN + "/" + theHero.getMaxHP() + TEXT_COLOR_RESET + " | " // Character hp count
-            + TEXT_PURPLE + "Potions: Hx" + healthPotionDisplayHelper(theHero) + " " + TEXT_COLOR_RESET
-            + TEXT_PURPLE + "Vx" + visionPotionDisplayHelper(theHero) + TEXT_COLOR_RESET + " | " // number of player hp potions and vision potions
-            + TEXT_BLUE + "Pillars: " + TEXT_COLOR_RESET
+            + displayPlayerName(theHero) + " | " // character name
+            + displayPlayerHP(theHero) + " | " // Character hp count
+            + displayPotions(theHero) + " | " // number of hp potions and vision potions
+            + displayPillars(theHero)
             + NEWLINE
             + "Abilities: Basic Attack | " 
             + theHero.getSpecialSkillName() + " | " 
@@ -153,17 +202,6 @@ public class DungeonView {
             + SEPERATOR_STRAIGHT 
             + NEWLINE
         );
-    }
-
-    private final String hpColorStatusHelper(final Hero theHero) {
-        if (theHero.getHP() > theHero.getMaxHP() * 0.75) {
-            return TEXT_GREEN + theHero.getHP() + TEXT_COLOR_RESET;
-        } else if (theHero.getHP() < theHero.getMaxHP() * 0.75 && theHero.getHP() > theHero.getMaxHP() * 0.25) {
-            return TEXT_YELLOW + theHero.getHP() + TEXT_COLOR_RESET;
-        } else if (theHero.getHP() < theHero.getMaxHP() * 0.25) {
-            return TEXT_RED + theHero.getHP() + TEXT_COLOR_RESET;
-        }
-        return TEXT_BLACK + theHero.getHP() + TEXT_COLOR_RESET;
     }
 
     public final void displayInGameMenu() {
@@ -177,17 +215,46 @@ public class DungeonView {
             + NEWLINE
             + "[B] Help "
             + NEWLINE
-            + "[Q] Quit "
+            + "[Q] Quit to Menu "
             + TEXT_COLOR_RESET
             + NEWLINE
             + "> Enter choice: "
         );
     }
 
-    public final void displayRoom(final Room theRoom) { //parameter/s: room
-        System.out.println("Current room: ");
+    public final void displayRoom(final Room theRoom) {
         System.out.println(
-            theRoom.toString()
+            "Current room: "
+            + NEWLINE
+            + theRoom.toString()
+            + NEWLINE
+        );
+    }
+
+    /**
+     * Displays rooms in the dungeon for the player to see.
+     * Rooms unvisited by the player will be displayed in '?'.
+     * 
+     * @param theDungeon
+     */
+    public final void displayDungeon(final Dungeon theDungeon) {
+        System.out.println(
+            NEWLINE
+            + "Dungeon map: "
+            + NEWLINE
+            + theDungeon.toString()
+            + NEWLINE
+        );
+    }
+
+    public final void turnSeperator() {
+        System.out.println(
+            NEWLINE
+            + SEPERATOR_EQUALS
+            + NEWLINE
+            + "                     NEXT TURN"
+            + NEWLINE
+            + SEPERATOR_EQUALS
             + NEWLINE
         );
     }
@@ -198,40 +265,44 @@ public class DungeonView {
 
     // ============================== Begin Extra Room display section ==============================
 
-    public final void displayRoomEvent(Room theRoom) { // Some parameter that indecates what is in the room
+    public final void DisplayMonsterEncounter(final Room theRoom) {
         if (theRoom.hasMonster()) {
             System.out.println(
                 TEXT_RED + "You encountered a " + theRoom.getMonster().getCharName() + TEXT_COLOR_RESET
             );
         }
-        if (theRoom.hasPit()) {
-            System.out.println(
-                TEXT_RED + "You fell into a pit!" + TEXT_COLOR_RESET
-            );
-        }
-        if (theRoom.hasFountain()) {
-            System.out.println(
-                TEXT_PINK + "You discovered a fountain!" + TEXT_COLOR_RESET
-            );
-        } 
-        if (theRoom.hasItems()) {
-            for (int i = 0; i < theRoom.getMyItems().size(); i++) {
-                if (theRoom.getMyItems().get(i) instanceof HealingPotion) {
-                    System.out.println(
-                        TEXT_GREEN + "You picked up a healing potion!" + TEXT_COLOR_RESET
-                    );
-                } else if (theRoom.getMyItems().get(i) instanceof VisionPotion) {
-                    System.out.println(
-                        TEXT_PURPLE + "You picked up a vision potion!" + TEXT_COLOR_RESET
-                    );
-                }
+    }
+
+    public final void displayPotionAcquisition(final Room theRoom) {
+        for (int i = 0; i < theRoom.getMyItems().size(); i++) {
+            if (theRoom.getMyItems().get(i) instanceof HealingPotion) {
+                System.out.println(
+                    TEXT_GREEN + "You picked up a healing potion!" + TEXT_COLOR_RESET
+                );
+            } else if (theRoom.getMyItems().get(i) instanceof VisionPotion) {
+                System.out.println(
+                    TEXT_PURPLE + "You picked up a vision potion!" + TEXT_COLOR_RESET
+                );
             }
-        } 
-        if (theRoom.hasPillar()) {
-            System.out.println(
-                TEXT_BLUE + "You picked up a pillar!" + TEXT_COLOR_RESET
-            );
-        } 
+        }
+    }
+
+    public final void displayPillarAcquisition() {
+        System.out.println(
+            TEXT_BLUE + "You picked up a pillar!" + TEXT_COLOR_RESET
+        );
+    }
+
+    public final void displayFountainInteraction() {
+        System.out.println(
+            TEXT_PINK + "You discovered a fountain!" + TEXT_COLOR_RESET
+        );
+    }
+
+    public final void displayPitInteration() {
+        System.out.println(
+            TEXT_RED + "You fell into a pit!" + TEXT_COLOR_RESET
+        );
     }
 
     /**
@@ -246,18 +317,12 @@ public class DungeonView {
     }
 
     /**
-     * Displays all the rooms in the dungeon for the player to see.
-     * This will display when the game end either through losing or 
-     * winning the game. Also used for debugging.
+     * Displays all rooms in the dungeon for the user to see.
      * 
-     * 
+     * @param theDungeon
      */
-    public final void displayDungeon(final Dungeon theDungeon) {
-        System.out.println("Dungeon map: ");
-        System.out.println(
-            theDungeon.toString()
-            + NEWLINE
-        );
+    public final void displayFullDungeon(final Dungeon theDungeon) {
+        
     }
 
     // ============================== End Extra Room Display Section ==============================
@@ -266,25 +331,75 @@ public class DungeonView {
 
     // ============================== Begin Combat Display Section ==============================
 
-    public final void promptActionChoice(final Hero theHero) { //parameter/s: hero, monster
+    public final void promptActionChoice(final Hero theHero) {
         System.out.print(
-            "Choose an Action: "
+            TEXT_BLUE + "Choose an Action: "
             + NEWLINE
             + " [1] Basic Attack"
             + NEWLINE
             + " [2] Special Attack: " + theHero.getSpecialSkillName()
             + NEWLINE
-            + " [3] Ultimate Attack: " + cooldownDisplayHelper(theHero)
+            + " [3] Ultimate Attack: " + cooldownDisplayHelper(theHero) + TEXT_COLOR_RESET 
             + NEWLINE
-            + " [4] Use Healing Potion: Hx" + healthPotionDisplayHelper(theHero)
+            + TEXT_BLUE + " [4] Use Healing Potion: " + TEXT_COLOR_RESET 
+            + TEXT_PURPLE + "Hx" + healthPotionDisplayHelper(theHero) + TEXT_COLOR_RESET
             + NEWLINE
             + "> Enter Choice: "
         );
     }
 
-    public final void displayCombatRound(final int myRound) {
+    public final void displayHeroCombatStatus(final Hero theHero) {
         System.out.println(
-            TEXT_RED + SEPERATOR_EQUALS_HALF + " Round: " + myRound + " " + SEPERATOR_EQUALS_HALF + TEXT_COLOR_RESET
+            TEXT_BLUE + SEPERATOR_EQUALS_SHORT + " Hero's Status " + SEPERATOR_EQUALS_SHORT + TEXT_COLOR_RESET
+            + NEWLINE
+            + displayPlayerName(theHero)
+            + NEWLINE
+            + displayPlayerHP(theHero)
+            + NEWLINE
+            + displayHealingPotions(theHero)
+            + NEWLINE
+            + TEXT_BLUE + SEPERATOR_EQUALS_HALF + "===" + TEXT_BLUE
+            + NEWLINE
+        );
+    }
+
+    public final void displayMonsterStatus(final Monster theMonster) {
+        System.out.println(
+            TEXT_RED + "\\\\\\ Monster's Status ///" + TEXT_COLOR_RESET
+            + NEWLINE
+            + displayMonsterName(theMonster)
+            + NEWLINE
+            + displayMonsterHP(theMonster)
+            + NEWLINE
+            + TEXT_RED + "////////||||||||\\\\\\\\\\\\\\\\" + TEXT_COLOR_RESET
+            + NEWLINE
+        );
+    }
+
+    public final String displayCombatRound(final int myRound) {
+        return
+            NEWLINE
+            + TEXT_PINK + SEPERATOR_EQUALS_HALF + " ROUND " + myRound + " " + SEPERATOR_EQUALS_HALF + TEXT_COLOR_RESET
+            + NEWLINE;
+    }
+
+    public final void displayHeroTurn() {
+        System.out.println(
+             TEXT_YELLOW + "================== HERO'S TURN ==================" + TEXT_COLOR_RESET
+            + NEWLINE
+        );
+    }
+
+    public final void displayMonsterTurn() {
+        System.out.println(
+            NEWLINE
+            + TEXT_RED + "================== ENEMY'S TURN ==================" + TEXT_COLOR_RESET
+        );
+    }
+
+    public final void displayCombatLog() {
+        System.out.println(
+            TEXT_BLUE + SEPERATOR_EQUALS_HALF + " COMBAT LOG " + SEPERATOR_EQUALS_HALF + TEXT_COLOR_RESET
         );
     }
 
@@ -319,7 +434,55 @@ public class DungeonView {
         }
     }
 
+    private final String playerHPColorHelper(final Hero theHero) {
+        if (theHero.getHP() > theHero.getMaxHP() * 0.75) {
+            return TEXT_GREEN + theHero.getHP() + TEXT_COLOR_RESET;
+        } else if (theHero.getHP() < theHero.getMaxHP() * 0.75 && theHero.getHP() > theHero.getMaxHP() * 0.25) {
+            return TEXT_YELLOW + theHero.getHP() + TEXT_COLOR_RESET;
+        } else if (theHero.getHP() < theHero.getMaxHP() * 0.25) {
+            return TEXT_RED + theHero.getHP() + TEXT_COLOR_RESET;
+        }
+        return TEXT_BLACK + theHero.getHP() + TEXT_COLOR_RESET;
+    }
+
+    private final String monsterHpColorHelper(final Monster theMonster) {
+        if (theMonster.getHP() > theMonster.getMaxHP() * 0.75) {
+            return TEXT_GREEN + theMonster.getHP() + TEXT_COLOR_RESET;
+        } else if (theMonster.getHP() < theMonster.getMaxHP() * 0.75 && theMonster.getHP() > theMonster.getMaxHP() * 0.25) {
+            return TEXT_YELLOW + theMonster.getHP() + TEXT_COLOR_RESET;
+        } else if (theMonster.getHP() < theMonster.getMaxHP() * 0.25) {
+            return TEXT_RED + theMonster.getHP() + TEXT_COLOR_RESET;
+        }
+        return TEXT_BLACK + theMonster.getHP() + TEXT_COLOR_RESET;
+    }
+
     // ==============================  End Display Helper Method Section  ==============================
+
+
+
+    // ==============================  Begin Misc Display Section  ==============================
+    
+    public final void reprompt() {
+        System.out.print("> Enter choice: ");
+    }
+
+    public final void promptSave() {
+        System.out.print(
+            "Do you want to save [Y/N]?"
+            + NEWLINE
+            + "> Enter choice: "
+        );
+    }
+
+    public final void endSectionBlue() {
+        System.out.println(
+            NEWLINE
+            + TEXT_BLUE + SEPERATOR_EQUALS + TEXT_COLOR_RESET
+            + NEWLINE
+        );
+    }
+
+    // ==============================   End Misc Display Section   ==============================
 
 
 
@@ -327,7 +490,12 @@ public class DungeonView {
 
     public final void displayLoss() {
         System.out.println(
-            TEXT_RED + "DEFEAT" + TEXT_COLOR_RESET
+            NEWLINE
+            + TEXT_RED + SEPERATOR_EQUALS
+            + NEWLINE 
+            + "                    GAME OVER"
+            + NEWLINE
+            + SEPERATOR_EQUALS + TEXT_COLOR_RESET
             + NEWLINE
         );
 
@@ -335,9 +503,14 @@ public class DungeonView {
 
     public final void displayWin() {
         System.out.println(
-            TEXT_GREEN + "You escaped the dungeon!" + TEXT_COLOR_RESET
+            NEWLINE
+            + TEXT_YELLOW + SEPERATOR_EQUALS + TEXT_COLOR_RESET
             + NEWLINE
-            + TEXT_YELLOW + "VICTORY" + TEXT_COLOR_RESET
+            + TEXT_GREEN + "             You escaped the dungeon!"
+            + NEWLINE
+            + "                     VICTORY" + TEXT_COLOR_RESET
+            + NEWLINE
+            + TEXT_YELLOW + SEPERATOR_EQUALS + TEXT_COLOR_RESET
             + NEWLINE
         );
     }

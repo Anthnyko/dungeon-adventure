@@ -73,11 +73,10 @@ public class BattleController {
         myRound = 1;
         myDungeonView = new DungeonView();
         myCombatLog.clear();
-        System.out.println("A wild " + myMonster.getCharName() + " appears!");
 
         while (!myBattleOver) {
-            myDungeonView.displayCombatRound(myRound);
-            log("=== Round " + myRound + " ===");
+            System.out.println(myDungeonView.displayCombatRound(myRound));
+            log(myDungeonView.displayCombatRound(myRound));
             heroTurn();
             if (isBattleOver()) break;
 
@@ -156,9 +155,9 @@ public class BattleController {
      * cooldown reduction.
      */
     private void heroTurn() {
-        System.out.println("\n--- Hero Turn ---");
-        myHero.displayStatus();
-        myMonster.displayStatus();
+        myDungeonView.displayHeroTurn();
+        myDungeonView.displayHeroCombatStatus(myHero);
+        myDungeonView.displayMonsterStatus(myMonster);
 
         final int choice = getHeroActionChoice();
         myHero.performAction(choice, myMonster);
@@ -168,7 +167,7 @@ public class BattleController {
                 if (myHero.getLastDamageDealt() == 0) {
                     log(myHero.getCharName() + " misses " + myMonster.getCharName());
                 } else {
-                    log(myHero.getCharName() + " → " + myMonster.getCharName() +
+                    log(myHero.getCharName() + " -> " + myMonster.getCharName() +
                             " (-" + myHero.getLastDamageDealt() + ")");
                 }
                 break;
@@ -199,7 +198,7 @@ public class BattleController {
      * Executes the monster's turn by performing its attack on the hero.
      */
     private void monsterTurn() {
-        System.out.println("\n--- Monster Turn ---");
+        myDungeonView.displayMonsterTurn();
         myMonster.attack(myHero);
 
         int dmg = myMonster.getLastDamageDealt();
@@ -266,11 +265,11 @@ public class BattleController {
      * Displays entire combat log during battle and when combat ends.
      */
     private void displayCombatLog() {
-        System.out.println("\n=== Combat Log ===");
+        myDungeonView.displayCombatLog();
         for (String entry : myCombatLog) {
             System.out.println(entry);
         }
-        System.out.println("==================\n");
+        myDungeonView.endSectionBlue();
     }
 
     /**
@@ -283,11 +282,11 @@ public class BattleController {
         int heal = myHero.getLastHeal();
 
         if (dmg > 0) {
-            log(myHero.getCharName() + " :: " + abilityName + " → " + myMonster.getCharName() + " (-" + dmg + ")");
+            log(myDungeonView.displayPlayerName(myHero) + " :: " + abilityName + " -> " + myMonster.getCharName() + " (-" + dmg + ")");
         } else if (heal > 0) {
-            log(myHero.getCharName() + " :: " + abilityName + " (+" + heal + " HP)");
+            log(myDungeonView.displayPlayerName(myHero) + " :: " + abilityName + " (+" + heal + " HP)");
         } else {
-            log(myHero.getCharName() + " :: " + abilityName + " (effect applied)");
+            log(myDungeonView.displayPlayerName(myHero) + " :: " + abilityName + " (effect applied)");
         }
     }
 }
