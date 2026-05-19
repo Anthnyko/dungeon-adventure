@@ -44,8 +44,8 @@ public class Gremlin extends Monster {
                 rs.getInt("MinDamage"),
                 rs.getInt("MaxDamage"),
                 rs.getInt("AttackSpeed"),
-                rs.getInt("HitChance"),
-                rs.getInt("HealChance"),
+                rs.getDouble("HitChance"),
+                rs.getDouble("HealChance"),
                 rs.getInt("MinHeal"),
                 rs.getInt("MaxHeal")
         );

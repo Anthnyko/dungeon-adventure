@@ -120,9 +120,9 @@ public class BattleController {
      */
     public String getCombatSummary() {
         if (!myHero.isAlive()) {
-            return "Hero defeated by " + myMonster.getCharName();
+            return myDungeonView.displayPlayerName(myHero) + " is defeated by " + myDungeonView.displayMonsterName(myMonster);
         }
-        return "Hero defeated " + myMonster.getCharName();
+        return myDungeonView.displayPlayerName(myHero) + " defeated " + myDungeonView.displayMonsterName(myMonster);
     }
 
     /**
@@ -165,9 +165,9 @@ public class BattleController {
         switch (choice) {
             case 1:
                 if (myHero.getLastDamageDealt() == 0) {
-                    log(myHero.getCharName() + " misses " + myMonster.getCharName());
+                    log(myDungeonView.displayPlayerName(myHero) + " misses " + myDungeonView.displayMonsterName(myMonster));
                 } else {
-                    log(myHero.getCharName() + " -> " + myMonster.getCharName() +
+                    log(myDungeonView.displayPlayerName(myHero) + " -> " + myDungeonView.displayMonsterName(myMonster) +
                             " (-" + myHero.getLastDamageDealt() + ")");
                 }
                 break;
@@ -181,14 +181,14 @@ public class BattleController {
                 break;
 
             case 4:
-                log(myHero.getCharName() + " +" + myHero.getLastHeal() + " HP");
+                log(myDungeonView.displayPlayerName(myHero) + " +" + myHero.getLastHeal() + " HP");
                 break;
         }
 
         // Extra turn mechanic (Thief only)
         if (myHero.hasExtraTurn()) {
-            log(myHero.getCharName() + "gains extra turn");
-            System.out.println(myHero.getCharName() + " gains an extra turn!");
+            log(myDungeonView.displayPlayerName(myHero) + "gains extra turn");
+            System.out.println(myDungeonView.displayPlayerName(myHero) + " gains an extra turn!");
             myHero.consumeExtraTurn();
             heroTurn();
         }
@@ -204,9 +204,9 @@ public class BattleController {
         int dmg = myMonster.getLastDamageDealt();
 
         if (dmg > 0) {
-            log(myMonster.getCharName() + " → " + myHero.getCharName() + " (-" + dmg + ")");
+            log(myDungeonView.displayMonsterName(myMonster) + " -> " + myDungeonView.displayPlayerName(myHero) + " (-" + dmg + ")");
         } else {
-            log(myMonster.getCharName() + " misses " + myHero.getCharName());
+            log(myDungeonView.displayMonsterName(myMonster) + " misses " + myDungeonView.displayPlayerName(myHero));
         }
     }
 
@@ -216,7 +216,7 @@ public class BattleController {
     private void bleedPhase() {
         int bleed = myMonster.processBleed();
         if (bleed > 0) {
-            log(myMonster.getCharName() + " • Bleed (-" + bleed + ")");
+            log(myDungeonView.displayMonsterName(myMonster) + " • Bleed (-" + bleed + ")");
         }
     }
 
@@ -236,16 +236,16 @@ public class BattleController {
      */
     private boolean isBattleOver() {
         if (!myHero.isAlive()) {
-            log(myHero.getCharName() + " falls in battle");
+            log(myDungeonView.displayPlayerName(myHero) + " falls in battle");
             System.out.println("You have been defeated...");
             myBattleOver = true;
         } else if (!myMonster.isAlive()) {
             if (myMonster.diedFromBleed()) {
-                log(myMonster.getCharName() + " dies from bleeding");
+                log(myDungeonView.displayMonsterName(myMonster) + " dies from bleeding");
             } else {
-                log(myMonster.getCharName() + " dies");
+                log(myDungeonView.displayMonsterName(myMonster) + " dies");
             }
-            System.out.println("You defeated the " + myMonster.getCharName() + "!");
+            System.out.println("You defeated the " + myDungeonView.displayMonsterName(myMonster) + "!");
             myHero.reduceCooldown();
             myBattleOver = true;
         }
@@ -282,7 +282,7 @@ public class BattleController {
         int heal = myHero.getLastHeal();
 
         if (dmg > 0) {
-            log(myDungeonView.displayPlayerName(myHero) + " :: " + abilityName + " -> " + myMonster.getCharName() + " (-" + dmg + ")");
+            log(myDungeonView.displayPlayerName(myHero) + " :: " + abilityName + " -> " + myDungeonView.displayMonsterName(myMonster) + " (-" + dmg + ")");
         } else if (heal > 0) {
             log(myDungeonView.displayPlayerName(myHero) + " :: " + abilityName + " (+" + heal + " HP)");
         } else {
