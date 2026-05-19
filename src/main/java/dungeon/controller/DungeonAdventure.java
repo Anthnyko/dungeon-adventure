@@ -13,6 +13,10 @@ import dungeon.model.characters.Warrior;
 import dungeon.view.DungeonView;
 
 /**
+ * The DungeonAdventure class serves as the main controller for the dungeon adventure game.
+ * It manages the game flow, including menu navigation, game initialization, player input,
+ * combat encounters, and game state management. This class orchestrates interactions between
+ * the game model (Dungeon, Hero, Monsters) and the view (DungeonView).
  * 
  * @author Jackson Steger
  * @version 1.0
@@ -39,6 +43,9 @@ public final class DungeonAdventure {
         game.mainMenu();
     }
 
+    /**
+     * Constructs a DungeonAdventure instance and initializes the game view.
+     */
     public DungeonAdventure() {
         myDungeonView = new DungeonView();
         // Default constructor
@@ -64,6 +71,10 @@ public final class DungeonAdventure {
         myDungeonView.displayIntro(myDungeon);
     }
 
+    /**
+     * Displays the main menu and handles player navigation through menu options.
+     * Allows the player to start a new game, load a saved game, view help, view about info, or quit.
+     */
     private final void mainMenu() {
         int playerChoice = -1;
         myDungeonView.displayMainMenu();
@@ -148,6 +159,12 @@ public final class DungeonAdventure {
         }
     }
 
+    /**
+     * Prompts the player to select a hero class (Warrior, Priest, or Thief).
+     * Validates input and returns the selected class choice.
+     * 
+     * @return the player's hero class selection (1-3)
+     */
     private final int classChoice() {
         // Validate player class selection
         int playerChoice = -1;
@@ -175,6 +192,12 @@ public final class DungeonAdventure {
         return playerChoice;
     }
 
+    /**
+     * Prompts the player to enter their hero's name.
+     * Validates that the name is not empty and does not exceed 15 characters.
+     * 
+     * @return the player's chosen hero name
+     */
     private final String nameChoice() {
          // Set the player's name with a max 15 characters
         String heroName;
@@ -202,6 +225,13 @@ public final class DungeonAdventure {
         return heroName;
     }
 
+    /**
+     * Creates and initializes the hero based on the selected class and name.
+     * 
+     * @param thePlayerChoice the selected hero class (1=Warrior, 2=Priest, 3=Thief)
+     * @param theHeroName the name given to the hero
+     * @throws IllegalArgumentException if thePlayerChoice is not 1, 2, or 3
+     */
     public void setMyHero(int thePlayerChoice, String theHeroName) {
         myHero = switch (thePlayerChoice) {
             case 1 -> new Warrior(theHeroName);
@@ -211,6 +241,11 @@ public final class DungeonAdventure {
         }; 
     }
 
+    /**
+     * Prompts the player to select the dungeon difficulty level.
+     * Creates a dungeon of the appropriate size based on the selection:
+     * Easy (5x5), Medium (7x7), or Hard (10x10).
+     */
     private final void dungeonDifficultyChoice() {
         int playerChoice = -1;
         while (playerChoice < 1 || playerChoice > 3) {
@@ -342,6 +377,10 @@ public final class DungeonAdventure {
         }
     }
 
+    /**
+     * Displays the about page with game information.
+     * Currently a placeholder that allows the player to return to the main menu.
+     */
     private final void aboutPage() {
         // TODO: implement the about page
         System.out.println("Press [1] to return to main menu.");
@@ -360,10 +399,17 @@ public final class DungeonAdventure {
         mainMenu();
     }
 
+    /**
+     * Displays the help page with game instructions and controls.
+     * Currently a placeholder for future implementation.
+     */
     private final void helpPage() {
 
     }
 
+    /**
+     * Closes and exits the game application.
+     */
     private final void closeGame() {
         System.out.println("Closing Game...");
         System.exit(0);
