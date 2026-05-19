@@ -571,7 +571,7 @@ public class DungeonView {
     private final String playerHPColorHelper(final Hero theHero) {
         if (theHero.getHP() > theHero.getMaxHP() * 0.75) {
             return TEXT_GREEN + theHero.getHP() + TEXT_COLOR_RESET;
-        } else if (theHero.getHP() < theHero.getMaxHP() * 0.75 && theHero.getHP() > theHero.getMaxHP() * 0.25) {
+        } else if (theHero.getHP() <= theHero.getMaxHP() * 0.75 && theHero.getHP() >= theHero.getMaxHP() * 0.25) {
             return TEXT_YELLOW + theHero.getHP() + TEXT_COLOR_RESET;
         } else if (theHero.getHP() < theHero.getMaxHP() * 0.25) {
             return TEXT_RED + theHero.getHP() + TEXT_COLOR_RESET;
