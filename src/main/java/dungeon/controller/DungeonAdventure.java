@@ -123,16 +123,13 @@ public final class DungeonAdventure {
             if (myDungeon.getCurrentRoom().hasMonster()) {
                 evaluateRoomEvents(myDungeon.getCurrentRoom());
                 myDungeonView.displayRoom(myDungeon.getCurrentRoom());
-                myDungeonView.displayDungeon(myDungeon);
-                myDungeonView.displayPlayerStatus(myHero);
-                myDungeonView.displayInGameMenu();
             } else {
                 myDungeonView.displayRoom(myDungeon.getCurrentRoom());
                 evaluateRoomEvents(myDungeon.getCurrentRoom());
-                myDungeonView.displayDungeon(myDungeon);
-                myDungeonView.displayPlayerStatus(myHero);
-                myDungeonView.displayInGameMenu();
             }
+            myDungeonView.displayDungeon(myDungeon);
+            myDungeonView.displayPlayerStatus(myHero);
+            myDungeonView.displayInGameMenu();
 
             String userChoice;
             boolean validInput = false;
@@ -305,18 +302,17 @@ public final class DungeonAdventure {
      */
     private final void handlePlayerChoice(final String thePlayerChoice) {
 
-        if(thePlayerChoice.equals("W") || thePlayerChoice.equals("A")
-        || thePlayerChoice.equals("S") || thePlayerChoice.equals("D")) {
-            move(thePlayerChoice);
-        } else if(thePlayerChoice.equals("H")) {
-            myHero.useHealingPotion();
-        } else if(thePlayerChoice.equals("V")) {
-            myHero.useVisionPotion(myDungeon);
-        } else if(thePlayerChoice.equals("B")) {
-            // TODO: implement help menu
-        } else if(thePlayerChoice.equals("Q")) {
-            saveGame();
-            myActiveGame = false;
+        switch (thePlayerChoice) {
+            case "W", "A", "S", "D" -> move(thePlayerChoice);
+            case "H" -> myHero.useHealingPotion();
+            case "V" -> myHero.useVisionPotion(myDungeon);
+            case "B" -> {
+                // TODO: implement help menu
+            }
+            case "Q" -> {
+                saveGame();
+                myActiveGame = false;
+            }
         }
         
     }

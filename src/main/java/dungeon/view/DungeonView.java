@@ -130,7 +130,7 @@ public class DungeonView {
             + "    Ultimate Skill: Enrage" 
             + TEXT_COLOR_RESET 
             + NEWLINE
-            + TEXT_PINK + "[2] Priest (75 HP): " 
+            + TEXT_PINK + "[2] Priest (85 HP): "
             + NEWLINE
             + "    Special Skill: Heal"
             + NEWLINE 
@@ -139,7 +139,7 @@ public class DungeonView {
             + NEWLINE
             + TEXT_BLACK + "[3] Thief (75 HP): "
             + NEWLINE
-            + "    Special Skill: Suprise Attack"
+            + "    Special Skill: Surprise Attack"
             + NEWLINE 
             + "    Ultimate Skill: Garrote"  
             + TEXT_COLOR_RESET 
@@ -231,7 +231,7 @@ public class DungeonView {
      * @param theMonster the monster whose name to display
      * @return formatted monster name display string
      */
-    public static String displayMonsterName(final Monster theMonster) {
+    public String displayMonsterName(final Monster theMonster) {
         return TEXT_YELLOW + theMonster.getCharName() + TEXT_COLOR_RESET;
     }
 

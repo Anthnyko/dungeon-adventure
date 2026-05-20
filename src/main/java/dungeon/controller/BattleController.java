@@ -25,9 +25,6 @@ public class BattleController {
     /** Tracks whether the battle has ended. */
     private boolean myBattleOver;
 
-    /** Tracks round number during combat. */
-    private int myRound;
-
     /**
      * Handles all combat-related text output, including round banners,
      * action prompts, and status displays for both the hero and monster.
@@ -57,10 +54,6 @@ public class BattleController {
         myHero = theHero;
     }
 
-    public int getMyRound() {
-        return myRound;
-    }
-
     /**
      * Begins the combat loop and continues until either the hero or the monster
      * is defeated. Handles turn sequencing and end-of-round effects.
@@ -70,7 +63,11 @@ public class BattleController {
     public void startBattle(final Monster theMonster) {
         myMonster = theMonster;
         myBattleOver = false;
-        myRound = 1;
+        myHero.setAttackLogger(this::log);
+        myMonster.setAttackLogger(this::log);
+
+        int myRound = 1;
+
         myDungeonView = new DungeonView();
         myCombatLog.clear();
 
@@ -163,15 +160,6 @@ public class BattleController {
         myHero.performAction(choice, myMonster);
 
         switch (choice) {
-            case 1:
-                if (myHero.getLastDamageDealt() == 0) {
-                    log(myDungeonView.displayPlayerName(myHero) + " misses " + myDungeonView.displayMonsterName(myMonster));
-                } else {
-                    log(myDungeonView.displayPlayerName(myHero) + " -> " + myDungeonView.displayMonsterName(myMonster) +
-                            " (-" + myHero.getLastDamageDealt() + ")");
-                }
-                break;
-
             case 2:
                 logAbility(myHero.getSpecialSkillName());
                 break;
@@ -185,13 +173,23 @@ public class BattleController {
                 break;
         }
 
+        // Monster healing after taking damage
+        if (myHero.getLastDamageDealt() > 0) {
+            myMonster.heal();
+            int heal = myMonster.getLastHeal();
+            if (heal > 0) {
+                log(myDungeonView.displayMonsterName(myMonster) + " regenerates +" + heal + " HP");
+            }
+        }
+
         // Extra turn mechanic (Thief only)
         if (myHero.hasExtraTurn()) {
-            log(myDungeonView.displayPlayerName(myHero) + "gains extra turn");
+            log(myDungeonView.displayPlayerName(myHero) + " gains extra turn");
             System.out.println(myDungeonView.displayPlayerName(myHero) + " gains an extra turn!");
             myHero.consumeExtraTurn();
             heroTurn();
         }
+
     }
 
     /**
@@ -199,33 +197,31 @@ public class BattleController {
      */
     private void monsterTurn() {
         myDungeonView.displayMonsterTurn();
-        myMonster.attack(myHero);
 
-        int dmg = myMonster.getLastDamageDealt();
-
-        if (dmg > 0) {
-            log(myDungeonView.displayMonsterName(myMonster) + " -> " + myDungeonView.displayPlayerName(myHero) + " (-" + dmg + ")");
-        } else {
-            log(myDungeonView.displayMonsterName(myMonster) + " misses " + myDungeonView.displayPlayerName(myHero));
+        // 1. Bleed happens BEFORE monster attacks
+        if (bleedPhase()) {
+            return;
         }
+
+        myMonster.attack(myHero);
     }
 
     /**
      * Helper method for logging bleed damage on monsters.
      */
-    private void bleedPhase() {
+    private boolean bleedPhase() {
         int bleed = myMonster.processBleed();
         if (bleed > 0) {
             log(myDungeonView.displayMonsterName(myMonster) + " • Bleed (-" + bleed + ")");
         }
+        return !myMonster.isAlive();
     }
 
     /**
      * Processes end-of-round effects such as bleed damage on the monster.
      */
     private void processEndOfRoundEffects() {
-        myHero.reduceCooldown();
-        bleedPhase();
+        myHero.tickCooldowns();
     }
 
     /**
@@ -235,7 +231,7 @@ public class BattleController {
      * @return true if the battle is over, false otherwise
      */
     private boolean isBattleOver() {
-        if (!myHero.isAlive()) {
+        if (!heroIsAlive()) {
             log(myDungeonView.displayPlayerName(myHero) + " falls in battle");
             System.out.println("You have been defeated...");
             myBattleOver = true;

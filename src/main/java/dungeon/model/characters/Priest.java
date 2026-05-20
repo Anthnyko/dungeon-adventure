@@ -5,7 +5,7 @@ package dungeon.model.characters;
  * focusing on healing and holy damage. This class defines the
  * Priest's base stats and provides stubs for its special abilities,
  * which are implemented in later iterations.
- *
+ * <p>
  * The Priest has two unique abilities:
  * - heal: the Priest's special skill (typically self-targeted)
  * - smite: the Priest's ultimate cooldown ability
@@ -22,7 +22,7 @@ public class Priest extends Hero {
      */
     public Priest(String theName) {
         super(theName,
-                75,   // HP
+                85,   // HP
                 75,   // max HP
                 25,   // min damage
                 45,   // max damage
@@ -67,7 +67,7 @@ public class Priest extends Hero {
      * Executes the Priest's healing ability.
      */
     private void heal() {
-        final int heal = 20;
+        final int heal = 40;
 
         if (heal + myHP > myMaxHP) {
             myLastHeal = myMaxHP - myHP;
@@ -90,7 +90,7 @@ public class Priest extends Hero {
             return;
         }
 
-        final int smiteDmg = 50;
+        final int smiteDmg = 70;
 
         System.out.println(myCharName + " casts smite!");
         myCDTimer = 3;

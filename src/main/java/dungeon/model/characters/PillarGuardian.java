@@ -8,11 +8,11 @@ import java.sql.SQLException;
  * in the dungeon. The Pillar Guardian is significantly stronger than
  * standard monsters and must be defeated before the hero can collect
  * a Pillar of OO.
- *
+ * <p>
  * This monster does not heal, has high durability, and deals heavy
  * damage, making it a mid‑game challenge intended to test the player's
  * resource management and combat strategy.
- *
+ * <p>
  * Pillar Guardians appear only in pillar rooms and are not encountered
  * elsewhere in the dungeon.
  *
@@ -49,7 +49,7 @@ public class PillarGuardian extends Monster {
      * These stats are intentionally higher than those of regular
      * monsters to create a mini‑boss encounter.
      * This constructor is intended for testing purposes only.
-     *
+     * <p>
      * Stats:
      * - HP: 250
      * - Max HP: 250
