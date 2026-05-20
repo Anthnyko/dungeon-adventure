@@ -51,7 +51,7 @@ public class DungeonView {
         System.out.print(
             TEXT_YELLOW + SEPERATOR_EQUALS + TEXT_COLOR_RESET
             + NEWLINE
-            + "WELCOME TO DUNGEON ADVENTURE!"
+            + "          WELCOME TO DUNGEON ADVENTURE!"
             + NEWLINE
             + TEXT_YELLOW + SEPERATOR_EQUALS + TEXT_COLOR_RESET
             + NEWLINE
