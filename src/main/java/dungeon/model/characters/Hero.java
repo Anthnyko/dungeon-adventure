@@ -172,6 +172,12 @@ public abstract class Hero extends DungeonCharacter {
                 specialSkill(theTarget);
                 break;
             case 3:
+                if (myCDTimer > 0) {
+                    System.out.println("Your ultimate is still on cooldown (" + myCDTimer + " turns left)");
+                    myLastDamageDealt = 0;
+                    myLastHeal = 0;
+                    break;
+                }
                 bigCooldown(theTarget);
                 break;
             case 4:

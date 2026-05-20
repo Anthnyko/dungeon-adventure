@@ -185,6 +185,13 @@ public class BattleController {
                 break;
         }
 
+        // Monster healing after taking damage
+        myMonster.heal();
+        int heal = myMonster.getLastHeal();
+        if (heal > 0) {
+            log(myDungeonView.displayMonsterName(myMonster) + " regenerates +" + heal + " HP");
+        }
+
         // Extra turn mechanic (Thief only)
         if (myHero.hasExtraTurn()) {
             log(myDungeonView.displayPlayerName(myHero) + "gains extra turn");
@@ -192,6 +199,7 @@ public class BattleController {
             myHero.consumeExtraTurn();
             heroTurn();
         }
+
     }
 
     /**
@@ -199,6 +207,12 @@ public class BattleController {
      */
     private void monsterTurn() {
         myDungeonView.displayMonsterTurn();
+
+        // 1. Bleed happens BEFORE monster attacks
+        if (bleedPhase()) {
+            return;
+        }
+
         myMonster.attack(myHero);
 
         int dmg = myMonster.getLastDamageDealt();
@@ -213,11 +227,12 @@ public class BattleController {
     /**
      * Helper method for logging bleed damage on monsters.
      */
-    private void bleedPhase() {
+    private boolean bleedPhase() {
         int bleed = myMonster.processBleed();
         if (bleed > 0) {
             log(myDungeonView.displayMonsterName(myMonster) + " • Bleed (-" + bleed + ")");
         }
+        return !myMonster.isAlive();
     }
 
     /**
@@ -225,7 +240,6 @@ public class BattleController {
      */
     private void processEndOfRoundEffects() {
         myHero.reduceCooldown();
-        bleedPhase();
     }
 
     /**
