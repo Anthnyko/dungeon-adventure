@@ -63,6 +63,8 @@ public class BattleController {
     public void startBattle(final Monster theMonster) {
         myMonster = theMonster;
         myBattleOver = false;
+        myHero.setAttackLogger(this::log);
+        myMonster.setAttackLogger(this::log);
 
         int myRound = 1;
 
@@ -158,15 +160,6 @@ public class BattleController {
         myHero.performAction(choice, myMonster);
 
         switch (choice) {
-            case 1:
-                if (myHero.getLastDamageDealt() == 0) {
-                    log(myDungeonView.displayPlayerName(myHero) + " misses " + myDungeonView.displayMonsterName(myMonster));
-                } else {
-                    log(myDungeonView.displayPlayerName(myHero) + " -> " + myDungeonView.displayMonsterName(myMonster) +
-                            " (-" + myHero.getLastDamageDealt() + ")");
-                }
-                break;
-
             case 2:
                 logAbility(myHero.getSpecialSkillName());
                 break;
@@ -181,15 +174,17 @@ public class BattleController {
         }
 
         // Monster healing after taking damage
-        myMonster.heal();
-        int heal = myMonster.getLastHeal();
-        if (heal > 0) {
-            log(myDungeonView.displayMonsterName(myMonster) + " regenerates +" + heal + " HP");
+        if (myHero.getLastDamageDealt() > 0) {
+            myMonster.heal();
+            int heal = myMonster.getLastHeal();
+            if (heal > 0) {
+                log(myDungeonView.displayMonsterName(myMonster) + " regenerates +" + heal + " HP");
+            }
         }
 
         // Extra turn mechanic (Thief only)
         if (myHero.hasExtraTurn()) {
-            log(myDungeonView.displayPlayerName(myHero) + "gains extra turn");
+            log(myDungeonView.displayPlayerName(myHero) + " gains extra turn");
             System.out.println(myDungeonView.displayPlayerName(myHero) + " gains an extra turn!");
             myHero.consumeExtraTurn();
             heroTurn();
@@ -209,14 +204,6 @@ public class BattleController {
         }
 
         myMonster.attack(myHero);
-
-        int dmg = myMonster.getLastDamageDealt();
-
-        if (dmg > 0) {
-            log(myDungeonView.displayMonsterName(myMonster) + " -> " + myDungeonView.displayPlayerName(myHero) + " (-" + dmg + ")");
-        } else {
-            log(myDungeonView.displayMonsterName(myMonster) + " misses " + myDungeonView.displayPlayerName(myHero));
-        }
     }
 
     /**

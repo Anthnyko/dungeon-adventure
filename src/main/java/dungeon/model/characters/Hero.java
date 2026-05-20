@@ -181,9 +181,7 @@ public abstract class Hero extends DungeonCharacter {
                 bigCooldown(theTarget);
                 break;
             case 4:
-                useHealingPotion();
-            default:
-                System.out.println("Invalid choice. You lose your turn.");
+                myLastHeal = useHealingPotion();
         }
     }
 

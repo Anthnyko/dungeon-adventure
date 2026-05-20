@@ -1,6 +1,7 @@
 package dungeon.model.characters;
 
 import java.util.Random;
+import java.util.function.Consumer;
 
 /**
  * Abstract base class representing any character in the dungeon.
@@ -44,6 +45,8 @@ public abstract class DungeonCharacter {
     /** Rolls random value for abilities. */
     protected Random rng = new Random();
 
+    protected Consumer<String> myAttackLogger;
+
 
     /**
      * Constructs a new DungeonCharacter with the given combat attributes.
@@ -83,18 +86,23 @@ public abstract class DungeonCharacter {
         if (numAttacks < 1) numAttacks = 1;
 
         for (int i = 0; i < numAttacks; i++) {
+
             if (rng.nextDouble() < myHitChance) {
                 final int damage = myMinDamage + (int)(rng.nextDouble() * (myMaxDamage - myMinDamage + 1));
                 myLastDamageDealt = damage;
-                System.out.println(myCharName + " attacks " + theTarget.getCharName() + " for " + damage + " damage!");
                 theTarget.takeDamage(damage);
+                if (myAttackLogger != null) {
+                    myAttackLogger.accept(myCharName + " hits " + theTarget.getCharName() + " (-" + damage + ")");
+                }
             } else {
-                System.out.println(myCharName + " misses " + theTarget.myCharName + "...");
-            }
+                myLastDamageDealt = 0;
 
-            if (!theTarget.isAlive()) {
-                break;
+                System.out.println(myCharName + " misses " + theTarget.getCharName() + "...");
+                if (myAttackLogger != null) {
+                    myAttackLogger.accept(myCharName + " misses " + theTarget.getCharName());
+                }
             }
+            if (!theTarget.isAlive()) break;
         }
 
     }
@@ -185,4 +193,8 @@ public abstract class DungeonCharacter {
 
     /** @return the character's max hit points */
     public int getMaxHP() { return myMaxHP; }
+
+    public void setAttackLogger(Consumer<String> logger) {
+        myAttackLogger = logger;
+    }
 }
