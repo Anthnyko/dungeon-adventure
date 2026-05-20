@@ -15,12 +15,12 @@ import java.sql.SQLException;
  *
  * <p>Gremlin Stats:</p>
  * <ul>
- *     <li>HP: 70</li>
- *     <li>Damage: 15–30</li>
+ *     <li>HP: 55</li>
+ *     <li>Damage: 10–20</li>
  *     <li>Attack Speed: 5</li>
  *     <li>Hit Chance: 0.8</li>
- *     <li>Heal Chance: 0.4</li>
- *     <li>Heal Amount: 20–40</li>
+ *     <li>Heal Chance: 0.25</li>
+ *     <li>Heal Amount: 10–20</li>
  * </ul>
  *
  * This class extends {@link Monster} and provides the appropriate
@@ -58,14 +58,14 @@ public class Gremlin extends Monster {
      */
     public Gremlin() {
         super("Gremlin",
-                70,   // HP
-                70,   // max HP
-                15,   // min damage
-                30,   // max damage
+                55,   // HP
+                55,   // max HP
+                10,   // min damage
+                20,   // max damage
                 5,    // attack speed
                 0.8,  // hit chance
-                0.4,  // heal chance
-                20,   // min heal
-                40);  // max heal
+                0.25,  // heal chance
+                10,   // min heal
+                20);  // max heal
     }
 }

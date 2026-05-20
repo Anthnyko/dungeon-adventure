@@ -174,7 +174,7 @@ public class BattleController {
         }
 
         // Monster healing after taking damage
-        if (myHero.getLastDamageDealt() > 0) {
+        if (myHero.getLastDamageDealt() > 0 && myMonster.isAlive()) {
             myMonster.heal();
             int heal = myMonster.getLastHeal();
             if (heal > 0) {
