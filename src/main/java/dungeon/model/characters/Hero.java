@@ -9,7 +9,7 @@ import java.util.List;
  * Abstract base class for all hero types in the dungeon game.
  * Heroes share common combat attributes from DungeonCharacter and
  * add blocking and potion-related functionality.
- *
+ * <p>
  * This class defines the shared structure for Warrior, Priestess,
  * and Thief, but does not implement combat logic in Iteration 1.
  *
@@ -32,7 +32,7 @@ public abstract class Hero extends DungeonCharacter {
     protected int myCDTimer;
 
     /** Probability that the character blocks an incoming attack. */
-    protected double myBlockChance;
+    protected final double myBlockChance;
 
     /** Track whether thief gains extra turn from special skill. */
     protected boolean myExtraTurn;
@@ -127,7 +127,7 @@ public abstract class Hero extends DungeonCharacter {
      * (e.g., when moving between rooms).
      */
     public void tickCooldowns() {
-        reduceCooldown(); // You already have this method
+        reduceCooldown();
     }
 
     /**

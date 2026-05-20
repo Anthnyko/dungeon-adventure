@@ -133,27 +133,6 @@ public abstract class Monster extends DungeonCharacter {
     }
 
     /**
-     * @return the probability that the monster successfully heals
-     */
-    public double getMyHealChance() {
-        return myHealChance;
-    }
-
-    /**
-     * @return the minimum amount of HP the monster can heal
-     */
-    public int getMyMinHeal() {
-        return myMinHeal;
-    }
-
-    /**
-     * @return the maximum amount of HP the monster can heal
-     */
-    public int getMyMaxHeal() {
-        return myMaxHeal;
-    }
-
-    /**
      * @return the number of turns remaining for bleed damage effects
      */
     public int getMyBleedTimer() {

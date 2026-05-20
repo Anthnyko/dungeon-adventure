@@ -25,9 +25,6 @@ public class BattleController {
     /** Tracks whether the battle has ended. */
     private boolean myBattleOver;
 
-    /** Tracks round number during combat. */
-    private int myRound;
-
     /**
      * Handles all combat-related text output, including round banners,
      * action prompts, and status displays for both the hero and monster.
@@ -57,10 +54,6 @@ public class BattleController {
         myHero = theHero;
     }
 
-    public int getMyRound() {
-        return myRound;
-    }
-
     /**
      * Begins the combat loop and continues until either the hero or the monster
      * is defeated. Handles turn sequencing and end-of-round effects.
@@ -70,7 +63,9 @@ public class BattleController {
     public void startBattle(final Monster theMonster) {
         myMonster = theMonster;
         myBattleOver = false;
-        myRound = 1;
+
+        int myRound = 1;
+
         myDungeonView = new DungeonView();
         myCombatLog.clear();
 
@@ -239,7 +234,7 @@ public class BattleController {
      * Processes end-of-round effects such as bleed damage on the monster.
      */
     private void processEndOfRoundEffects() {
-        myHero.reduceCooldown();
+        myHero.tickCooldowns();
     }
 
     /**
@@ -249,7 +244,7 @@ public class BattleController {
      * @return true if the battle is over, false otherwise
      */
     private boolean isBattleOver() {
-        if (!myHero.isAlive()) {
+        if (!heroIsAlive()) {
             log(myDungeonView.displayPlayerName(myHero) + " falls in battle");
             System.out.println("You have been defeated...");
             myBattleOver = true;

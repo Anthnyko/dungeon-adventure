@@ -5,7 +5,7 @@ import java.util.Random;
 /**
  * Abstract base class representing any character in the dungeon.
  * Both heroes and monsters share these core combat attributes.
- *
+ * <p>
  * This class defines the common structure for all character types
  * but does not implement combat logic in Iteration 1.
  *
@@ -15,10 +15,10 @@ import java.util.Random;
 public abstract class DungeonCharacter {
 
     /** The character's name. */
-    protected String myCharName;
+    protected final String myCharName;
 
     /** Max hit points of the character. */
-    protected int myMaxHP;
+    protected final int myMaxHP;
 
     /** Current hit points of the character. */
     protected int myHP;
@@ -161,7 +161,7 @@ public abstract class DungeonCharacter {
 
     /**
      * Returns last damage dealt by the character.
-     *
+     * <p>
      * Used for combat logging.
      * @return last damage dealt
      */
@@ -185,24 +185,4 @@ public abstract class DungeonCharacter {
 
     /** @return the character's max hit points */
     public int getMaxHP() { return myMaxHP; }
-
-    /** @return the minimum damage value */
-    public int getMinDamage() {
-        return myMinDamage;
-    }
-
-    /** @return the maximum damage value */
-    public int getMaxDamage() {
-        return myMaxDamage;
-    }
-
-    /** @return the character's attack speed */
-    public int getAttackSpeed() {
-        return myAttackSpeed;
-    }
-
-    /** @return the probability of landing an attack */
-    public double getHitChance() {
-        return myHitChance;
-    }
 }

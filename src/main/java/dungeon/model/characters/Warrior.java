@@ -1,11 +1,11 @@
 package dungeon.model.characters;
 
 /**
- * The Warrior hero class. Warriors specialize in high-damage melee
+ * The Warrior hero class. Warriors specialize in high-damage physical
  * combat and rely on strength and resilience to overpower enemies.
  * This class defines the Warrior's base stats and provides stubs
  * for its special abilities, which are implemented in later iterations.
- *
+ * <p>
  * The Warrior has two unique abilities:
  * - crushingBlow: the Warrior's special skill
  * - enrage: the Warrior's ultimate cooldown ability
@@ -16,10 +16,10 @@ package dungeon.model.characters;
 public class Warrior extends Hero {
 
     /** Minimum damage the character can deal on Crushing Blow. */
-    protected int myMinCrushDamage;
+    protected final int myMinCrushDamage;
 
     /** Maximum damage the character can deal on Crushing Blow. */
-    protected int myMaxCrushDamage;
+    protected final int myMaxCrushDamage;
 
     /** Tracks turn duration of Enrage. */
     protected int myEnrageTimer;
@@ -39,7 +39,7 @@ public class Warrior extends Hero {
                 0.8,  // hit chance
                 0.2); // block chance (or dodge if you keep it)
         myMinCrushDamage = 75;
-        myMaxCrushDamage = 175;
+        myMaxCrushDamage = 150;
         myEnrageTimer = 0;
     }
 
@@ -50,8 +50,8 @@ public class Warrior extends Hero {
             int originalMin = myMinDamage;
             int originalMax = myMaxDamage;
 
-            myMinDamage += 10;
-            myMaxDamage += 10;
+            myMinDamage += 7;
+            myMaxDamage += 7;
 
             super.attack(theTarget);
 
@@ -137,13 +137,13 @@ public class Warrior extends Hero {
 
     /**
      * Executes the Warrior's enrage ability, used as the ultimate move.
-     *
+     * <p>
      * On successful attack, the enrage buff is decremented by 1.
      */
     private void enrage() {
         System.out.println(getCharName() + " becomes enraged!");
 
-        myEnrageTimer = 3;
+        myEnrageTimer = 2;
         myCDTimer = 4;
 
         myLastDamageDealt = 0;

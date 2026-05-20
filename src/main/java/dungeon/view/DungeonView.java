@@ -231,7 +231,7 @@ public class DungeonView {
      * @param theMonster the monster whose name to display
      * @return formatted monster name display string
      */
-    public static String displayMonsterName(final Monster theMonster) {
+    public String displayMonsterName(final Monster theMonster) {
         return TEXT_YELLOW + theMonster.getCharName() + TEXT_COLOR_RESET;
     }
 
