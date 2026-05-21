@@ -146,11 +146,25 @@ public class BattleController {
                         + "> Enter choice: "
                     );
                     choice = -1;
+                } else if (choice == 2 && myHero.getSkillTimer() > 0) {
+                    System.out.print(
+                            "Your skill is on cooldown!"
+                                    + NEWLINE
+                                    + "> Enter choice: "
+                    );
+                    choice = -1;
                 } else if (choice == 3 && myHero.getCDTimer() > 0) {
                     System.out.print(
                         "Your ultimate is on cooldown!"
                         + NEWLINE
                         + "> Enter choice: "
+                    );
+                    choice = -1;
+                } else if (choice == 3 && myHero instanceof Warrior warrior && warrior.getMyEnrageTimer() > 0) {
+                    System.out.print(
+                            "Enrage is still active!"
+                                    + NEWLINE
+                                    + "> Enter choice: "
                     );
                     choice = -1;
                 } else if (choice == 4 && myHero.getHealingPotion() <= 0) {
@@ -193,6 +207,9 @@ public class BattleController {
 
             case 3:
                 logAbility(myHero.getUltimateName());
+                if (myHero instanceof Warrior warrior) {
+                    heroTurn();
+                }
                 break;
 
             case 4:

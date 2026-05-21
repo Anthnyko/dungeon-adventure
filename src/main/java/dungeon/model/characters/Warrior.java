@@ -59,6 +59,10 @@ public class Warrior extends Hero {
             myMinDamage = originalMin;
             myMaxDamage = originalMax;
             myEnrageTimer--;
+            if (myEnrageTimer == 0) {
+               System.out.println("Enrage has worn off...");
+               myCDTimer = 5;
+            }
         } else {
             super.attack(theTarget);
         }
@@ -144,7 +148,6 @@ public class Warrior extends Hero {
         System.out.println(getCharName() + " becomes enraged!");
         myHP += 25;
         myEnrageTimer = 2;
-        myCDTimer = 4;
 
         myLastDamageDealt = 0;
         myLastHeal = 25;

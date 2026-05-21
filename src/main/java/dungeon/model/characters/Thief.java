@@ -118,7 +118,7 @@ public class Thief extends Hero {
             monster.applyBleed(8);
         }
 
-        myCDTimer = 3;
+        myCDTimer = 4;
 
         myLastDamageDealt = 0;
         myLastHeal = 0;
