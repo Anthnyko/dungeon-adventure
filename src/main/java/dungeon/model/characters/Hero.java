@@ -54,8 +54,8 @@ public abstract class Hero extends DungeonCharacter {
                 double theHitChance, double theBlockChance) {
         super(theName, theHP, theMaxHP,theMinDamage, theMaxDamage, theAttackSpeed, theHitChance);
         myBlockChance = theBlockChance;
-        myHealingPotions = 0;
-        myVisionPotions = 0;
+        myHealingPotions = 3;
+        myVisionPotions = 1;
         myPillarsFound = new ArrayList<>();
         myCDTimer = 0;
     }

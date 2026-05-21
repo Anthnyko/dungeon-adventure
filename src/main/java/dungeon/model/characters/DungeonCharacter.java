@@ -104,7 +104,6 @@ public abstract class DungeonCharacter {
             }
             if (!theTarget.isAlive()) break;
         }
-
     }
 
     /**
