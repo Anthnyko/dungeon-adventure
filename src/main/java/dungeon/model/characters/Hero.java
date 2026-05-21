@@ -28,6 +28,9 @@ public abstract class Hero extends DungeonCharacter {
     /** Tracker for all Pillar items collected by the Hero. */
     protected List<Character> myPillarsFound;
 
+    /** Tracks cooldown time for the Hero's special skill. */
+    protected int mySkillTimer;
+
     /** Tracks cooldown time for the Hero's ultimate ability. */
     protected int myCDTimer;
 
@@ -120,6 +123,17 @@ public abstract class Hero extends DungeonCharacter {
         if (myCDTimer > 0) {
             myCDTimer--;
         }
+        if (mySkillTimer > 0) {
+            mySkillTimer--;
+        }
+    }
+
+    /**
+     * Resets all cooldowns on Hero
+     */
+    public void resetCooldowns() {
+        myCDTimer = 0;
+        mySkillTimer = 0;
     }
 
     /**
