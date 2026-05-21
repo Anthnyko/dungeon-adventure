@@ -279,7 +279,7 @@ public final class DungeonAdventure {
                 || (userChoice.equals("A") && myDungeon.getCurrentRoom().hasWestDoor())
                 || (userChoice.equals("S") && myDungeon.getCurrentRoom().hasSouthDoor())
                 || (userChoice.equals("D") && myDungeon.getCurrentRoom().hasEastDoor())
-                || (userChoice.equals("H") && myHero.getHealingPotion() > 0) 
+                || (userChoice.equals("H") && myHero.getHealingPotion() > 0  && myHero.getMaxHP() != myHero.getHP()) 
                 || (userChoice.equals("V") && myHero.getVisionPotion() > 0)
                 || userChoice.equals("F")
                 || userChoice.equals("B") 
@@ -294,11 +294,19 @@ public final class DungeonAdventure {
                     + "> Enter choice: "
                 );                            
             } else if (userChoice.equals("H")) {
-                System.out.print(
-                    "You have no healing potions!"
-                    + NEWLINE
-                    + "> Enter choice: "
-                );
+                if (myHero.getHealingPotion() <= 0) {
+                    System.out.print(
+                        "You have no healing potions!"
+                        + NEWLINE
+                        + "> Enter choice: "
+                    );
+                } else if (myHero.getMaxHP() == myHero.getHP()) {
+                    System.out.print(
+                        "You are at max health!"
+                        + NEWLINE
+                        + "> Enter choice: "
+                    );
+                }
             } else if (userChoice.equals("V")) {
                 System.out.print(
                     "You have no vision potions!"
@@ -513,7 +521,7 @@ public final class DungeonAdventure {
         int playerChoice = -1;
         myDungeonView.promptPostGame();
         
-        while (playerChoice != 1) {
+        while (playerChoice < 1 || playerChoice > 3) {
             try {
                 final String input = myScanner.nextLine().trim();
                 playerChoice = Integer.parseInt(input);

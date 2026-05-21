@@ -636,6 +636,8 @@ public class DungeonView {
             + "[2] Start a new game "
             + NEWLINE
             + "[3] Close game "
+            + NEWLINE
+            + "> Enter choice: "
         );
     }
 
