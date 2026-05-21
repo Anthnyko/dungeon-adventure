@@ -19,19 +19,20 @@ import dungeon.model.items.VisionPotion;
 public class DungeonView {
 
     // Text Colors
-    private static final String TEXT_COLOR_RESET = "\u001B[0m";
-    private static final String TEXT_RED = "\u001B[31m";
-    private static final String TEXT_GREEN = "\u001B[32m";
-    private static final String TEXT_YELLOW = "\u001B[33m";
-    private static final String TEXT_BLUE = "\u001B[34m";
-    private static final String TEXT_PINK = "\u001B[35m";
-    private static final String TEXT_PURPLE = "\u001B[36m";
-    private static final String TEXT_BLACK = "\u001B[30m";
+    private static final String TEXT_COLOR_RESET    = "\u001B[0m";
+    private static final String TEXT_RED            = "\u001B[31m";
+    private static final String TEXT_GREEN          = "\u001B[32m";
+    private static final String TEXT_YELLOW         = "\u001B[33m";
+    private static final String TEXT_BLUE           = "\u001B[34m";
+    private static final String TEXT_PINK           = "\u001B[35m";
+    private static final String TEXT_PURPLE         = "\u001B[36m";
+    private static final String TEXT_BLACK          = "\u001B[30m";
+    private static final String TEXT_DIM            = "\u001B[2m";
 
-    private static final String SEPERATOR_EQUALS = "==================================================";
-    private static final String SEPERATOR_EQUALS_HALF = "====================";
-    private static final String SEPERATOR_EQUALS_SHORT = "====";
-    private static final String SEPERATOR_STRAIGHT = "--------------------------------------------------";
+    private static final String SEPERATOR_EQUALS        = "==================================================";
+    private static final String SEPERATOR_EQUALS_HALF   = "====================";
+    private static final String SEPERATOR_EQUALS_SHORT  = "====";
+    private static final String SEPERATOR_STRAIGHT      = "--------------------------------------------------";
     private static final String NEWLINE = System.lineSeparator();
 
     /**
@@ -51,7 +52,7 @@ public class DungeonView {
         System.out.print(
             TEXT_YELLOW + SEPERATOR_EQUALS + TEXT_COLOR_RESET
             + NEWLINE
-            + "WELCOME TO DUNGEON ADVENTURE!"
+            + "          WELCOME TO DUNGEON ADVENTURE!"
             + NEWLINE
             + TEXT_YELLOW + SEPERATOR_EQUALS + TEXT_COLOR_RESET
             + NEWLINE
@@ -292,7 +293,7 @@ public class DungeonView {
             + NEWLINE
             + "[B] Help "
             + NEWLINE
-            + "[Q] Quit to Menu "
+            + "[Q] Quit "
             + TEXT_COLOR_RESET
             + NEWLINE
             + "> Enter choice: "
@@ -306,7 +307,7 @@ public class DungeonView {
      */
     public final void displayRoom(final Room theRoom) {
         System.out.println(
-            "Current room: "
+            "Current Room: "
             + NEWLINE
             + theRoom.toString()
             + NEWLINE
@@ -322,7 +323,7 @@ public class DungeonView {
     public final void displayDungeon(final Dungeon theDungeon) {
         System.out.println(
             NEWLINE
-            + "Dungeon map: "
+            + "Dungeon Map: "
             + NEWLINE
             + theDungeon.toString()
             + NEWLINE
@@ -426,7 +427,13 @@ public class DungeonView {
      * @param theDungeon
      */
     public final void displayFullDungeon(final Dungeon theDungeon) {
-        
+        System.out.println(
+            NEWLINE
+            + "Full Dungeon Map: "
+            + NEWLINE
+            + theDungeon.toStringFullDungeon()
+            + NEWLINE
+        );
     }
 
     // ============================== End Extra Room Display Section ==============================
@@ -614,6 +621,26 @@ public class DungeonView {
         );
     }
 
+    public final void promptReturnToMenu() {
+        System.out.print(
+            "Do you want to return to the main menu [Y/N]?"
+            + NEWLINE
+            + "> Enter choice: "
+        );
+    }
+
+    public final void promptPostGame() {
+        System.out.print(
+            "[1] Quit to main menu "
+            + NEWLINE
+            + "[2] Start a new game "
+            + NEWLINE
+            + "[3] Close game "
+            + NEWLINE
+            + "> Enter choice: "
+        );
+    }
+
     /**
      * Displays a blue separator line as a section ending marker.
      */
@@ -623,6 +650,10 @@ public class DungeonView {
             + TEXT_BLUE + SEPERATOR_EQUALS + TEXT_COLOR_RESET
             + NEWLINE
         );
+    }
+
+    public final void displayHelpSection() {
+
     }
 
     // ==============================   End Misc Display Section   ==============================

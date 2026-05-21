@@ -207,6 +207,11 @@ public abstract class Hero extends DungeonCharacter {
         return myHealingPotions;
     }
 
+    /**
+     * Returns the characters of the collected pillars
+     * 
+     * @return the pillars collected (ex. [A, I])
+     */
     public List<Character> getMyPillars() {
         return myPillarsFound;
     }
@@ -220,16 +225,36 @@ public abstract class Hero extends DungeonCharacter {
         return myVisionPotions;
     }
 
+    /**
+     * Gains +1 to the total number of healing potions.
+     */
     public void gainHealingPotion() {
         myHealingPotions += 1;
     }
 
+    /**
+     * Gains +1 to the total number of vision potions.
+     */
     public void gainVisionPotion() {
         myVisionPotions += 1;
     }
 
+    /**
+     * Adds a pillar to the inventory.
+     * 
+     * @param thePillar
+     */
     public void gainPillar(final char thePillar) {
         myPillarsFound.add(thePillar);
+    }
+
+    /**
+     * Returns the total number of pillars this hero has collected.
+     * 
+     * @return the number of pillars collected
+     */
+    public int getPillarCount() {
+        return myPillarsFound.size();
     }
 
     /**
