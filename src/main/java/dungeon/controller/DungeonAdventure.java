@@ -385,6 +385,7 @@ public final class DungeonAdventure {
      * evaluating effects of the new room.
      */
     private final void move(final String theDirection) {
+        myHero.tickCooldowns();
         switch (theDirection) {
             case "W" -> myDungeon.moveHero("NORTH");
             case "A" -> myDungeon.moveHero("WEST");

@@ -291,6 +291,8 @@ public class DungeonView {
             + NEWLINE
             + "[V] Use vision potion "
             + NEWLINE
+            + "[F] Save game "
+            + NEWLINE
             + "[B] Help "
             + NEWLINE
             + "[Q] Quit "
