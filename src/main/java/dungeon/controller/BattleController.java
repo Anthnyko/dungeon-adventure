@@ -212,7 +212,7 @@ public class BattleController {
     private boolean bleedPhase() {
         int bleed = myMonster.processBleed();
         if (bleed > 0) {
-            log(myDungeonView.displayMonsterName(myMonster) + " • Bleed (-" + bleed + ")");
+            log(myDungeonView.displayMonsterName(myMonster) + " Bleeds (-" + bleed + ")");
         }
         return !myMonster.isAlive();
     }

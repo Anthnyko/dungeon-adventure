@@ -153,6 +153,19 @@ public abstract class DungeonCharacter {
         System.out.println(myCharName + " takes " + damage + " damage! (HP: " + myHP + ")");
     }
 
+    /**
+     * Applies bleed damage to the Monster.
+     *
+     * @param damage the amount of damage taken
+     */
+    public void takeBleedDamage(int damage) {
+        myHP -= damage;
+        if (myHP <= 0) {
+            myHP = 0;
+        }
+        System.out.println(myCharName + " bleeds " + damage + " damage! (HP: " + myHP + ")");
+    }
+
     public void applyHeal(int theHealAmount) {
         myHP += theHealAmount;
         if (myHP >= myMaxHP) {

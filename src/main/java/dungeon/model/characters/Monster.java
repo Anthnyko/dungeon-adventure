@@ -107,10 +107,8 @@ public abstract class Monster extends DungeonCharacter {
      */
     public int processBleed() {
         if (myBleedTimer > 0) {
-            takeDamage(myBleedDamage);
+            takeBleedDamage(myBleedDamage);
             myBleedTimer--;
-
-            System.out.println(myCharName + " takes " + myBleedDamage + " bleed damage!");
 
             if (!isAlive()) {
                 myDiedFromBleed = true;
