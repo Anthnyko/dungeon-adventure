@@ -142,11 +142,11 @@ public class Warrior extends Hero {
      */
     private void enrage() {
         System.out.println(getCharName() + " becomes enraged!");
-
+        myHP += 25;
         myEnrageTimer = 2;
         myCDTimer = 4;
 
         myLastDamageDealt = 0;
-        myLastHeal = 0;
+        myLastHeal = 25;
     }
 }

@@ -113,7 +113,7 @@ public class Thief extends Hero {
         }
 
         System.out.println(getCharName() + " uses Garrote!");
-
+        theTarget.takeDamage(45);
         if (theTarget instanceof Monster monster) {
             monster.applyBleed(8);
         }
