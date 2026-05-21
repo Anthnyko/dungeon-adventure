@@ -51,22 +51,22 @@ public class PillarGuardian extends Monster {
      * This constructor is intended for testing purposes only.
      * <p>
      * Stats:
-     * - HP: 250
-     * - Max HP: 250
-     * - Damage: 35–60
+     * - HP: 200
+     * - Max HP: 200
+     * - Damage: 30–45
      * - Attack Speed: 2
-     * - Hit Chance: 0.75
+     * - Hit Chance: 0.6
      * - Heal Chance: 0 (cannot heal)
      *
      */
     public PillarGuardian() {
         super("Pillar Guardian",
-                250,  // HP
-                250,  // max HP
-                35,   // min damage
-                60,   // max damage
+                200,  // HP
+                200,  // max HP
+                30,   // min damage
+                45,   // max damage
                 2,    // attack speed
-                0.75, // hit chance
+                0.6, // hit chance
                 0,    // heal chance
                 0,    // min heal
                 0);   // max heal

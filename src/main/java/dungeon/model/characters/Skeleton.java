@@ -14,12 +14,12 @@ import java.sql.SQLException;
  *
  * <p>Skeleton Stats:</p>
  * <ul>
- *     <li>HP: 100</li>
- *     <li>Damage: 30–50</li>
+ *     <li>HP: 80</li>
+ *     <li>Damage: 20–35</li>
  *     <li>Attack Speed: 3</li>
  *     <li>Hit Chance: 0.8</li>
- *     <li>Heal Chance: 0.3</li>
- *     <li>Heal Amount: 30–50</li>
+ *     <li>Heal Chance: 0.15</li>
+ *     <li>Heal Amount: 15–30</li>
  * </ul>
  *
  * This class extends {@link Monster} and provides the appropriate
@@ -57,14 +57,14 @@ public class Skeleton extends Monster {
      */
     public Skeleton() {
         super("Skeleton",
-                100, // HP
-                100, // max HP
-                30,  // min damage
-                50,  // max damage
+                80, // HP
+                80, // max HP
+                20,  // min damage
+                35,  // max damage
                 3,   // attack speed
                 0.8, // hit chance
-                0.3, // heal chance
-                30,  // min heal
-                50); // max heal
+                0.15, // heal chance
+                15,  // min heal
+                30); // max heal
     }
 }
