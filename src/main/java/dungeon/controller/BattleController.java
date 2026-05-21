@@ -43,6 +43,8 @@ public class BattleController {
      */
     private final List<String> myCombatLog = new ArrayList<>();
 
+    private static final String NEWLINE = System.lineSeparator();
+
 
     /**
      * Constructs a GameController to manage a combat encounter between
@@ -129,18 +131,42 @@ public class BattleController {
      */
     private int getHeroActionChoice() {
         int choice = -1;
+        myDungeonView.promptActionChoice(myHero);
 
         while (choice < 1 || choice > 4) {
             try {
-                myDungeonView.promptActionChoice(myHero);
                 final String input = myScanner.nextLine().trim();
                 choice = Integer.parseInt(input);
 
                 if (choice < 1 || choice > 4) {
-                    System.out.println("Invalid input: Please enter a choice between 1-4.");
+                    System.out.print(
+                        "Invalid input: Please enter a choice between 1-4."
+                        + NEWLINE
+                        + "> Enter choice: "
+                    );
+                    choice = -1;
+                } else if (choice == 3 && myHero.getCDTimer() > 0) {
+                    System.out.print(
+                        "Your ultimate is on cooldown!"
+                        + NEWLINE
+                        + "> Enter choice: "
+                    );
+                    choice = -1;
+                } else if (choice == 4 && myHero.getHealingPotion() <= 0) {
+                    System.out.print(
+                        "You have no healing potions!"
+                        + NEWLINE
+                        + "> Enter choice: "
+                    );
+                    choice = -1;
                 }
             } catch (final NumberFormatException e) {
-                System.out.println("Invalid input: Please enter a number between 1-4.");
+                System.out.print(
+                    "Invalid input: Please enter a number between 1-4."
+                    + NEWLINE
+                    + "> Enter choice: "
+                );
+                choice = -1;
             }
         }
         return choice;

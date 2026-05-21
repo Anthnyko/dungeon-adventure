@@ -232,6 +232,10 @@ public abstract class Hero extends DungeonCharacter {
         myPillarsFound.add(thePillar);
     }
 
+    public int getPillarCount() {
+        return myPillarsFound.size();
+    }
+
     /**
      * Returns the remaining cooldown time for the hero's ultimate ability.
      *
