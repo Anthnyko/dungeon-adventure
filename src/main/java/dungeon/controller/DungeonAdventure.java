@@ -532,6 +532,12 @@ public final class DungeonAdventure {
                 );
             }
         }
+        switch (playerChoice) {
+            case 1 -> mainMenu();
+            case 2 -> createGame();
+            case 3 -> closeGame();
+            default -> throw new IllegalArgumentException("Invalid input: " + playerChoice);
+        }
     }
 
     /**
