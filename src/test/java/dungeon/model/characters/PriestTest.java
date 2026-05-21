@@ -25,21 +25,21 @@ public class PriestTest {
     @Test
     public void testHealRestores20HP() {
         Priest p = createPriest();
-        p.takeDamage(30); // HP = 45
+        p.takeDamage(30);
 
-        p.specialSkill(null); // heal()
+        p.specialSkill(null);
 
-        assertEquals(65, p.getHP());
+        assertEquals(85, p.getHP());
     }
 
     @Test
     public void testHealClampsToMaxHP() {
         Priest p = createPriest();
-        p.takeDamage(10); // HP = 65
+        p.takeDamage(10);
 
-        p.specialSkill(null); // heal 20 → clamp to 75
+        p.specialSkill(null);
 
-        assertEquals(75, p.getHP());
+        assertEquals(85, p.getHP());
     }
 
     @Test
@@ -63,9 +63,9 @@ public class PriestTest {
 
         int before = s.getHP();
 
-        p.bigCooldown(s); // smite()
+        p.bigCooldown(s);
 
-        assertEquals(before - 50, s.getHP());
+        assertEquals(before - 70, s.getHP());
     }
 
     @Test

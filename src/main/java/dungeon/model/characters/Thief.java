@@ -87,13 +87,11 @@ public class Thief extends Hero {
         if (roll < 0.40) {
             System.out.println(getCharName() + " performs a Surprise Attack! Extra turn gained!");
             singleAttack(theTarget);
-            myLastDamageDealt = theTarget.getLastDamageDealt();
             myExtraTurn = true;
 
         } else if (roll < 0.85) {
             System.out.println(getCharName() + " attempts a Surprise Attack but only lands a normal hit.");
             singleAttack(theTarget);
-            myLastDamageDealt = theTarget.getLastDamageDealt();
             myExtraTurn = false;
 
         } else {

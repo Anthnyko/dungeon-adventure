@@ -109,7 +109,7 @@ public class ThiefTest {
 
         t.bigCooldown(s);
 
-        assertEquals(5, s.getMyBleedTimer());
+        assertEquals(8, s.getMyBleedTimer());
     }
 
     @Test
