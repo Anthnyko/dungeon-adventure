@@ -86,14 +86,12 @@ public abstract class Hero extends DungeonCharacter {
      */
     public int useHealingPotion() {
         final int healPotionValue = 20;
-        if (myHealingPotions <= 0) {
-            System.out.println("You have no healing potions!");
-            return 0;
-        }
         myHealingPotions--;
+
         if (healPotionValue + myHP > myMaxHP) {
             int healValue = myMaxHP - myHP;
             myHP = myMaxHP;
+            System.out.println("You used healing potion! (+" + healValue +")");
             return healValue;
         } else {
             myHP += healPotionValue;

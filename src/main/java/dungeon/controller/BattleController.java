@@ -167,11 +167,23 @@ public class BattleController {
                                     + "> Enter choice: "
                     );
                     choice = -1;
+                } else if (choice == 3 && myHero instanceof Warrior warrior && warrior.getMyEnrageTimer() == 0) {
+                    myHero.bigCooldown(myMonster);
+                    logAbility(myHero.getUltimateName());
+                    System.out.print("> Enter choice: ");
+                    choice = -1;
                 } else if (choice == 4 && myHero.getHealingPotion() <= 0) {
                     System.out.print(
                         "You have no healing potions!"
                         + NEWLINE
                         + "> Enter choice: "
+                    );
+                    choice = -1;
+                } else if (choice == 4 && myHero.getHP() >= myHero.getMaxHP()) {
+                    System.out.print(
+                            "You are full HP!"
+                                    + NEWLINE
+                                    + "> Enter choice: "
                     );
                     choice = -1;
                 }
@@ -207,9 +219,6 @@ public class BattleController {
 
             case 3:
                 logAbility(myHero.getUltimateName());
-                if (myHero instanceof Warrior warrior) {
-                    heroTurn();
-                }
                 break;
 
             case 4:
