@@ -85,7 +85,7 @@ public abstract class Hero extends DungeonCharacter {
      * @return amount of HP healed
      */
     public int useHealingPotion() {
-        final int healPotionValue = 20;
+        final int healPotionValue = 50;
         myHealingPotions--;
 
         if (healPotionValue + myHP > myMaxHP) {
