@@ -248,7 +248,7 @@ public abstract class Hero extends DungeonCharacter {
     /**
      * Adds a pillar to the inventory.
      * 
-     * @param thePillar
+     * @param thePillar the typing of the pillar
      */
     public void gainPillar(final char thePillar) {
         myPillarsFound.add(thePillar);
