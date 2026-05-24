@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import dungeon.model.RoomEvent.FountainEvent;
+import dungeon.model.RoomEvent.PitEvent;
+import dungeon.model.RoomEvent.RoomEvent;
 import dungeon.model.characters.Hero;
 import dungeon.model.characters.Monster;
 import dungeon.model.items.HealingPotion;
@@ -48,10 +51,8 @@ public class Room {
     /** Tracks the monster in this room if it has one **/
     private Monster myMonster;
 
-    /** Tracks if this room has a pit */
-    private boolean myPit;
-
-    private boolean myFountain;
+    /** List of all events in this room */
+    private List<RoomEvent> myEvents = new ArrayList<>();
 
     /** Tracks if this room has a pillar */
     private boolean myPillar;
@@ -62,8 +63,8 @@ public class Room {
     /** The list of items this room contains */
     private final List<Item> myItems;
 
-    /** The chance that each item or event has to be placed */
-    public int myChance = 10;//Players luck maybe?
+    /** The chance that each item has to be placed */
+    private static final int SPAWN_CHANCE = 10;
 
     /** Random object for random generation */
     private final Random myRandom;
@@ -77,8 +78,6 @@ public class Room {
         myItems = new ArrayList<Item>();
 
         generateRandomItems();
-
-        myPit = myRandom.nextInt(100) < myChance;
 
         myEntrance = false;
         myExit = false;
@@ -146,10 +145,11 @@ public class Room {
     }
 
     /**
-     * Places a fountain of chance in this room.
+     * Add a room event to this room.
+     * @param theEvent the event to add (e.g. PitEvent, FountainEvent)
      */
-    public void setFountain(final boolean theValue) {
-        myFountain = theValue;
+    public void addEvent(final RoomEvent theEvent) {
+        myEvents.add(theEvent);
     }
 
     /**
@@ -185,17 +185,29 @@ public class Room {
     /**
      * @return true if the room has a pillar
      */
-    public boolean hasPillar() {return myPillar;}
+    public boolean hasPillar() {
+        return myPillar;
+    }
 
     /**
      * @return true if the room has a pit
      */
-    public boolean hasPit() {return myPit;}
+    public boolean hasPit() {
+        for (RoomEvent event : myEvents) {
+            if (event instanceof PitEvent) return true;
+        }
+        return false;
+    }
 
     /**
      * @return true if the room has a fountain
      */
-    public boolean hasFountain() {return myFountain;}
+    public boolean hasFountain() {
+        for (RoomEvent event : myEvents) {
+            if (event instanceof FountainEvent) return true;
+        }
+        return false;
+    }
 
     /**
      * @return true if the room has a monster
@@ -225,12 +237,16 @@ public class Room {
     public boolean isRevealed() {return myRevealed;}
 
     /**
+     * @return a list of all the room event objects in this room
+     */
+    public List<RoomEvent> getEvents() {return myEvents;}
+
+    /**
      * @return the monster in this room, or null if non exists
      */
     public Monster getMonster() {
         return myMonster;
     }
-
 
     /**
      * Removes the list of items in the room and returns them
@@ -264,36 +280,25 @@ public class Room {
     }
 
     /**
-     * applies the pit damage onto the hero if this room has a pit.
+     * Triggers a specific room event by type and applies its effect to the hero.
+     * If no matching event is found, nothing happens.
+     * The event is removed from the room after it has been triggered.
      *
-     * @param theHero the hero to apply the pit damage on
-     * @return the amount of damage the pit did
+     * @param theEventType the type of event to trigger ("PIT", "FOUNTAIN")
+     * @param theHero the hero to apply the event on
      */
-    public int triggerPitDamage(final Hero theHero) {
-        if (!hasPit()) return 0;
-
-        final int damage = myRandom.nextInt(20) + 1;
-        System.out.println(theHero.getCharName() + " has fallen into a pit trap");
-        theHero.takeDamage(damage);
-        myPit = false;
-        return damage;
-    }
-
-    /**
-     * heals the hero if this room has a fountain.
-     *
-     * @param theHero the hero to heal
-     * @return the amount of health healed
-     */
-    public int activateFountainHeal(final Hero theHero) {
-        if (!hasFountain()) return 0;
-
-        final int healAmount = 40;
-        System.out.println(theHero.getCharName() + " has arrived at the Fountain of Chance");
-        theHero.applyHeal(healAmount);
-        myFountain = false;
-
-        return 40;
+    public void triggerEvent(final String theEventType, final Hero theHero) {
+        for (RoomEvent event : new ArrayList<>(myEvents)) {
+            if (event instanceof PitEvent && theEventType.equals("PIT")) {
+                event.trigger(theHero);
+                myEvents.remove(event);
+                return;
+            } else if (event instanceof FountainEvent && theEventType.equals("FOUNTAIN")) {
+                event.trigger(theHero);
+                myEvents.remove(event);
+                return;
+            }
+        }
     }
 
     /**
@@ -309,13 +314,6 @@ public class Room {
      */
     public void addItem(final Item theItem) {
         myItems.add(theItem);
-    }
-
-    /**
-     * Sets if this room has a pit or not
-     */
-    public void setPit(final boolean theValue) {
-        myPit = theValue;
     }
 
     /**
@@ -348,18 +346,19 @@ public class Room {
     private char getRoomSymbol() {
         if (myEntrance) return 'i';
         if (myExit) return 'O';
+        if (myPillar) return myPillarType;
 
         int count = 0;
-        if (myPit) count++;
-        if (myFountain) count++;
-        if (myPillar) count++;
+        if (hasPit()) count++;
+        if (hasMonster()) count++;
+        if (hasFountain()) count++;
         count += myItems.size();
 
         if (count > 1) return 'M';
 
-        if (myPillar) return myPillarType;
-        if (myFountain) return '+';
-        if (myPit) return 'X';
+        if (hasFountain()) return '+';
+        if (hasPit()) return 'X';
+        if (hasMonster()) return '!';
         if(myItems.size() == 1) return myItems.getFirst().getSymbol();
 
         return ' ';
@@ -367,11 +366,11 @@ public class Room {
 
     private void clearRoom() {
         myItems.clear();
-        myPit = false;
+        myEvents.clear();
     }
 
     private void generateRandomItems() {
-        if (myRandom.nextInt(100) < myChance) myItems.add(new HealingPotion());
-        if (myRandom.nextInt(100) < myChance) myItems.add(new VisionPotion());
+        if (myRandom.nextInt(100) < SPAWN_CHANCE) myItems.add(new HealingPotion());
+        if (myRandom.nextInt(100) < SPAWN_CHANCE) myItems.add(new VisionPotion());
     }
 }
