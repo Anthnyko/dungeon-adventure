@@ -333,11 +333,11 @@ public final class DungeonAdventure {
     private void evaluateRoomEvents(final Room theRoom) { 
         if (theRoom.hasPit()) {
             myDungeonView.displayPitInteration();
-            theRoom.triggerPitDamage(myHero);
+            theRoom.triggerEvent("PIT", myHero);
         }
         if (theRoom.hasFountain()) {
             myDungeonView.displayFountainInteraction();
-            theRoom.activateFountainHeal(myHero);
+            theRoom.triggerEvent("FOUNTAIN", myHero);
         } 
         if (theRoom.hasItems()) {
             myDungeonView.displayPotionAcquisition(theRoom);
