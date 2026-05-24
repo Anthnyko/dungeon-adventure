@@ -28,6 +28,9 @@ public abstract class Hero extends DungeonCharacter {
     /** Tracker for all Pillar items collected by the Hero. */
     protected List<Character> myPillarsFound;
 
+    /** Tracks cooldown time for the Hero's special skill. */
+    protected int mySkillTimer;
+
     /** Tracks cooldown time for the Hero's ultimate ability. */
     protected int myCDTimer;
 
@@ -82,15 +85,13 @@ public abstract class Hero extends DungeonCharacter {
      * @return amount of HP healed
      */
     public int useHealingPotion() {
-        final int healPotionValue = 20;
-        if (myHealingPotions <= 0) {
-            System.out.println("You have no healing potions!");
-            return 0;
-        }
+        final int healPotionValue = 50;
         myHealingPotions--;
+
         if (healPotionValue + myHP > myMaxHP) {
             int healValue = myMaxHP - myHP;
             myHP = myMaxHP;
+            System.out.println("You used healing potion! (+" + healValue +")");
             return healValue;
         } else {
             myHP += healPotionValue;
@@ -120,6 +121,17 @@ public abstract class Hero extends DungeonCharacter {
         if (myCDTimer > 0) {
             myCDTimer--;
         }
+        if (mySkillTimer > 0) {
+            mySkillTimer--;
+        }
+    }
+
+    /**
+     * Resets all cooldowns on Hero
+     */
+    public void resetCooldowns() {
+        myCDTimer = 0;
+        mySkillTimer = 0;
     }
 
     /**
@@ -172,12 +184,6 @@ public abstract class Hero extends DungeonCharacter {
                 specialSkill(theTarget);
                 break;
             case 3:
-                if (myCDTimer > 0) {
-                    System.out.println("Your ultimate is still on cooldown (" + myCDTimer + " turns left)");
-                    myLastDamageDealt = 0;
-                    myLastHeal = 0;
-                    break;
-                }
                 bigCooldown(theTarget);
                 break;
             case 4:
@@ -242,7 +248,7 @@ public abstract class Hero extends DungeonCharacter {
     /**
      * Adds a pillar to the inventory.
      * 
-     * @param thePillar
+     * @param thePillar the typing of the pillar
      */
     public void gainPillar(final char thePillar) {
         myPillarsFound.add(thePillar);
@@ -255,6 +261,15 @@ public abstract class Hero extends DungeonCharacter {
      */
     public int getPillarCount() {
         return myPillarsFound.size();
+    }
+
+    /**
+     * Returns the remaining cooldown time for the hero's skill.
+     *
+     * @return the cooldown value
+     */
+    public int getSkillTimer() {
+        return mySkillTimer;
     }
 
     /**

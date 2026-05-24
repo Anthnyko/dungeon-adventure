@@ -15,6 +15,10 @@ package dungeon.model.characters;
  */
 public class Priest extends Hero {
 
+    protected final int myMinHeal;
+
+    protected final int myMaxHeal;
+
     /**
      * Constructs a new Priest with predefined combat attributes.
      *
@@ -29,6 +33,9 @@ public class Priest extends Hero {
                 5,    // attack speed
                 0.7,  // hit chance
                 0.3); // block chance
+        myMinHeal = 20;
+        myMaxHeal = 40;
+        mySkillTimer = 0;
     }
 
     /**
@@ -67,17 +74,19 @@ public class Priest extends Hero {
      * Executes the Priest's healing ability.
      */
     private void heal() {
-        final int heal = 40;
+        int heal = myMinHeal + rng.nextInt(myMaxHeal - myMinHeal + 1);
 
         if (heal + myHP > myMaxHP) {
             myLastHeal = myMaxHP - myHP;
             myHP = myMaxHP;
         } else {
             myHP += heal;
-            myLastHeal = 0;
+            myLastHeal = heal;
         }
+
+        mySkillTimer = 3;
         myLastDamageDealt = 0;
-        System.out.println(myCharName + " casts heal!\n Regenerates " + heal + " health!");
+        System.out.println(myCharName + " casts heal!\nRegenerates " + heal + " health!");
     }
 
     /**
@@ -89,15 +98,19 @@ public class Priest extends Hero {
         if (theTarget == null || !theTarget.isAlive()) {
             return;
         }
-
         final int smiteDmg = 70;
+        final double roll = rng.nextDouble();
 
-        System.out.println(myCharName + " casts smite!");
-        myCDTimer = 3;
+        if (roll < 0.60) {
+            System.out.println(getCharName() + " casts Smite!");
+            theTarget.takeDamage(smiteDmg);
+            myCDTimer = 4;
+            myLastDamageDealt = smiteDmg;
 
-        myLastDamageDealt = smiteDmg;
+        } else {
+            System.out.println(getCharName() + " fails to cast Smite!");
+            myLastDamageDealt = 0;
+        }
         myLastHeal = 0;
-
-        theTarget.takeDamage(smiteDmg);
     }
 }

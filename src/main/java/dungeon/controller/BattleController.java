@@ -1,6 +1,7 @@
 package dungeon.controller;
 
 import dungeon.model.characters.Monster;
+import dungeon.model.characters.Warrior;
 import dungeon.view.DungeonView;
 import dungeon.model.characters.Hero;
 
@@ -145,6 +146,13 @@ public class BattleController {
                         + "> Enter choice: "
                     );
                     choice = -1;
+                } else if (choice == 2 && myHero.getSkillTimer() > 0) {
+                    System.out.print(
+                            "Your skill is on cooldown!"
+                                    + NEWLINE
+                                    + "> Enter choice: "
+                    );
+                    choice = -1;
                 } else if (choice == 3 && myHero.getCDTimer() > 0) {
                     System.out.print(
                         "Your ultimate is on cooldown!"
@@ -152,11 +160,30 @@ public class BattleController {
                         + "> Enter choice: "
                     );
                     choice = -1;
+                } else if (choice == 3 && myHero instanceof Warrior warrior && warrior.getMyEnrageTimer() > 0) {
+                    System.out.print(
+                            "Enrage is still active!"
+                                    + NEWLINE
+                                    + "> Enter choice: "
+                    );
+                    choice = -1;
+                } else if (choice == 3 && myHero instanceof Warrior warrior && warrior.getMyEnrageTimer() == 0) {
+                    myHero.bigCooldown(myMonster);
+                    logAbility(myHero.getUltimateName());
+                    System.out.print("> Enter choice: ");
+                    choice = -1;
                 } else if (choice == 4 && myHero.getHealingPotion() <= 0) {
                     System.out.print(
                         "You have no healing potions!"
                         + NEWLINE
                         + "> Enter choice: "
+                    );
+                    choice = -1;
+                } else if (choice == 4 && myHero.getHP() >= myHero.getMaxHP()) {
+                    System.out.print(
+                            "You are full HP!"
+                                    + NEWLINE
+                                    + "> Enter choice: "
                     );
                     choice = -1;
                 }
