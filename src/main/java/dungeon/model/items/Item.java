@@ -7,7 +7,7 @@ package dungeon.model.items;
  * @author Ibrahim Mohamud
  * @version 1.0
  */
-public abstract class Item {
+public interface Item {
 
     /**
      * Gets the symbol of the item
