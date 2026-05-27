@@ -5,7 +5,7 @@ package dungeon.model.characters;
  * focusing on healing and holy damage. This class defines the
  * Priest's base stats and provides stubs for its special abilities,
  * which are implemented in later iterations.
- *
+ * <p>
  * The Priest has two unique abilities:
  * - heal: the Priest's special skill (typically self-targeted)
  * - smite: the Priest's ultimate cooldown ability
@@ -15,6 +15,10 @@ package dungeon.model.characters;
  */
 public class Priest extends Hero {
 
+    protected final int myMinHeal;
+
+    protected final int myMaxHeal;
+
     /**
      * Constructs a new Priest with predefined combat attributes.
      *
@@ -22,13 +26,16 @@ public class Priest extends Hero {
      */
     public Priest(String theName) {
         super(theName,
-                75,   // HP
-                75,   // max HP
+                85,   // HP
+                85,   // max HP
                 25,   // min damage
                 45,   // max damage
                 5,    // attack speed
                 0.7,  // hit chance
                 0.3); // block chance
+        myMinHeal = 20;
+        myMaxHeal = 40;
+        mySkillTimer = 0;
     }
 
     /**
@@ -67,17 +74,19 @@ public class Priest extends Hero {
      * Executes the Priest's healing ability.
      */
     private void heal() {
-        final int heal = 20;
+        int heal = myMinHeal + rng.nextInt(myMaxHeal - myMinHeal + 1);
 
         if (heal + myHP > myMaxHP) {
             myLastHeal = myMaxHP - myHP;
             myHP = myMaxHP;
         } else {
             myHP += heal;
-            myLastHeal = 0;
+            myLastHeal = heal;
         }
+
+        mySkillTimer = 3;
         myLastDamageDealt = 0;
-        System.out.println(myCharName + " casts heal!\n Regenerates " + heal + " health!");
+        System.out.println(myCharName + " casts heal!\nRegenerates " + heal + " health!");
     }
 
     /**
@@ -89,15 +98,19 @@ public class Priest extends Hero {
         if (theTarget == null || !theTarget.isAlive()) {
             return;
         }
+        final int smiteDmg = 70;
+        final double roll = rng.nextDouble();
 
-        final int smiteDmg = 50;
+        if (roll < 0.60) {
+            System.out.println(getCharName() + " casts Smite!");
+            theTarget.takeDamage(smiteDmg);
+            myCDTimer = 4;
+            myLastDamageDealt = smiteDmg;
 
-        System.out.println(myCharName + " casts smite!");
-        myCDTimer = 3;
-
-        myLastDamageDealt = smiteDmg;
+        } else {
+            System.out.println(getCharName() + " fails to cast Smite!");
+            myLastDamageDealt = 0;
+        }
         myLastHeal = 0;
-
-        theTarget.takeDamage(smiteDmg);
     }
 }

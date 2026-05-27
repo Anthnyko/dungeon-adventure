@@ -1,5 +1,8 @@
 package dungeon.model.characters;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  * The Gremlin class represents a fast but fragile Monster type in the dungeon.
  * Gremlins rely on speed and unpredictability, attacking quickly but with
@@ -12,12 +15,12 @@ package dungeon.model.characters;
  *
  * <p>Gremlin Stats:</p>
  * <ul>
- *     <li>HP: 70</li>
- *     <li>Damage: 15–30</li>
+ *     <li>HP: 55</li>
+ *     <li>Damage: 10–20</li>
  *     <li>Attack Speed: 5</li>
  *     <li>Hit Chance: 0.8</li>
- *     <li>Heal Chance: 0.4</li>
- *     <li>Heal Amount: 20–40</li>
+ *     <li>Heal Chance: 0.25</li>
+ *     <li>Heal Amount: 10–20</li>
  * </ul>
  *
  * This class extends {@link Monster} and provides the appropriate
@@ -28,19 +31,41 @@ package dungeon.model.characters;
 public class Gremlin extends Monster {
 
     /**
-     * Constructs a new Gremlin with predefined combat and healing attributes.
+     * Constructs a new Gremlin by loading its stats from the database.
+     * This is the primary constructor used during normal dungeon generation.
+     *
+     * @param rs the ResultSet from the Monsters table containing this Gremlin's stats
+     * @throws SQLException if any of the expected columns are missing or cannot be read from the ResultSet
+     */
+    public Gremlin(ResultSet rs) throws SQLException {
+        super(rs.getString("Name"),
+                rs.getInt("HP"),
+                rs.getInt("MaxHP"),
+                rs.getInt("MinDamage"),
+                rs.getInt("MaxDamage"),
+                rs.getInt("AttackSpeed"),
+                rs.getDouble("HitChance"),
+                rs.getDouble("HealChance"),
+                rs.getInt("MinHeal"),
+                rs.getInt("MaxHeal")
+        );
+    }
+
+    /**
+     * Constructs a new Gremlin with hardcoded standard stats.
      * All values are based on the standard Dungeon Adventure monster stats.
+     * This constructor is intended for testing purposes only.
      */
     public Gremlin() {
         super("Gremlin",
-                70,   // HP
-                70,   // max HP
-                15,   // min damage
-                30,   // max damage
+                55,   // HP
+                55,   // max HP
+                10,   // min damage
+                20,   // max damage
                 5,    // attack speed
                 0.8,  // hit chance
-                0.4,  // heal chance
-                20,   // min heal
-                40);  // max heal
+                0.25,  // heal chance
+                10,   // min heal
+                20);  // max heal
     }
 }

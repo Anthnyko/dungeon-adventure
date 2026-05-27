@@ -12,11 +12,11 @@ import dungeon.model.items.VisionPotion;
 
 /**
  * Represents a single room in the dungeon
- *
+ * <p>
  * A room contains doors that connect it to adjacent rooms in the North,
  * South, East, and West. The room is responsible to storing items and behaviors
  * and applies item effects once the adventurer enters it.
- *
+ * <p>
  * Room content is randomly generated while special rooms (entrance, exit, pillars)
  * are decided by the Dungeon class.
  *
@@ -225,13 +225,30 @@ public class Room {
     public boolean isRevealed() {return myRevealed;}
 
     /**
+     * @return the monster in this room, or null if non exists
+     */
+    public Monster getMonster() {
+        return myMonster;
+    }
+
+
+    /**
      * Removes the list of items in the room and returns them
      * @return A list of all the items in the room
      */
-    public List<Item> pickUpItems() {
-        final List<Item> items = new ArrayList<>(myItems);
+    public void pickUpItems(final Hero theHero) {
+        for (int i = 0; i < myItems.size(); i++) {
+            if (myItems.get(i) instanceof HealingPotion) {
+                theHero.gainHealingPotion();
+            } else if (myItems.get(i) instanceof VisionPotion) {
+                theHero.gainVisionPotion();
+            }
+        }  
         myItems.clear();
-        return items;
+    }
+
+    public List<Item> getMyItems() {
+        return myItems;
     }
 
     /**
@@ -253,9 +270,10 @@ public class Room {
      * @return the amount of damage the pit did
      */
     public int triggerPitDamage(final Hero theHero) {
-        if (!myPit) return 0;
+        if (!hasPit()) return 0;
 
         final int damage = myRandom.nextInt(20) + 1;
+        System.out.println(theHero.getCharName() + " has fallen into a pit trap");
         theHero.takeDamage(damage);
         myPit = false;
         return damage;
@@ -268,12 +286,22 @@ public class Room {
      * @return the amount of health healed
      */
     public int activateFountainHeal(final Hero theHero) {
-        // Implement in later iteration
-        final int heal = 40;
-        if (heal + theHero.getHP() > theHero.getMaxHP()) {
-            //Need a way to set the heroes hp
-        }
-        return 0;
+        if (!hasFountain()) return 0;
+
+        final int healAmount = 40;
+        System.out.println(theHero.getCharName() + " has arrived at the Fountain of Chance");
+        theHero.applyHeal(healAmount);
+        myFountain = false;
+
+        return 40;
+    }
+
+    /**
+     * Removes the monster from this room.
+     * Used for when a monster is defeated.
+     */
+    public void removeMonster() {
+        myMonster = null;
     }
 
     /**
@@ -330,7 +358,7 @@ public class Room {
         if (count > 1) return 'M';
 
         if (myPillar) return myPillarType;
-        if (myFountain) return '!';
+        if (myFountain) return '+';
         if (myPit) return 'X';
         if(myItems.size() == 1) return myItems.getFirst().getSymbol();
 
@@ -345,9 +373,5 @@ public class Room {
     private void generateRandomItems() {
         if (myRandom.nextInt(100) < myChance) myItems.add(new HealingPotion());
         if (myRandom.nextInt(100) < myChance) myItems.add(new VisionPotion());
-    }
-
-    public Monster getMonster() {
-        return myMonster;
     }
 }

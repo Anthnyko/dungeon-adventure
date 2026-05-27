@@ -69,6 +69,66 @@ public abstract class Monster extends DungeonCharacter {
     }
 
     /**
+     * Performs an attack on the target Hero.
+     *
+     * @param theTarget the character being attacked
+     */
+    @Override
+    public void attack(DungeonCharacter theTarget) {
+        if (theTarget instanceof Hero hero) {
+
+            // Monster attacking a Hero → include blockChance
+            int numAttacks = myAttackSpeed / hero.myAttackSpeed;
+            if (numAttacks < 1) numAttacks = 1;
+
+            for (int i = 0; i < numAttacks; i++) {
+
+                // Hit roll
+                if (rng.nextDouble() < myHitChance) {
+
+                    // Block roll
+                    if (rng.nextDouble() < hero.getBlockChance()) {
+                        myLastDamageDealt = 0;
+
+                        System.out.println(theTarget.getCharName() + " blocks the attack!");
+                        if (myAttackLogger != null) {
+                            myAttackLogger.accept(hero.getCharName() + " blocks the attack!");
+                        }
+                        continue;
+                    }
+
+                    // Damage
+                    final int damage = myMinDamage +
+                            (int)(rng.nextDouble() * (myMaxDamage - myMinDamage + 1));
+
+                    myLastDamageDealt = damage;
+                    hero.takeDamage(damage);
+
+                    if (myAttackLogger != null) {
+                        myAttackLogger.accept(myCharName + " hits " +
+                                hero.getCharName() + " (-" + damage + ")");
+                    }
+
+                } else {
+                    // Miss
+                    myLastDamageDealt = 0;
+
+                    System.out.println(myCharName + " misses " + theTarget.getCharName() + "...");
+                    if (myAttackLogger != null) {
+                        myAttackLogger.accept(myCharName + " misses " + hero.getCharName());
+                    }
+                }
+
+                if (!hero.isAlive()) break;
+            }
+
+        } else {
+            // Monster attacking another monster or NPC → use normal attack
+            super.attack(theTarget);
+        }
+    }
+
+    /**
      * Attempts to heal the monster.
      * This method will be called during combat
      * after the monster takes damage.
@@ -107,10 +167,8 @@ public abstract class Monster extends DungeonCharacter {
      */
     public int processBleed() {
         if (myBleedTimer > 0) {
-            takeDamage(myBleedDamage);
+            takeBleedDamage(myBleedDamage);
             myBleedTimer--;
-
-            System.out.println(myCharName + " takes " + myBleedDamage + " bleed damage!");
 
             if (!isAlive()) {
                 myDiedFromBleed = true;
@@ -130,27 +188,6 @@ public abstract class Monster extends DungeonCharacter {
         System.out.println("Name: " + myCharName);
         System.out.println("HP: " + myHP + "/" + myMaxHP);
         System.out.println("====================");
-    }
-
-    /**
-     * @return the probability that the monster successfully heals
-     */
-    public double getMyHealChance() {
-        return myHealChance;
-    }
-
-    /**
-     * @return the minimum amount of HP the monster can heal
-     */
-    public int getMyMinHeal() {
-        return myMinHeal;
-    }
-
-    /**
-     * @return the maximum amount of HP the monster can heal
-     */
-    public int getMyMaxHeal() {
-        return myMaxHeal;
     }
 
     /**

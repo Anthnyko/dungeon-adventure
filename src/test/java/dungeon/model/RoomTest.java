@@ -36,8 +36,9 @@ public class RoomTest {
     @Test
     public void testPickUpItemsEmptiesRoom() {
         Room room = new Room();
+        Warrior warrior = new Warrior("test");
         room.addItem(new HealingPotion());
-        room.pickUpItems();
+        room.pickUpItems(warrior);
         assertFalse(room.hasItems());
     }
 
@@ -67,10 +68,11 @@ public class RoomTest {
     @Test
     public void testHasItems() {
         Room room = new Room();
+        Warrior warrior = new Warrior("test");
         room.addItem(new HealingPotion());
         assertTrue(room.hasItems());
 
-        room.pickUpItems();
+        room.pickUpItems(warrior);
         assertFalse(room.hasItems());
     }
 

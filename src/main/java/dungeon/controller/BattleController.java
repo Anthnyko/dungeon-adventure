@@ -1,6 +1,7 @@
 package dungeon.controller;
 
 import dungeon.model.characters.Monster;
+import dungeon.model.characters.Warrior;
 import dungeon.view.DungeonView;
 import dungeon.model.characters.Hero;
 
@@ -25,9 +26,6 @@ public class BattleController {
     /** Tracks whether the battle has ended. */
     private boolean myBattleOver;
 
-    /** Tracks round number during combat. */
-    private int myRound;
-
     /**
      * Handles all combat-related text output, including round banners,
      * action prompts, and status displays for both the hero and monster.
@@ -46,6 +44,8 @@ public class BattleController {
      */
     private final List<String> myCombatLog = new ArrayList<>();
 
+    private static final String NEWLINE = System.lineSeparator();
+
 
     /**
      * Constructs a GameController to manage a combat encounter between
@@ -57,10 +57,6 @@ public class BattleController {
         myHero = theHero;
     }
 
-    public int getMyRound() {
-        return myRound;
-    }
-
     /**
      * Begins the combat loop and continues until either the hero or the monster
      * is defeated. Handles turn sequencing and end-of-round effects.
@@ -70,14 +66,17 @@ public class BattleController {
     public void startBattle(final Monster theMonster) {
         myMonster = theMonster;
         myBattleOver = false;
-        myRound = 1;
+        myHero.setAttackLogger(this::log);
+        myMonster.setAttackLogger(this::log);
+
+        int myRound = 1;
+
         myDungeonView = new DungeonView();
         myCombatLog.clear();
-        System.out.println("A wild " + myMonster.getCharName() + " appears!");
 
         while (!myBattleOver) {
-            myDungeonView.displayCombatRound(getMyRound());
-            log("=== Round " + myRound + " ===");
+            System.out.println(myDungeonView.displayCombatRound(myRound));
+            log(myDungeonView.displayCombatRound(myRound));
             heroTurn();
             if (isBattleOver()) break;
 
@@ -121,9 +120,9 @@ public class BattleController {
      */
     public String getCombatSummary() {
         if (!myHero.isAlive()) {
-            return "Hero defeated by " + myMonster.getCharName();
+            return myDungeonView.displayPlayerName(myHero) + " is defeated by " + myDungeonView.displayMonsterName(myMonster);
         }
-        return "Hero defeated " + myMonster.getCharName();
+        return myDungeonView.displayPlayerName(myHero) + " defeated " + myDungeonView.displayMonsterName(myMonster);
     }
 
     /**
@@ -133,18 +132,68 @@ public class BattleController {
      */
     private int getHeroActionChoice() {
         int choice = -1;
+        myDungeonView.promptActionChoice(myHero);
 
         while (choice < 1 || choice > 4) {
             try {
-                myDungeonView.promptActionChoice(myHero);
                 final String input = myScanner.nextLine().trim();
                 choice = Integer.parseInt(input);
 
                 if (choice < 1 || choice > 4) {
-                    System.out.println("Invalid input: Please enter a choice between 1-4.");
+                    System.out.print(
+                        "Invalid input: Please enter a choice between 1-4."
+                        + NEWLINE
+                        + "> Enter choice: "
+                    );
+                    choice = -1;
+                } else if (choice == 2 && myHero.getSkillTimer() > 0) {
+                    System.out.print(
+                            "Your skill is on cooldown!"
+                                    + NEWLINE
+                                    + "> Enter choice: "
+                    );
+                    choice = -1;
+                } else if (choice == 3 && myHero.getCDTimer() > 0) {
+                    System.out.print(
+                        "Your ultimate is on cooldown!"
+                        + NEWLINE
+                        + "> Enter choice: "
+                    );
+                    choice = -1;
+                } else if (choice == 3 && myHero instanceof Warrior warrior && warrior.getMyEnrageTimer() > 0) {
+                    System.out.print(
+                            "Enrage is still active!"
+                                    + NEWLINE
+                                    + "> Enter choice: "
+                    );
+                    choice = -1;
+                } else if (choice == 3 && myHero instanceof Warrior warrior && warrior.getMyEnrageTimer() == 0) {
+                    myHero.bigCooldown(myMonster);
+                    logAbility(myHero.getUltimateName());
+                    System.out.print("> Enter choice: ");
+                    choice = -1;
+                } else if (choice == 4 && myHero.getHealingPotion() <= 0) {
+                    System.out.print(
+                        "You have no healing potions!"
+                        + NEWLINE
+                        + "> Enter choice: "
+                    );
+                    choice = -1;
+                } else if (choice == 4 && myHero.getHP() >= myHero.getMaxHP()) {
+                    System.out.print(
+                            "You are full HP!"
+                                    + NEWLINE
+                                    + "> Enter choice: "
+                    );
+                    choice = -1;
                 }
             } catch (final NumberFormatException e) {
-                System.out.println("Invalid input: Please enter a number between 1-4.");
+                System.out.print(
+                    "Invalid input: Please enter a number between 1-4."
+                    + NEWLINE
+                    + "> Enter choice: "
+                );
+                choice = -1;
             }
         }
         return choice;
@@ -156,23 +205,14 @@ public class BattleController {
      * cooldown reduction.
      */
     private void heroTurn() {
-        System.out.println("\n--- Hero Turn ---");
-        myHero.displayStatus();
-        myMonster.displayStatus();
+        myDungeonView.displayHeroTurn();
+        myDungeonView.displayHeroCombatStatus(myHero);
+        myDungeonView.displayMonsterStatus(myMonster);
 
         final int choice = getHeroActionChoice();
         myHero.performAction(choice, myMonster);
 
         switch (choice) {
-            case 1:
-                if (myHero.getLastDamageDealt() == 0) {
-                    log(myHero.getCharName() + " misses " + myMonster.getCharName());
-                } else {
-                    log(myHero.getCharName() + " → " + myMonster.getCharName() +
-                            " (-" + myHero.getLastDamageDealt() + ")");
-                }
-                break;
-
             case 2:
                 logAbility(myHero.getSpecialSkillName());
                 break;
@@ -182,51 +222,59 @@ public class BattleController {
                 break;
 
             case 4:
-                log(myHero.getCharName() + " +" + myHero.getLastHeal() + " HP");
+                log(myDungeonView.displayPlayerName(myHero) + " +" + myHero.getLastHeal() + " HP");
                 break;
+        }
+
+        // Monster healing after taking damage
+        if (myHero.getLastDamageDealt() > 0 && myMonster.isAlive()) {
+            myMonster.heal();
+            int heal = myMonster.getLastHeal();
+            if (heal > 0) {
+                log(myDungeonView.displayMonsterName(myMonster) + " regenerates +" + heal + " HP");
+            }
         }
 
         // Extra turn mechanic (Thief only)
         if (myHero.hasExtraTurn()) {
-            log(myHero.getCharName() + "gains extra turn");
-            System.out.println(myHero.getCharName() + " gains an extra turn!");
+            log(myDungeonView.displayPlayerName(myHero) + " gains extra turn");
+            System.out.println(myDungeonView.displayPlayerName(myHero) + " gains an extra turn!");
             myHero.consumeExtraTurn();
             heroTurn();
         }
+
     }
 
     /**
      * Executes the monster's turn by performing its attack on the hero.
      */
     private void monsterTurn() {
-        System.out.println("\n--- Monster Turn ---");
-        myMonster.attack(myHero);
+        myDungeonView.displayMonsterTurn();
 
-        int dmg = myMonster.getLastDamageDealt();
-
-        if (dmg > 0) {
-            log(myMonster.getCharName() + " → " + myHero.getCharName() + " (-" + dmg + ")");
-        } else {
-            log(myMonster.getCharName() + " misses " + myHero.getCharName());
+        // 1. Bleed happens BEFORE monster attacks
+        if (bleedPhase()) {
+            return;
         }
+
+        myMonster.attack(myHero);
     }
 
     /**
      * Helper method for logging bleed damage on monsters.
      */
-    private void bleedPhase() {
+    private boolean bleedPhase() {
         int bleed = myMonster.processBleed();
         if (bleed > 0) {
-            log(myMonster.getCharName() + " • Bleed (-" + bleed + ")");
+            log(myDungeonView.displayMonsterName(myMonster) + " Bleeds (-" + bleed + ")");
         }
+        return !myMonster.isAlive();
     }
 
     /**
      * Processes end-of-round effects such as bleed damage on the monster.
      */
     private void processEndOfRoundEffects() {
-        myHero.reduceCooldown();
-        bleedPhase();
+        myHero.tickCooldowns();
     }
 
     /**
@@ -236,17 +284,17 @@ public class BattleController {
      * @return true if the battle is over, false otherwise
      */
     private boolean isBattleOver() {
-        if (!myHero.isAlive()) {
-            log(myHero.getCharName() + " falls in battle");
+        if (!heroIsAlive()) {
+            log(myDungeonView.displayPlayerName(myHero) + " falls in battle");
             System.out.println("You have been defeated...");
             myBattleOver = true;
         } else if (!myMonster.isAlive()) {
             if (myMonster.diedFromBleed()) {
-                log(myMonster.getCharName() + " dies from bleeding");
+                log(myDungeonView.displayMonsterName(myMonster) + " dies from bleeding");
             } else {
-                log(myMonster.getCharName() + " dies");
+                log(myDungeonView.displayMonsterName(myMonster) + " dies");
             }
-            System.out.println("You defeated the " + myMonster.getCharName() + "!");
+            System.out.println("You defeated the " + myDungeonView.displayMonsterName(myMonster) + "!");
             myHero.reduceCooldown();
             myBattleOver = true;
         }
@@ -266,11 +314,11 @@ public class BattleController {
      * Displays entire combat log during battle and when combat ends.
      */
     private void displayCombatLog() {
-        System.out.println("\n=== Combat Log ===");
+        myDungeonView.displayCombatLog();
         for (String entry : myCombatLog) {
             System.out.println(entry);
         }
-        System.out.println("==================\n");
+        myDungeonView.endSectionBlue();
     }
 
     /**
@@ -283,11 +331,11 @@ public class BattleController {
         int heal = myHero.getLastHeal();
 
         if (dmg > 0) {
-            log(myHero.getCharName() + " :: " + abilityName + " → " + myMonster.getCharName() + " (-" + dmg + ")");
+            log(myDungeonView.displayPlayerName(myHero) + " :: " + abilityName + " -> " + myDungeonView.displayMonsterName(myMonster) + " (-" + dmg + ")");
         } else if (heal > 0) {
-            log(myHero.getCharName() + " :: " + abilityName + " (+" + heal + " HP)");
+            log(myDungeonView.displayPlayerName(myHero) + " :: " + abilityName + " (+" + heal + " HP)");
         } else {
-            log(myHero.getCharName() + " :: " + abilityName + " (effect applied)");
+            log(myDungeonView.displayPlayerName(myHero) + " :: " + abilityName + " (effect applied)");
         }
     }
 }

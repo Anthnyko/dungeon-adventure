@@ -9,7 +9,7 @@ import java.util.List;
  * Abstract base class for all hero types in the dungeon game.
  * Heroes share common combat attributes from DungeonCharacter and
  * add blocking and potion-related functionality.
- *
+ * <p>
  * This class defines the shared structure for Warrior, Priestess,
  * and Thief, but does not implement combat logic in Iteration 1.
  *
@@ -26,13 +26,16 @@ public abstract class Hero extends DungeonCharacter {
     protected int myVisionPotions;
 
     /** Tracker for all Pillar items collected by the Hero. */
-    // protected List<Pillar> myPillarsFound;
+    protected List<Character> myPillarsFound;
+
+    /** Tracks cooldown time for the Hero's special skill. */
+    protected int mySkillTimer;
 
     /** Tracks cooldown time for the Hero's ultimate ability. */
     protected int myCDTimer;
 
     /** Probability that the character blocks an incoming attack. */
-    protected double myBlockChance;
+    protected final double myBlockChance;
 
     /** Track whether thief gains extra turn from special skill. */
     protected boolean myExtraTurn;
@@ -54,9 +57,9 @@ public abstract class Hero extends DungeonCharacter {
                 double theHitChance, double theBlockChance) {
         super(theName, theHP, theMaxHP,theMinDamage, theMaxDamage, theAttackSpeed, theHitChance);
         myBlockChance = theBlockChance;
-        myHealingPotions = 0;
-        myVisionPotions = 0;
-        // myPillarsFound = new ArrayList<Pillar>();
+        myHealingPotions = 3;
+        myVisionPotions = 1;
+        myPillarsFound = new ArrayList<>();
         myCDTimer = 0;
     }
 
@@ -82,15 +85,13 @@ public abstract class Hero extends DungeonCharacter {
      * @return amount of HP healed
      */
     public int useHealingPotion() {
-        final int healPotionValue = 20;
-        if (myHealingPotions <= 0) {
-            System.out.println("You have no healing potions!");
-            return 0;
-        }
+        final int healPotionValue = 50;
         myHealingPotions--;
+
         if (healPotionValue + myHP > myMaxHP) {
             int healValue = myMaxHP - myHP;
             myHP = myMaxHP;
+            System.out.println("You used healing potion! (+" + healValue +")");
             return healValue;
         } else {
             myHP += healPotionValue;
@@ -120,6 +121,17 @@ public abstract class Hero extends DungeonCharacter {
         if (myCDTimer > 0) {
             myCDTimer--;
         }
+        if (mySkillTimer > 0) {
+            mySkillTimer--;
+        }
+    }
+
+    /**
+     * Resets all cooldowns on Hero
+     */
+    public void resetCooldowns() {
+        myCDTimer = 0;
+        mySkillTimer = 0;
     }
 
     /**
@@ -127,7 +139,7 @@ public abstract class Hero extends DungeonCharacter {
      * (e.g., when moving between rooms).
      */
     public void tickCooldowns() {
-        reduceCooldown(); // You already have this method
+        reduceCooldown();
     }
 
     /**
@@ -175,9 +187,7 @@ public abstract class Hero extends DungeonCharacter {
                 bigCooldown(theTarget);
                 break;
             case 4:
-                useHealingPotion();
-            default:
-                System.out.println("Invalid choice. You lose your turn.");
+                myLastHeal = useHealingPotion();
         }
     }
 
@@ -204,12 +214,62 @@ public abstract class Hero extends DungeonCharacter {
     }
 
     /**
+     * Returns the characters of the collected pillars
+     * 
+     * @return the pillars collected (ex. [A, I])
+     */
+    public List<Character> getMyPillars() {
+        return myPillarsFound;
+    }
+
+    /**
      * Returns the number of vision potions the hero currently holds.
      *
      * @return the count of vision potions
      */
     public int getVisionPotion() {
         return myVisionPotions;
+    }
+
+    /**
+     * Gains +1 to the total number of healing potions.
+     */
+    public void gainHealingPotion() {
+        myHealingPotions += 1;
+    }
+
+    /**
+     * Gains +1 to the total number of vision potions.
+     */
+    public void gainVisionPotion() {
+        myVisionPotions += 1;
+    }
+
+    /**
+     * Adds a pillar to the inventory.
+     * 
+     * @param thePillar the typing of the pillar
+     */
+    public void gainPillar(final char thePillar) {
+        myPillarsFound.add(thePillar);
+    }
+
+    /**
+     * Returns the total number of pillars this hero has collected.
+     * 
+     * @return the number of pillars collected
+     */
+    public int getPillarCount() {
+        return myPillarsFound.size();
+    }
+
+    /**
+     * Returns the remaining cooldown time for the hero's skill.
+     *
+     * @return the cooldown value
+     */
+    public int getSkillTimer() {
+        return mySkillTimer;
     }
 
     /**
