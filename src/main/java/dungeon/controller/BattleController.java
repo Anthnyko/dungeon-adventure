@@ -76,7 +76,7 @@ public class BattleController {
         System.out.println("A wild " + myMonster.getCharName() + " appears!");
 
         while (!myBattleOver) {
-            myDungeonView.displayCombatRound(myRound);
+            myDungeonView.displayCombatRound(getMyRound());
             log("=== Round " + myRound + " ===");
             heroTurn();
             if (isBattleOver()) break;
