@@ -601,7 +601,7 @@ public class DungeonView {
     private final String monsterHpColorHelper(final Monster theMonster) {
         if (theMonster.getHP() > theMonster.getMaxHP() * 0.75) {
             return TEXT_GREEN + theMonster.getHP() + TEXT_COLOR_RESET;
-        } else if (theMonster.getHP() < theMonster.getMaxHP() * 0.75 && theMonster.getHP() > theMonster.getMaxHP() * 0.25) {
+        } else if (theMonster.getHP() <= theMonster.getMaxHP() * 0.75 && theMonster.getHP() >= theMonster.getMaxHP() * 0.25) {
             return TEXT_YELLOW + theMonster.getHP() + TEXT_COLOR_RESET;
         } else if (theMonster.getHP() < theMonster.getMaxHP() * 0.25) {
             return TEXT_RED + theMonster.getHP() + TEXT_COLOR_RESET;
