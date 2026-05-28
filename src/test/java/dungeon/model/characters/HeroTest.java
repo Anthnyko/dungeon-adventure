@@ -1,6 +1,5 @@
 package dungeon.model.characters;
 
-import dungeon.model.Dungeon;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
