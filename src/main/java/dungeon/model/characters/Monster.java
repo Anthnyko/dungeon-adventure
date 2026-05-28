@@ -68,64 +68,25 @@ public abstract class Monster extends DungeonCharacter {
         myDiedFromBleed = false;
     }
 
-    /**
-     * Performs an attack on the target Hero.
-     *
-     * @param theTarget the character being attacked
-     */
     @Override
-    public void attack(DungeonCharacter theTarget) {
+    protected boolean beforeHit(DungeonCharacter theTarget) {
         if (theTarget instanceof Hero hero) {
 
-            // Monster attacking a Hero → include blockChance
-            int numAttacks = myAttackSpeed / hero.myAttackSpeed;
-            if (numAttacks < 1) numAttacks = 1;
+            // Block roll
+            if (rng.nextDouble() < hero.getBlockChance()) {
+                myLastDamageDealt = 0;
 
-            for (int i = 0; i < numAttacks; i++) {
+                System.out.println(theTarget.getCharName() + " blocks the attack!");
 
-                // Hit roll
-                if (rng.nextDouble() < myHitChance) {
-
-                    // Block roll
-                    if (rng.nextDouble() < hero.getBlockChance()) {
-                        myLastDamageDealt = 0;
-
-                        System.out.println(theTarget.getCharName() + " blocks the attack!");
-                        if (myAttackLogger != null) {
-                            myAttackLogger.accept(hero.getCharName() + " blocks the attack!");
-                        }
-                        continue;
-                    }
-
-                    // Damage
-                    final int damage = myMinDamage +
-                            (int)(rng.nextDouble() * (myMaxDamage - myMinDamage + 1));
-
-                    myLastDamageDealt = damage;
-                    hero.takeDamage(damage);
-
-                    if (myAttackLogger != null) {
-                        myAttackLogger.accept(myCharName + " hits " +
-                                hero.getCharName() + " (-" + damage + ")");
-                    }
-
-                } else {
-                    // Miss
-                    myLastDamageDealt = 0;
-
-                    System.out.println(myCharName + " misses " + theTarget.getCharName() + "...");
-                    if (myAttackLogger != null) {
-                        myAttackLogger.accept(myCharName + " misses " + hero.getCharName());
-                    }
+                if (myAttackLogger != null) {
+                    myAttackLogger.accept(hero.getCharName() + " blocks the attack!");
                 }
 
-                if (!hero.isAlive()) break;
+                return false; // cancel this swing
             }
-
-        } else {
-            // Monster attacking another monster or NPC → use normal attack
-            super.attack(theTarget);
         }
+
+        return true; // proceed normally
     }
 
     /**
@@ -177,17 +138,6 @@ public abstract class Monster extends DungeonCharacter {
             return myBleedDamage;
         }
         return 0;
-    }
-
-    /**
-     * Displays the monster's current combat status, including HP.
-     */
-    @Override
-    public void displayStatus() {
-        System.out.println("=== MONSTER STATUS ===");
-        System.out.println("Name: " + myCharName);
-        System.out.println("HP: " + myHP + "/" + myMaxHP);
-        System.out.println("====================");
     }
 
     /**

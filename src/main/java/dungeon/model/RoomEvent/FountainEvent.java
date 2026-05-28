@@ -5,8 +5,7 @@ import dungeon.model.characters.Hero;
 public class FountainEvent implements RoomEvent {
 
     @Override
-    public String trigger(Hero theHero) {
+    public void trigger(Hero theHero) {
         theHero.applyHeal(40);
-        return "FOUNTAIN";
     }
 }

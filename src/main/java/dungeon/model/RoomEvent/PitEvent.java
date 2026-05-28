@@ -7,9 +7,8 @@ import java.util.Random;
 public class PitEvent implements RoomEvent{
 
     @Override
-    public String trigger(Hero theHero) {
+    public void trigger(Hero theHero) {
         int damage = new Random().nextInt(20) + 1;
         theHero.takeDamage(damage);
-        return "PIT";
     }
 }
