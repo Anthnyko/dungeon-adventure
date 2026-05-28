@@ -333,11 +333,11 @@ public final class DungeonAdventure {
     private void evaluateRoomEvents(final Room theRoom) { 
         if (theRoom.hasPit()) {
             myDungeonView.displayPitInteration();
-            theRoom.triggerPitDamage(myHero);
+            theRoom.triggerEvent("PIT", myHero);
         }
         if (theRoom.hasFountain()) {
             myDungeonView.displayFountainInteraction();
-            theRoom.activateFountainHeal(myHero);
+            theRoom.triggerEvent("FOUNTAIN", myHero);
         } 
         if (theRoom.hasItems()) {
             myDungeonView.displayPotionAcquisition(theRoom);
@@ -381,10 +381,11 @@ public final class DungeonAdventure {
     }
 
     /**
-     * Handles the player's movement within the dungeon, updating position and
-     * evaluating effects of the new room.
+     * Handles the player's movement within the dungeon, updating position, cooldowns,
+     * and evaluating effects of the new room.
      */
     private final void move(final String theDirection) {
+        myHero.tickCooldowns();
         switch (theDirection) {
             case "W" -> myDungeon.moveHero("NORTH");
             case "A" -> myDungeon.moveHero("WEST");

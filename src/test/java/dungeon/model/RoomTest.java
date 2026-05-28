@@ -1,5 +1,7 @@
 package dungeon.model;
 
+import dungeon.model.RoomEvent.FountainEvent;
+import dungeon.model.RoomEvent.PitEvent;
 import dungeon.model.characters.Hero;
 import dungeon.model.characters.Warrior;
 import dungeon.model.items.HealingPotion;
@@ -13,7 +15,7 @@ public class RoomTest {
     public void testEntranceHasNothingElse() {
         Room room = new Room();
         room.addItem(new HealingPotion());
-        room.setPit(true);
+        room.addEvent(new PitEvent());
         room.setEntrance();
 
         assertTrue(room.isEntrance());
@@ -22,10 +24,10 @@ public class RoomTest {
     }
 
     @Test
-    public void testExitHasNoItems() {
+    public void testExitHasNothingElse() {
         Room room = new Room();
         room.addItem(new HealingPotion());
-        room.setPit(true);
+        room.addEvent(new PitEvent());
         room.setExit();
 
         assertTrue(room.isExit());
@@ -53,16 +55,17 @@ public class RoomTest {
     }
 
     @Test
-    public void testTriggerPit() {
+    public void testTriggerEvent() {
         Room room = new Room();
         Warrior warrior = new Warrior("test");
-        room.setPit(true);
+        room.addEvent(new PitEvent());
 
-        int damage1 = room.triggerPitDamage(warrior);
-        int damage2 = room.triggerPitDamage(warrior); //To test that the trap can't be triggered twice
+        int hpBefore = warrior.getHP();
+        room.triggerEvent("PIT", warrior);
+        int hpAfter = warrior.getHP();
 
-        assertTrue(damage1 >= 0);
-        assertEquals(0, damage2);
+        assertTrue(hpAfter < hpBefore);
+        assertFalse(room.hasPit()); //check that pit is removed after
     }
 
     @Test
@@ -79,7 +82,7 @@ public class RoomTest {
     @Test
     public void testFountainSet() {
         Room room = new Room();
-        room.setFountain(true);
+        room.addEvent(new FountainEvent());
         assertTrue(room.hasFountain());
     }
 }
