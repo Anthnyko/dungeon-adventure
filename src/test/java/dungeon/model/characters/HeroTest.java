@@ -10,10 +10,6 @@ public class HeroTest {
         return new Thief("TestHero");
     }
 
-    private Dungeon dummyDungeon() {
-        return new Dungeon(3, 3, "TestDungeon");
-    }
-
     @Test
     public void testHeroStartsWithZeroHealingPotions() {
         Hero h = createHero();
@@ -60,12 +56,6 @@ public class HeroTest {
         h.myCDTimer = 0;
         h.reduceCooldown();
         assertEquals(0, h.getCDTimer());
-    }
-
-    @Test
-    public void testGetBlockChanceReturnsCorrectValue() {
-        Hero h = new Thief("TestHero");
-        assertEquals(h.getBlockChance(), h.getBlockChance(), 0.0001);
     }
 
     @Test
