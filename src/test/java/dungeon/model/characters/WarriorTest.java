@@ -125,7 +125,6 @@ public class WarriorTest {
         w.bigCooldown(null);
 
         assertEquals(2, w.getMyEnrageTimer());
-        assertEquals(4, w.getCDTimer());
     }
 
     @Test

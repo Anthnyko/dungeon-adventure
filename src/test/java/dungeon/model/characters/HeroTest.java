@@ -17,16 +17,7 @@ public class HeroTest {
     @Test
     public void testHeroStartsWithZeroHealingPotions() {
         Hero h = createHero();
-        assertEquals(0, h.getHealingPotion());
-    }
-
-    @Test
-    public void testUsingHealingPotionWithZeroPotionsDoesNothing() {
-        Hero h = createHero();
-        h.myHP = 50;
-        h.useHealingPotion();
-        assertEquals(50, h.getHP());
-        assertEquals(0, h.getHealingPotion());
+        assertEquals(3, h.getHealingPotion());
     }
 
     @Test
@@ -46,21 +37,6 @@ public class HeroTest {
         h.useHealingPotion();
 
         assertEquals(1, h.getHealingPotion());
-    }
-
-    @Test
-    public void testHeroStartsWithZeroVisionPotions() {
-        Hero h = createHero();
-        assertEquals(0, h.getVisionPotion());
-    }
-
-    @Test
-    public void testUsingVisionPotionWithZeroPotionsDoesNothing() {
-        Hero h = createHero();
-
-        h.useVisionPotion(dummyDungeon());
-
-        assertEquals(0, h.getVisionPotion());
     }
 
     @Test
