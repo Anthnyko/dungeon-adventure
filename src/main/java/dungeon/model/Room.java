@@ -282,6 +282,15 @@ public class Room {
     /**
      * Triggers a specific room event by type and applies its effect to the hero.
      * If no matching event is found, nothing happens.
+     *
+     *  * Valid event types:
+     *  * <ul>
+     *  *     <li>"PIT" ? triggers the pit trap, dealing damage to the hero</li>
+     *  *     <li>"FOUNTAIN" ? triggers the fountain, healing the hero</li>
+     *        <li>"POISON" ? triggers the fountain, healing the hero</li>
+     *        <li>"ALARM" ? triggers the fountain, healing the hero</li>
+     *  * </ul>
+     *
      * The event is removed from the room after it has been triggered.
      *
      * @param theEventType the type of event to trigger ("PIT", "FOUNTAIN")
