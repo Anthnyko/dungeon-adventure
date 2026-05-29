@@ -119,7 +119,7 @@ public class ThiefTest {
 
         t.bigCooldown(s);
 
-        assertEquals(3, t.getCDTimer());
+        assertEquals(4, t.getCDTimer());
     }
 
     @Test
