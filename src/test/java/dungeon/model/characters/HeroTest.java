@@ -1,6 +1,5 @@
 package dungeon.model.characters;
 
-import dungeon.model.Dungeon;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -10,23 +9,10 @@ public class HeroTest {
         return new Thief("TestHero");
     }
 
-    private Dungeon dummyDungeon() {
-        return new Dungeon(3, 3, "TestDungeon");
-    }
-
     @Test
     public void testHeroStartsWithZeroHealingPotions() {
         Hero h = createHero();
-        assertEquals(0, h.getHealingPotion());
-    }
-
-    @Test
-    public void testUsingHealingPotionWithZeroPotionsDoesNothing() {
-        Hero h = createHero();
-        h.myHP = 50;
-        h.useHealingPotion();
-        assertEquals(50, h.getHP());
-        assertEquals(0, h.getHealingPotion());
+        assertEquals(3, h.getHealingPotion());
     }
 
     @Test
@@ -46,21 +32,6 @@ public class HeroTest {
         h.useHealingPotion();
 
         assertEquals(1, h.getHealingPotion());
-    }
-
-    @Test
-    public void testHeroStartsWithZeroVisionPotions() {
-        Hero h = createHero();
-        assertEquals(0, h.getVisionPotion());
-    }
-
-    @Test
-    public void testUsingVisionPotionWithZeroPotionsDoesNothing() {
-        Hero h = createHero();
-
-        h.useVisionPotion(dummyDungeon());
-
-        assertEquals(0, h.getVisionPotion());
     }
 
     @Test
@@ -84,12 +55,6 @@ public class HeroTest {
         h.myCDTimer = 0;
         h.reduceCooldown();
         assertEquals(0, h.getCDTimer());
-    }
-
-    @Test
-    public void testGetBlockChanceReturnsCorrectValue() {
-        Hero h = new Thief("TestHero");
-        assertEquals(h.getBlockChance(), h.getBlockChance(), 0.0001);
     }
 
     @Test

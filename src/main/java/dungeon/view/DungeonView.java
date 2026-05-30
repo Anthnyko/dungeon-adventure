@@ -91,7 +91,7 @@ public class DungeonView {
             + NEWLINE
             + "You have entered " + myDungeon.getMyName() + "!" //change to incorporate the dungeon name
             + NEWLINE
-            + TEXT_BLACK + "Collect all 4 pillars and find the exit" + TEXT_COLOR_RESET 
+            + TEXT_DIM + "Collect all 4 pillars and find the exit" + TEXT_COLOR_RESET 
             + NEWLINE
             + TEXT_YELLOW + SEPERATOR_EQUALS + TEXT_COLOR_RESET 
             + NEWLINE
@@ -138,7 +138,7 @@ public class DungeonView {
             + "    Ultimate Skill: Smite" 
             + TEXT_COLOR_RESET 
             + NEWLINE
-            + TEXT_BLACK + "[3] Thief (75 HP): "
+            + TEXT_DIM + "[3] Thief (75 HP): "
             + NEWLINE
             + "    Special Skill: Surprise Attack"
             + NEWLINE 
@@ -271,8 +271,8 @@ public class DungeonView {
             + displayPillars(theHero)
             + NEWLINE
             + "Abilities: Basic Attack | " 
-            + theHero.getSpecialSkillName() + " | " 
-            + cooldownDisplayHelper(theHero)  
+            + skillCooldownDisplayHelper(theHero) + " | " 
+            + ultCooldownDisplayHelper(theHero)  
             + NEWLINE 
             + SEPERATOR_STRAIGHT 
             + NEWLINE
@@ -290,6 +290,8 @@ public class DungeonView {
             + "[H] Use healing potion "
             + NEWLINE
             + "[V] Use vision potion "
+            + NEWLINE
+            + "[F] Save game "
             + NEWLINE
             + "[B] Help "
             + NEWLINE
@@ -453,9 +455,10 @@ public class DungeonView {
             + NEWLINE
             + " [1] Basic Attack"
             + NEWLINE
-            + " [2] Special Attack: " + theHero.getSpecialSkillName()
+            + " [2] Special Attack: " + skillCooldownDisplayHelper(theHero) + TEXT_COLOR_RESET
             + NEWLINE
-            + " [3] Ultimate Attack: " + cooldownDisplayHelper(theHero) + TEXT_COLOR_RESET 
+            + TEXT_BLUE
+            + " [3] Ultimate Attack: " + ultCooldownDisplayHelper(theHero) + TEXT_COLOR_RESET 
             + NEWLINE
             + TEXT_BLUE + " [4] Use Healing Potion: " + TEXT_COLOR_RESET 
             + TEXT_PURPLE + "Hx" + healthPotionDisplayHelper(theHero) + TEXT_COLOR_RESET
@@ -550,12 +553,21 @@ public class DungeonView {
 
     // ============================== Begin Display Helper Method Section ==============================
 
-    private final String cooldownDisplayHelper(final Hero theHero) {
+    private final String ultCooldownDisplayHelper(final Hero theHero) {
         if (theHero.getCDTimer() > 0) {
             return TEXT_BLACK + theHero.getUltimateName() + TEXT_COLOR_RESET
             + " (CD: " + theHero.getCDTimer() + " turns left)";
         } else {
             return theHero.getUltimateName();
+        }
+    }   
+    
+    private final String skillCooldownDisplayHelper(final Hero theHero) {
+        if (theHero.getSkillTimer() > 0) {
+            return TEXT_BLACK + theHero.getSpecialSkillName() + TEXT_COLOR_RESET
+            + " (CD: " + theHero.getSkillTimer() + " turns left)";
+        } else {
+            return theHero.getSpecialSkillName();
         }
     }
 
@@ -589,7 +601,7 @@ public class DungeonView {
     private final String monsterHpColorHelper(final Monster theMonster) {
         if (theMonster.getHP() > theMonster.getMaxHP() * 0.75) {
             return TEXT_GREEN + theMonster.getHP() + TEXT_COLOR_RESET;
-        } else if (theMonster.getHP() < theMonster.getMaxHP() * 0.75 && theMonster.getHP() > theMonster.getMaxHP() * 0.25) {
+        } else if (theMonster.getHP() <= theMonster.getMaxHP() * 0.75 && theMonster.getHP() >= theMonster.getMaxHP() * 0.25) {
             return TEXT_YELLOW + theMonster.getHP() + TEXT_COLOR_RESET;
         } else if (theMonster.getHP() < theMonster.getMaxHP() * 0.25) {
             return TEXT_RED + theMonster.getHP() + TEXT_COLOR_RESET;

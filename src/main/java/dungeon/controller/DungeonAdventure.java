@@ -381,10 +381,11 @@ public final class DungeonAdventure {
     }
 
     /**
-     * Handles the player's movement within the dungeon, updating position and
-     * evaluating effects of the new room.
+     * Handles the player's movement within the dungeon, updating position, cooldowns,
+     * and evaluating effects of the new room.
      */
     private final void move(final String theDirection) {
+        myHero.tickCooldowns();
         switch (theDirection) {
             case "W" -> myDungeon.moveHero("NORTH");
             case "A" -> myDungeon.moveHero("WEST");
