@@ -1,7 +1,10 @@
 package dungeon.model;
 
+import dungeon.model.RoomEvent.AlarmEvent;
 import dungeon.model.RoomEvent.FountainEvent;
 import dungeon.model.RoomEvent.PitEvent;
+import dungeon.model.RoomEvent.PoisonEvent;
+import dungeon.model.characters.Monster;
 
 import java.util.*;
 
@@ -36,6 +39,14 @@ public class Dungeon {
     /** The column index of the room the hero is in */
     private int myHeroCol;
 
+    /** The maximum number of monsters that can be placed in the dungeon */
+    private final int myMaxMonsters;
+
+    /** the row of the alerted monster for the alarm event, -1 if no monster is alerted */
+    private int myAlertedMonsterRow = -1;
+    /** the column of the alerted monster for the alarm event, -1 if no monster is alerted */
+    private int myAlertedMonsterCol = -1;
+
     /** The name of the dungeon */
     private final String myName;
 
@@ -62,6 +73,12 @@ public class Dungeon {
         myWidth = theWidth;
         myHeight = theHeight;
         myName = theName;
+        myMaxMonsters = switch(theName) {
+            case "The Easy Dungeon" -> (int) Math.ceil(myWidth * myHeight * 0.25);
+            case "The Medium Dungeon" -> (int) Math.ceil(myWidth * myHeight * 0.3);
+            case "The Hard Dungeon" -> (int) Math.ceil(myWidth * myHeight * 0.35);
+            default -> (int) Math.ceil(myWidth * myHeight * 0.3);
+        };
 
         mazeGeneration();
     }
@@ -93,6 +110,8 @@ public class Dungeon {
 
         placePillars();
         placePits();
+        placePoisons();
+        placeAlarms();
         placeFountains();
         placeMonsters();
     }
@@ -188,6 +207,36 @@ public class Dungeon {
         }
     }
 
+    private void placePoisons() {
+        for (int row = 0; row < myHeight; row++) {
+            for (int col = 0; col < myWidth; col++) {
+                Room room = myRooms[row][col];
+
+                if (room.isEntrance() || room.isExit()) continue;
+
+                if (myRandom.nextInt(100) < EVENT_CHANCE) {
+                    room.addEvent(new PoisonEvent());
+                }
+            }
+        }
+    }
+
+    private void placeAlarms() {
+        for (int row = 0; row < myHeight; row++) {
+            for (int col = 0; col < myWidth; col++) {
+                Room room = myRooms[row][col];
+
+                if (room.isEntrance() || room.isExit()) continue;
+
+                if (myRandom.nextInt(100) < EVENT_CHANCE) {
+                    room.addEvent(new AlarmEvent());
+                }
+            }
+        }
+    }
+
+
+
     private void placeFountains() {
         int count = (myWidth * myHeight) / 10; // around 1 fountain per 10 rooms
 
@@ -203,8 +252,12 @@ public class Dungeon {
     }
 
     private void placeMonsters() {
+        int monstersPlaced = 0;
+
         for (int row = 0; row < myHeight; row++) {
             for (int col = 0; col < myWidth; col++) {
+                if (monstersPlaced >= myMaxMonsters) return;
+
                 Room room = myRooms[row][col];
 
                 if (room.isEntrance() || room.isExit()) continue;
@@ -214,15 +267,9 @@ public class Dungeon {
                     continue;
                 }
 
-                if (room.hasFountain()) {
-                    if (myRandom.nextInt(100) < 50) { // 50% chance for monster spawn in fountain room
-                        room.setMonster(myMonsterGenerator.createMonster(getRandomMonsterType(row, col)));
-                    }
-                    continue;
-                }
-
                 if (myRandom.nextInt(100) < 30) { // 30% chance to spawn monster in room
                     room.setMonster(myMonsterGenerator.createMonster(getRandomMonsterType(row, col)));
+                    monstersPlaced++;
                 }
             }
         }
@@ -258,6 +305,13 @@ public class Dungeon {
         myRooms[theRow][theCol+1].setWestDoor(true);
     }
 
+    public void spawnMonsterAtHero() {
+        if (!myRooms[myHeroRow][myHeroCol].hasMonster()) {
+            myRooms[myHeroRow][myHeroCol].setMonster(
+                    myMonsterGenerator.createMonster(getRandomMonsterType(myHeroRow, myHeroCol)));;
+        }
+    }
+
     /**
      * Attempts to move the hero in the given direction.
      *
@@ -289,6 +343,18 @@ public class Dungeon {
         return true;
     }
 
+    public void teleportHeroRandom() {
+        int row;
+        int col;
+        do {
+            row = myRandom.nextInt(myHeight);
+            col = myRandom.nextInt(myWidth);
+        } while (row == myHeroRow && col == myHeroCol);
+        myHeroRow = row;
+        myHeroCol = col;
+        getCurrentRoom().setRevealed(true);
+    }
+
     /**
      * Returns a list of directions the hero can currently move.
      * Only directions wih a door are included.
@@ -305,6 +371,130 @@ public class Dungeon {
         if (current.hasWestDoor()) validDirections.add("WEST");
 
         return validDirections;
+    }
+
+    public void triggerAlarm() {
+        if (myAlertedMonsterRow == -1) {
+            int[] nearest = findNearestMonster();
+            if (nearest != null) {
+                myAlertedMonsterRow = nearest[0];
+                myAlertedMonsterCol = nearest[1];
+            }
+        }
+    }
+
+    public void revealRandomPillar() {
+        List<int[]> pillarRooms = new ArrayList<>();
+        for (int row = 0; row < myHeight; row++) {
+            for (int col = 0; col < myWidth; col++) {
+                if (myRooms[row][col].hasPillar()) {
+                    pillarRooms.add(new int[]{row, col});
+                }
+            }
+        }
+        if (!pillarRooms.isEmpty()) {
+            int[] pillar = pillarRooms.get(myRandom.nextInt(pillarRooms.size()));
+            myRooms[pillar[0]][pillar[1]].setRevealed(true);
+        }
+    }
+
+    private int[] findNearestMonster() {
+        int[] nearest = null;
+        int shortestDistance = Integer.MAX_VALUE;
+
+        for (int row = 0; row < myHeight; row++) {
+            for (int col = 0; col < myWidth; col++) {
+                if (myRooms[row][col].hasMonster() && !myRooms[row][col].hasPillar()) {
+                    int distance = Math.abs(row - myHeroRow) + Math.abs(col - myHeroCol);
+                    if (distance < shortestDistance) {
+                        shortestDistance = distance;
+                        nearest = new int[]{row, col};
+                    }
+                }
+            }
+        }
+        return nearest;
+    }
+
+    private int[] getNextStepTowardHero(final int theMonsterRow, final int theMonsterCol) {
+        if (theMonsterRow == myHeroRow && theMonsterCol == myHeroCol) return null;
+
+        boolean[][] visited = new boolean[myHeight][myWidth];
+        Map<String, int[]> parent = new HashMap<>();
+        Queue<int[]> queue = new LinkedList<>();
+
+        queue.add(new int[]{theMonsterRow, theMonsterCol});
+        visited[theMonsterRow][theMonsterCol] = true;
+
+        while(!queue.isEmpty()) {
+            int[] current = queue.poll();
+            int r = current[0];
+            int c = current[1];
+            Room room =  myRooms[r][c];
+
+            int[][] neighbors = {
+                    {r-1, c}, // north
+                    {r+1, c}, // south
+                    {r, c+1}, // east
+                    {r, c-1} // west
+            };
+
+            boolean[] doors = {
+                    room.hasNorthDoor(),
+                    room.hasSouthDoor(),
+                    room.hasEastDoor(),
+                    room.hasWestDoor()
+            };
+
+            for (int i = 0; i < 4; i++) {
+                int nr = neighbors[i][0];
+                int nc = neighbors[i][1];
+
+                if (isInBounds(nr, nc) && !visited[nr][nc] && doors[i]) {
+                    visited[nr][nc] = true;
+                    parent.put(nr + "," + nc, new int[]{r, c});
+
+                    if (nr == myHeroRow && nc == myHeroCol) {
+                        // trace back to find first step
+                        int[] step = new int[]{nr, nc};
+                        while (true) {
+                            int[] prev = parent.get(step[0] + "," + step[1]);
+                            if (prev[0] == theMonsterRow && prev[1] == theMonsterCol) {
+                                return step;
+                            }
+                            step = prev;
+                        }
+                    }
+                    queue.add(new int[]{nr, nc});
+                }
+            }
+        }
+        return null;
+    }
+
+    public void moveAlarmMonsterCloser() {
+        if (myAlertedMonsterRow == -1) return;
+
+        // don't move if the monster is already in the hero's room
+        if (myAlertedMonsterRow == myHeroRow &&  myAlertedMonsterCol == myHeroCol) return;
+
+        // check if monster was defeated
+        if (!myRooms[myAlertedMonsterRow][myAlertedMonsterCol].hasMonster()) {
+            myAlertedMonsterRow = -1;
+            myAlertedMonsterCol = -1;
+            return;
+        }
+
+        int[] nextStep = getNextStepTowardHero(myAlertedMonsterRow, myAlertedMonsterCol);
+        if (nextStep == null) return;
+
+        if (!myRooms[nextStep[0]][nextStep[1]].hasMonster()) {
+            Monster monster = myRooms[myAlertedMonsterRow][myAlertedMonsterCol].getMonster();
+            myRooms[myAlertedMonsterRow][myAlertedMonsterCol].removeMonster();
+            myRooms[nextStep[0]][nextStep[1]].setMonster(monster);
+            myAlertedMonsterRow = nextStep[0];
+            myAlertedMonsterCol = nextStep[1];
+        }
     }
 
     /**

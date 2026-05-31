@@ -1,6 +1,6 @@
 package dungeon.model.items;
 
-public class VisionPotion extends Item{
+public class VisionPotion implements Item{
     @Override
     public char getSymbol() {
         return 'V';

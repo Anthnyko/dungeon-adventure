@@ -42,6 +42,12 @@ public abstract class DungeonCharacter {
     /** Last heal value used. */
     protected int myLastHeal;
 
+    /** Damage dealt per turn from a damage over time effect */
+    private int myTickDamage;
+
+    /** Number of turns remaining for the damage over time effect */
+    private int myTickTurnsRemaining;
+
     /** Rolls random value for abilities. */
     protected Random rng = new Random();
 
@@ -183,6 +189,18 @@ public abstract class DungeonCharacter {
             myHP = 0;
         }
         System.out.println(myCharName + " bleeds " + damage + " damage! (HP: " + myHP + ")");
+    }
+
+    public void takeTickDamage(int theDamage, int theDuration) {
+        myTickDamage = Math.max(myTickDamage, theDamage);
+        myTickTurnsRemaining = Math.max(myTickTurnsRemaining, theDuration);
+    }
+
+    public void tickDamage() {
+        if (myTickTurnsRemaining > 0) {
+            takeDamage(myTickDamage);
+            myTickTurnsRemaining--;
+        }
     }
 
     public void applyHeal(int theHealAmount) {

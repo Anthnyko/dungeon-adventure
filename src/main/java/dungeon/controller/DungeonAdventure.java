@@ -328,16 +328,30 @@ public final class DungeonAdventure {
      * Evaluates and applies the effects of the current room on the player,
      * such as finding items, encountering traps, or finding a monster. 
      * 
-     * @param room the room to evaluate
+     * @param theRoom the room to evaluate
      */
     private void evaluateRoomEvents(final Room theRoom) { 
         if (theRoom.hasPit()) {
-            myDungeonView.displayPitInteration();
-            theRoom.triggerEvent("PIT", myHero);
+            myDungeonView.displayPitInteraction();
+            theRoom.triggerEvent("PIT", myHero, myDungeon);
+        }
+        if (theRoom.hasPoison()) {
+            myDungeonView.displayPoisonInteraction();
+            theRoom.triggerEvent("POISON", myHero, myDungeon);
+        }
+        if (theRoom.hasAlarm()) {
+            myDungeonView.displayAlarmInteraction();
+            theRoom.triggerEvent("ALARM", myHero, myDungeon);
         }
         if (theRoom.hasFountain()) {
             myDungeonView.displayFountainInteraction();
-            theRoom.triggerEvent("FOUNTAIN", myHero);
+            String fountainEvent = theRoom.triggerEvent("FOUNTAIN", myHero, myDungeon);
+            switch (fountainEvent) {
+                case "FOUNTAIN_HEAL" -> myDungeonView.displayFountainHeal();
+                case "FOUNTAIN_TELEPORT" -> myDungeonView.displayFountainTeleport();
+                case "FOUNTAIN_POTION" -> myDungeonView.displayFountainPotion();
+                case "FOUNTAIN_MIND" -> myDungeonView.displayFountainMind();
+            }
         } 
         if (theRoom.hasItems()) {
             myDungeonView.displayPotionAcquisition(theRoom);
@@ -386,6 +400,7 @@ public final class DungeonAdventure {
      */
     private final void move(final String theDirection) {
         myHero.tickCooldowns();
+        myHero.tickDamage();
         switch (theDirection) {
             case "W" -> myDungeon.moveHero("NORTH");
             case "A" -> myDungeon.moveHero("WEST");
@@ -393,13 +408,14 @@ public final class DungeonAdventure {
             case "D" -> myDungeon.moveHero("EAST");
             default -> throw new IllegalArgumentException("Error: Invalid move input.");
         }
+        myDungeon.moveAlarmMonsterCloser();
     }
 
     /**
      * Manages combat between the hero and an encountered monster, including
      * attack resolution and outcome determination.
      * 
-     * @param monster the enemy monster to engage in combat
+     * @param theMonster the enemy monster to engage in combat
      */
     private final void handleCombat(final Monster theMonster, final Room theRoom) {
         final BattleController battle = new BattleController(myHero);
@@ -420,7 +436,7 @@ public final class DungeonAdventure {
     /**
      * Finalizes the game, displaying the outcome and cleaning up resources.
      * 
-     * @param theResult true if the player won, false if the player lost
+     * @param theExitReason true if the player won, false if the player lost
      */
     private final void endGame(final GameExitReason theExitReason) {
         switch (theExitReason) {

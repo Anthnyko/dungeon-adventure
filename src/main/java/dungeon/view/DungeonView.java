@@ -395,7 +395,7 @@ public class DungeonView {
     }
 
     /**
-     * Displays a message when the player discovers and interacts with a healing fountain.
+     * Displays a message when the player discovers and interacts with a fountain.
      */
     public final void displayFountainInteraction() {
         System.out.println(
@@ -404,11 +404,74 @@ public class DungeonView {
     }
 
     /**
+     * Displays a message when the player is healed by the fountain
+     */
+    public final void displayFountainHeal() {
+        System.out.println(
+                TEXT_PINK + "You drink from the Fountain... a warm glow washes over you!" + TEXT_COLOR_RESET
+        );
+    }
+
+    /**
+     * Displays a message when the player is teleported by the fountain
+     */
+    public final void displayFountainTeleport() {
+        System.out.println(
+                TEXT_PINK + "You drink from the Fountain... the world starts spinning!" + TEXT_COLOR_RESET
+        );
+        System.out.println(
+                TEXT_PINK + "You find yourself somewhere completely different..." + TEXT_COLOR_RESET
+        );
+    }
+
+    /**
+     * Displays a message when the player is given two potions by the fountain
+     */
+    public final void displayFountainPotion() {
+        System.out.println(
+                TEXT_PINK + "You drink from the Fountain... and notice two bottles lying in the Fountain?" + TEXT_COLOR_RESET
+        );
+    }
+
+    /**
+     * Displays a message when the player is revealed a pillar room by the fountain
+     */
+    public final void displayFountainMind() {
+        System.out.println(
+                TEXT_PINK + "You drink from the Fountain... visions of a pillar flash through your mind!" + TEXT_COLOR_RESET
+        );
+        System.out.println(
+                TEXT_PINK + "A pillar location has been revealed! But the visions leave your mind fractured." +
+                        " (-2 HP per turn for 6 turns)" + TEXT_COLOR_RESET
+        );
+    }
+
+
+
+    /**
      * Displays a message when the player falls into a pit.
      */
-    public final void displayPitInteration() {
+    public final void displayPitInteraction() {
         System.out.println(
             TEXT_RED + "You fell into a pit!" + TEXT_COLOR_RESET
+        );
+    }
+
+    /**
+     * Displays a message when the player runs into poison.
+     */
+    public final void displayPoisonInteraction() {
+        System.out.println(
+                TEXT_RED + "You ran into a poison trap!" + TEXT_COLOR_RESET
+        );
+    }
+
+    /**
+     * Displays a message when the player runs into an alarm.
+     */
+    public final void displayAlarmInteraction() {
+        System.out.println(
+                TEXT_RED + "You've tripped an alarm!" + TEXT_COLOR_RESET
         );
     }
 
