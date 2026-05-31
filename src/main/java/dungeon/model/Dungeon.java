@@ -1,4 +1,4 @@
-package dungeon.model.Dungeon;
+package dungeon.model;
 
 import dungeon.model.RoomEvent.FountainEvent;
 import dungeon.model.RoomEvent.PitEvent;

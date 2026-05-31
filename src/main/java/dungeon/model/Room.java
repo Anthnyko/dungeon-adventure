@@ -1,4 +1,4 @@
-package dungeon.model.Dungeon;
+package dungeon.model;
 
 import java.util.ArrayList;
 import java.util.List;
