@@ -10,7 +10,7 @@ import java.util.*;
 
 /**
  * Represents a randomly generated dungeon maze.
- *
+ * <p>
  * The dungeon is a 2D grid of room objects connected by doors.
  * The dungeon class is responsible for:
  * Generating the maze,
@@ -33,11 +33,6 @@ public class Dungeon {
     private int myEntranceRow;
     /** The column index of the entrance room */
     private int myEntranceCol;
-
-    /** The row index of the exit room */
-    private int myExitRow;
-    /** The column index of the exit room */
-    private int myExitCol;
 
     /** The row index of the room the hero is in */
     private int myHeroRow;
@@ -101,6 +96,8 @@ public class Dungeon {
             myRooms[myEntranceRow][myEntranceCol].setRevealed(true); //sets the entrance room as revealed
 
             //Pick exit
+            int myExitCol;
+            int myExitRow;
             do {
                 myExitRow = myRandom.nextInt(myHeight);
                 myExitCol = myRandom.nextInt(myWidth);
