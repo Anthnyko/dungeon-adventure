@@ -23,8 +23,10 @@ public class Priest extends Hero {
      * Constructs a new Priest with predefined combat attributes.
      *
      * @param theName the name of the Priest
+     * @param theHealingPotions the number of healing potions
+     * @param theVisionPotions the number of healing potions
      */
-    public Priest(String theName) {
+    public Priest(String theName, int theHealingPotions, int theVisionPotions) {
         super(theName,
                 85,   // HP
                 85,   // max HP
@@ -32,7 +34,9 @@ public class Priest extends Hero {
                 45,   // max damage
                 5,    // attack speed
                 0.7,  // hit chance
-                0.3); // block chance
+                0.3, // block chance
+                theHealingPotions,
+                theVisionPotions); 
         myMinHeal = 20;
         myMaxHeal = 40;
         mySkillTimer = 0;
@@ -68,6 +72,15 @@ public class Priest extends Hero {
     @Override
     public String getUltimateName() {
         return "Smite";
+    }
+
+    /**
+     * Returns the name of this hero class.
+     *
+     * @return the class name "Priest"
+     */
+    public String getClassName() {
+        return "Priest";
     }
 
     /**

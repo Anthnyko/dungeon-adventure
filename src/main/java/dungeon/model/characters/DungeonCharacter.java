@@ -206,6 +206,31 @@ public abstract class DungeonCharacter {
     /** @return the character's max hit points */
     public int getMaxHP() { return myMaxHP; }
 
+    /** @return the character's minimum damage */
+    public int getMinDamage() {
+        return myMinDamage;
+    }
+
+    /** @return the character's maximum damage */
+    public int getMaxDamage() {
+        return myMaxDamage;
+    }
+
+    /** @return the character's attack speed */
+    public int getAttackSpeed() {
+        return myAttackSpeed;
+    }
+
+    /** @return the character's hit chance */
+    public double getHitChance() {
+        return myHitChance;
+    }
+
+    /** Sets the character's current hit points */
+    public void setHP(int theHP) {
+        myHP = theHP;
+    }
+
     public void setAttackLogger(Consumer<String> logger) {
         myAttackLogger = logger;
     }
