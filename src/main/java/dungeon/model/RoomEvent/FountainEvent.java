@@ -18,7 +18,8 @@ public class FountainEvent implements RoomEvent {
      * @return "FOUNTAIN" to identify this event type to the controller
      */
     @Override
-    public void trigger(Hero theHero) {
+    public String trigger(final Hero theHero) {
         theHero.applyHeal(40);
+        return "FOUNTAIN";
     }
 }
