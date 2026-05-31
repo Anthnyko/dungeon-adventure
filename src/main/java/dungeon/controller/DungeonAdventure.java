@@ -1,10 +1,16 @@
 
 package dungeon.controller;
 
+import java.util.List;
 import java.util.Scanner;
 
 import dungeon.model.Dungeon;
 import dungeon.model.Room;
+import dungeon.model.Saving.GameState;
+import dungeon.model.Saving.InstanceCapture;
+import dungeon.model.Saving.RestoreSave;
+import dungeon.model.Saving.RestoreSave.RestoreResult;
+import dungeon.model.Saving.SaveGameManager;
 import dungeon.model.characters.Hero;
 import dungeon.model.characters.Monster;
 import dungeon.model.characters.Priest;
@@ -32,10 +38,11 @@ public final class DungeonAdventure {
     // private field for Hero
     private Hero myHero;
 
+    private final SaveGameManager mySaveGameManager;
+
     private final Scanner myScanner = new Scanner(System.in);
 
     private boolean myActiveGame;
-    private boolean myWinCondition;
     private static final String NEWLINE = System.lineSeparator();
 
     public static void main(final String[] args) {
@@ -48,6 +55,7 @@ public final class DungeonAdventure {
      */
     public DungeonAdventure() {
         myDungeonView = new DungeonView();
+        mySaveGameManager = new SaveGameManager();
         // Default constructor
     }
 
@@ -100,7 +108,7 @@ public final class DungeonAdventure {
 
         switch (playerChoice) {
             case 1 -> createGame();
-            case 2 -> loadGame(); // TODO: add load game
+            case 2 -> loadGame(); 
             case 3 -> helpPage(); // help menu
             case 4 -> aboutPage(); // about info
             case 5 -> closeGame(); // quit game
@@ -234,9 +242,9 @@ public final class DungeonAdventure {
      */
     public void setMyHero(int thePlayerChoice, String theHeroName) {
         myHero = switch (thePlayerChoice) {
-            case 1 -> new Warrior(theHeroName);
-            case 2 -> new Priest(theHeroName);
-            case 3 -> new Thief(theHeroName);
+            case 1 -> new Warrior(theHeroName, 0, 0);
+            case 2 -> new Priest(theHeroName, 0, 0);
+            case 3 -> new Thief(theHeroName, 0, 0);
             default -> throw new IllegalArgumentException("Invalid class choice: " + thePlayerChoice);
         }; 
     }
@@ -262,9 +270,9 @@ public final class DungeonAdventure {
             }
         }
         myDungeon = switch (playerChoice) {
-            case 1 -> new Dungeon(5, 5, "The Easy Dungeon");
-            case 2 -> new Dungeon(7, 7, "The Medium Dungeon");
-            case 3 -> new Dungeon(10, 10, "The Hard Dungeon");
+            case 1 -> new Dungeon(5, 5, "The Easy Dungeon", false);
+            case 2 -> new Dungeon(7, 7, "The Medium Dungeon", false);
+            case 3 -> new Dungeon(10, 10, "The Hard Dungeon", false);
             default -> throw new IllegalArgumentException("Invalid dungeon selection: " + playerChoice);
         };
     }
@@ -586,25 +594,107 @@ public final class DungeonAdventure {
             }           
         } while(!validInput);
 
-        // TODO: implement saveing
         switch (userChoice) { 
-            case "Y":
-                
-                
-            case "N":
-                // do nothing
-                
-            default:
-                break;
+            case "Y" -> {
+                final GameState state = InstanceCapture.captureGameState(myHero, myDungeon);
+                System.out.print("Enter save name: ");
+                final String saveName = myScanner.nextLine().trim();
+                if (mySaveGameManager.saveGame(state, saveName)) {
+                    System.out.println("Game saved!");
+                }
+            }
+            case "N" -> System.out.println("Canceled Save.");
+            default -> throw new IllegalArgumentException("Invalid input: " + userChoice);
         }
     }
 
     /**
-     * Loads a saved game
+     * Displays a menu for loading or managing saved games.
+     * Shows all available saves with timestamps, hero names, and classes.
+     * Allows the player to load a save or delete a save file.
      */
-    private final void loadGame() {
+    private final void loadMenu() {
+        final List<String> saves = mySaveGameManager.listSaves();
+        if (saves.isEmpty()) {
+            System.out.println("No saves available.");
+            mainMenu();
+            return;
+        }
+        
+        System.out.println("\nAvailable saves:");
+        for (int i = 0; i < saves.size(); i++) {
+            System.out.println((i + 1) + ". " + saves.get(i));
+        }
 
+        int playerChoice = -1;
+        myDungeonView.promptLoad();
+        while (playerChoice < 1 || playerChoice > 3) {
+            try {
+                final String input = myScanner.nextLine().trim();
+                playerChoice = Integer.parseInt(input);
+
+                if (playerChoice < 1 || playerChoice > 3) {
+                    System.out.print(
+                        "Invalid input: Please enter a choice between 1-3."
+                        + NEWLINE
+                        + "> Enter choice: "
+                    );
+                }
+            } catch (final NumberFormatException e) {
+                System.out.print(
+                    "Invalid input: Please enter a number between 1-3."
+                    + NEWLINE
+                    + "> Enter choice: "
+                );
+            }
+        }
+        switch (playerChoice) {
+            case 1 -> loadGame();
+            case 2 -> deleteSave();
+        
+            default -> throw new IllegalArgumentException("Invalid input: "  + playerChoice);
+        }
     }
 
+    /**
+     * Prompts the player to enter a save name and loads the corresponding game.
+     * Continues prompting until a valid save is found, then restores the game state
+     * and resumes the game loop.
+     */
+    private final void loadGame() {
+        System.out.print("> Enter save name to load: ");
+        GameState loadedState = null;
+        do {
+            final String saveName = myScanner.nextLine().trim();
+            loadedState = mySaveGameManager.loadGame(saveName);
+            if (loadedState == null) {
+                System.out.print("> Enter save name: ");
+            }
+        } while (loadedState == null);
 
+        if (loadedState != null) {
+            RestoreSave restore = new RestoreSave();
+            RestoreResult result = restore.restoreGameState(loadedState);
+            myDungeon = result.myDungeon;
+            myHero = result.myHero;
+//            restoreGameState(loadedState);
+            gameLoop();
+        }
+    }
+
+    /**
+     * Prompts the player to enter a save name and deletes the corresponding save file.
+     * If the save is not found, displays an error message.
+     * Returns to the load menu after attempting deletion.
+     */
+    private final void deleteSave() {
+        System.out.print("> Enter save name to delete: ");
+        boolean isDeleted = false;
+        final String saveName = myScanner.nextLine().trim();    
+        isDeleted = mySaveGameManager.deleteSave(saveName);    
+        if (!isDeleted) {
+            System.out.println("Could not find save.");
+        }
+        loadMenu();
+    }
 }

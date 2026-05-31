@@ -72,7 +72,7 @@ public class Dungeon {
      * @param theHeight the number of rows in the dungeon
      * @param theName the name of the dungeon
      */
-    public Dungeon(int theWidth, int theHeight, String theName) {
+    public Dungeon(int theWidth, int theHeight, String theName, final boolean forLoad) {
         myRandom = new Random();
         myMonsterGenerator = new MonsterGenerator();
         myWidth = theWidth;
@@ -84,7 +84,15 @@ public class Dungeon {
             case "The Hard Dungeon" -> (int) Math.ceil(myWidth * myHeight * 0.35);
             default -> (int) Math.ceil(myWidth * myHeight * 0.3);
         };
+        if (forLoad) {
+            intiializeRoomsForLoad();
+        }
+    }
 
+    /**
+     * Generates a new random layout of the dungeon.
+     */
+    public void generateDungeon() {
         mazeGeneration();
     }
 
@@ -124,6 +132,18 @@ public class Dungeon {
         for (int row = 0; row < myHeight; row++) {
             for (int col = 0; col < myWidth; col++) {
                 myRooms[row][col] = new Room();
+            }
+        }
+    }
+
+    /**
+     * Initializes rooms with no items
+     */
+    private void intiializeRoomsForLoad() {
+        myRooms = new Room[myHeight][myWidth];
+        for (int row = 0; row < myHeight; row++) {
+            for (int col = 0; col < myWidth; col++) {
+                myRooms[row][col] = new Room(true);
             }
         }
     }
@@ -672,7 +692,32 @@ public class Dungeon {
         return sb.toString();
     }
 
+    /**
+     * @return the name of the dungeon.
+     */
     public String getMyName() {
         return myName;
+    }
+
+    /**
+     * Sets where the entrance is in the dungeon.
+     * 
+     * @param theRow the row index
+     * @param theCol the column index
+     */
+    public void setEntrancePosition(final int theRow, final int theCol) {
+        myEntranceRow = theRow;
+        myEntranceCol = theCol;
+    }
+
+    /**
+     * Sets where the exit is in the dungeon.
+     * 
+     * @param theRow the row index
+     * @param theCol the column index
+     */
+    public void setExitPosition(final int theRow, final int theCol) {
+        myExitRow = theRow;
+        myExitCol = theCol;
     }
 }

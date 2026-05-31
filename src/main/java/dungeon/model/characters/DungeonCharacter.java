@@ -235,6 +235,11 @@ public abstract class DungeonCharacter {
         return myHP;
     }
 
+    /** Sets the character's current hit points */
+    public void setHP(int theHP) {
+        myHP = theHP;
+    }
+
     /** @return the character's max hit points */
     public int getMaxHP() { return myMaxHP; }
 

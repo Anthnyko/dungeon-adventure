@@ -54,11 +54,9 @@ public abstract class Hero extends DungeonCharacter {
      */
 
     public Hero(String theName, int theHP, int theMaxHP, int theMinDamage, int theMaxDamage, int theAttackSpeed,
-                double theHitChance, double theBlockChance) {
+                double theHitChance, double theBlockChance, int theHealingPotions, int theVisionPotions) {
         super(theName, theHP, theMaxHP,theMinDamage, theMaxDamage, theAttackSpeed, theHitChance);
         myBlockChance = theBlockChance;
-        myHealingPotions = 3;
-        myVisionPotions = 1;
         myPillarsFound = new ArrayList<>();
         myCDTimer = 0;
     }
@@ -266,6 +264,10 @@ public abstract class Hero extends DungeonCharacter {
 
     /** @return the name of ultimate skill */
     public abstract String getUltimateName();
+
+    /** @return the name of the class */
+    public abstract String getClassName();
+
 
     @Override
     public String toString() {
