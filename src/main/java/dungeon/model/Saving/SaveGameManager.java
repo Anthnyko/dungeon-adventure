@@ -55,7 +55,6 @@ public class SaveGameManager {
                     + ");";
             
             stmt.execute(sql);
-            System.out.println("Database initialized successfully.");
         } catch (SQLException e) {
             System.err.println("Error initializing database: " + e.getMessage());
         }

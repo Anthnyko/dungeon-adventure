@@ -44,6 +44,10 @@ public class InstanceCapture {
         state.myDungeonName = theDungeon.getMyName();
         state.myHeroRow = theDungeon.getHeroRow();
         state.myHeroCol = theDungeon.getHeroCol();
+        state.myEntranceRow = theDungeon.getMyEntranceRow();
+        state.myEntranceCol = theDungeon.getMyEntranceCol();
+        state.myExitRow = theDungeon.getMyExitRow();
+        state.myExitCol = theDungeon.getMyExitCol();
         
         // room data
         state.myRoomData = captureRoomData(theDungeon);

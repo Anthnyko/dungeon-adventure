@@ -348,6 +348,22 @@ public class Dungeon {
         return myHeroCol;
     }
 
+    public int getMyEntranceRow() {
+        return myEntranceRow;
+    }
+
+    public int getMyEntranceCol() {
+        return myEntranceCol;
+    }
+
+    public int getMyExitRow() {
+        return myExitRow;
+    }
+
+    public int getMyExitCol() {
+        return myExitCol;
+    }
+
     public int getDungeonWidth() {
         return myWidth;
     }
