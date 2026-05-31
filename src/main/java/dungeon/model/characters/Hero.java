@@ -26,7 +26,7 @@ public abstract class Hero extends DungeonCharacter {
     protected int myVisionPotions;
 
     /** Tracker for all Pillar items collected by the Hero. */
-    protected List<Character> myPillarsFound;
+    protected final List<Character> myPillarsFound;
 
     /** Tracks cooldown time for the Hero's special skill. */
     protected int mySkillTimer;
@@ -148,26 +148,6 @@ public abstract class Hero extends DungeonCharacter {
      */
     public void resetStatusEffects() {
         myExtraTurn = false;
-    }
-
-    /**
-     * Displays the hero's current combat status, including HP, potions,
-     * cooldown timers, and any other relevant combat information.
-     */
-    @Override
-    public void displayStatus() {
-        System.out.println("=== HERO STATUS ===");
-        System.out.println("Name: " + myCharName);
-        System.out.println("HP: " + myHP + "/" + myMaxHP);
-        System.out.println("Healing Potions: " + myHealingPotions);
-        System.out.println("Vision Potions: " + myVisionPotions);
-        System.out.println("Ultimate Cooldown: " + myCDTimer);
-        System.out.println("====================");
-        System.out.println("Abilities:");
-        System.out.println("1. Basic Attack");
-        System.out.println("2. " + getSpecialSkillName());
-        System.out.println("3. " + getUltimateName() + " (CD: " + myCDTimer + ")");
-        System.out.println("====================");
     }
 
     /** Displays actions for the user to choose from.

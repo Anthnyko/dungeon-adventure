@@ -93,24 +93,45 @@ public abstract class DungeonCharacter {
 
         for (int i = 0; i < numAttacks; i++) {
 
+            // 🔹 Hook: Monster can override this to add blockChance
+            if (!beforeHit(theTarget)) {
+                continue; // skip this swing
+            }
+
             if (rng.nextDouble() < myHitChance) {
-                final int damage = myMinDamage + (int)(rng.nextDouble() * (myMaxDamage - myMinDamage + 1));
+                final int damage = myMinDamage +
+                        (int)(rng.nextDouble() * (myMaxDamage - myMinDamage + 1));
+
                 myLastDamageDealt = damage;
                 theTarget.takeDamage(damage);
+
                 if (myAttackLogger != null) {
-                    myAttackLogger.accept(myCharName + " hits " + theTarget.getCharName() + " (-" + damage + ")");
+                    myAttackLogger.accept(myCharName + " hits " +
+                            theTarget.getCharName() + " (-" + damage + ")");
                 }
+
             } else {
                 myLastDamageDealt = 0;
 
                 System.out.println(myCharName + " misses " + theTarget.getCharName() + "...");
+
                 if (myAttackLogger != null) {
                     myAttackLogger.accept(myCharName + " misses " + theTarget.getCharName());
                 }
             }
+
             if (!theTarget.isAlive()) break;
         }
     }
+
+    /**
+     * Hook for subclasses to modify behavior before a hit.
+     * Return false to cancel this attack (e.g., Hero blocks).
+     */
+    protected boolean beforeHit(DungeonCharacter theTarget) {
+        return true;
+    }
+
 
     /**
      * Performs a single basic attack against the specified target.
@@ -134,7 +155,6 @@ public abstract class DungeonCharacter {
             System.out.println(myCharName + " misses " + theTarget.getCharName() + "...");
         }
     }
-
 
     /**
      * Determines whether the character is still alive.
@@ -190,12 +210,6 @@ public abstract class DungeonCharacter {
         }
         System.out.println(myCharName + " heals " + theHealAmount + " health! (HP: " + myHP + ")");
     }
-
-    /**
-     * Displays current combat status, including HP, potions,
-     * cooldown timers, and any other relevant combat information.
-     */
-    public abstract void displayStatus();
 
     /**
      * Returns last damage dealt by the character.
