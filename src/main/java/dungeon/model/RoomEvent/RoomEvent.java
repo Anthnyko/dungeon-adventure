@@ -20,4 +20,3 @@ public interface RoomEvent {
      */
     String trigger(final Hero theHero, final Dungeon theDungeon);
 }
-
