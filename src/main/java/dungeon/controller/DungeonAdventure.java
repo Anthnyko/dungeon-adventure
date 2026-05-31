@@ -275,7 +275,6 @@ public final class DungeonAdventure {
             case 3 -> new Dungeon(10, 10, "The Hard Dungeon", false);
             default -> throw new IllegalArgumentException("Invalid dungeon selection: " + playerChoice);
         };
-        myDungeon.generateDungeon();
     }
 
     private String getValidPlayerChoice() {
