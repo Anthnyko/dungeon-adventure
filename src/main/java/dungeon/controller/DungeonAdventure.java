@@ -275,6 +275,7 @@ public final class DungeonAdventure {
             case 3 -> new Dungeon(10, 10, "The Hard Dungeon", false);
             default -> throw new IllegalArgumentException("Invalid dungeon selection: " + playerChoice);
         };
+        myDungeon.generateDungeon();
     }
 
     private String getValidPlayerChoice() {
@@ -651,7 +652,6 @@ public final class DungeonAdventure {
         switch (playerChoice) {
             case 1 -> loadGame();
             case 2 -> deleteSave();
-        
             default -> throw new IllegalArgumentException("Invalid input: "  + playerChoice);
         }
     }
@@ -677,7 +677,6 @@ public final class DungeonAdventure {
             RestoreResult result = restore.restoreGameState(loadedState);
             myDungeon = result.myDungeon;
             myHero = result.myHero;
-//            restoreGameState(loadedState);
             gameLoop();
         }
     }
