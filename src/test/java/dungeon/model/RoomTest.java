@@ -56,12 +56,13 @@ public class RoomTest {
 
     @Test
     public void testTriggerEvent() {
+        Dungeon dungeon = new Dungeon(5, 5, "The Easy Dungeon");
         Room room = new Room();
         Warrior warrior = new Warrior("test");
         room.addEvent(new PitEvent());
 
         int hpBefore = warrior.getHP();
-        room.triggerEvent("PIT", warrior);
+        room.triggerEvent("PIT", warrior, dungeon);
         int hpAfter = warrior.getHP();
 
         assertTrue(hpAfter < hpBefore);

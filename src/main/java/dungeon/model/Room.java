@@ -1,12 +1,10 @@
-package dungeon.model.Dungeon;
+package dungeon.model;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import dungeon.model.RoomEvent.FountainEvent;
-import dungeon.model.RoomEvent.PitEvent;
-import dungeon.model.RoomEvent.RoomEvent;
+import dungeon.model.RoomEvent.*;
 import dungeon.model.characters.Hero;
 import dungeon.model.characters.Monster;
 import dungeon.model.items.HealingPotion;
@@ -79,17 +77,6 @@ public class Room {
 
         generateRandomItems();
 
-        myEntrance = false;
-        myExit = false;
-        myPillar = false;
-    }
-
-    /**
-     * Constructs a new room with no items.
-     */
-    public Room(boolean isEmpty) {
-        myRandom = new Random();
-        myItems = new ArrayList<Item>();
         myEntrance = false;
         myExit = false;
         myPillar = false;
@@ -211,6 +198,26 @@ public class Room {
     }
 
     /**
+     * @return true if the room has a pit
+     */
+    public boolean hasPoison() {
+        for (RoomEvent event : myEvents) {
+            if (event instanceof PoisonEvent) return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return true if the room has an alarm
+     */
+    public boolean hasAlarm() {
+        for (RoomEvent event : myEvents) {
+            if (event instanceof AlarmEvent) return true;
+        }
+        return false;
+    }
+
+    /**
      * @return true if the room has a fountain
      */
     public boolean hasFountain() {
@@ -291,15 +298,6 @@ public class Room {
     }
 
     /**
-     * Returns the type of pillar in this room.
-     * @return the pillar character ('A', 'E', 'I', 'P') or '.' if no pillar
-     */
-    public char getPillarType() {
-        if (myPillar) return myPillarType;
-        return '.';
-    }
-
-    /**
      * Triggers a specific room event by type and applies its effect to the hero.
      * If no matching event is found, nothing happens.
      *
@@ -315,19 +313,25 @@ public class Room {
      *
      * @param theEventType the type of event to trigger ("PIT", "FOUNTAIN")
      * @param theHero the hero to apply the event on
+     * @return a string of the event type triggered ("PIT", "FOUNTAIN")
      */
-    public void triggerEvent(final String theEventType, final Hero theHero) {
+    public String triggerEvent(final String theEventType, final Hero theHero, final Dungeon theDungeon) {
         for (RoomEvent event : new ArrayList<>(myEvents)) {
             if (event instanceof PitEvent && theEventType.equals("PIT")) {
-                event.trigger(theHero);
                 myEvents.remove(event);
-                return;
+                return event.trigger(theHero, theDungeon);
             } else if (event instanceof FountainEvent && theEventType.equals("FOUNTAIN")) {
-                event.trigger(theHero);
                 myEvents.remove(event);
-                return;
+                return event.trigger(theHero, theDungeon);
+            } else if (event instanceof PoisonEvent && theEventType.equals("POISON")) {
+                myEvents.remove(event);
+                return event.trigger(theHero, theDungeon);
+            } else if (event instanceof AlarmEvent && theEventType.equals("ALARM")) {
+                myEvents.remove(event);
+                return event.trigger(theHero, theDungeon);
             }
         }
+        return null;
     }
 
     /**
@@ -381,12 +385,15 @@ public class Room {
         if (hasPit()) count++;
         if (hasMonster()) count++;
         if (hasFountain()) count++;
+        if (hasPoison()) count++;
         count += myItems.size();
 
         if (count > 1) return 'M';
 
         if (hasFountain()) return '+';
         if (hasPit()) return 'X';
+        if (hasPoison()) return '~';
+        if (hasAlarm()) return '?';
         if (hasMonster()) return '!';
         if(myItems.size() == 1) return myItems.getFirst().getSymbol();
 

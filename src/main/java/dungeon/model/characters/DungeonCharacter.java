@@ -42,6 +42,12 @@ public abstract class DungeonCharacter {
     /** Last heal value used. */
     protected int myLastHeal;
 
+    /** Damage dealt per turn from a damage over time effect */
+    private int myTickDamage;
+
+    /** Number of turns remaining for the damage over time effect */
+    private int myTickTurnsRemaining;
+
     /** Rolls random value for abilities. */
     protected Random rng = new Random();
 
@@ -165,6 +171,18 @@ public abstract class DungeonCharacter {
         System.out.println(myCharName + " bleeds " + damage + " damage! (HP: " + myHP + ")");
     }
 
+    public void takeTickDamage(int theDamage, int theDuration) {
+        myTickDamage = Math.max(myTickDamage, theDamage);
+        myTickTurnsRemaining = Math.max(myTickTurnsRemaining, theDuration);
+    }
+
+    public void tickDamage() {
+        if (myTickTurnsRemaining > 0) {
+            takeDamage(myTickDamage);
+            myTickTurnsRemaining--;
+        }
+    }
+
     public void applyHeal(int theHealAmount) {
         myHP += theHealAmount;
         if (myHP >= myMaxHP) {
@@ -205,31 +223,6 @@ public abstract class DungeonCharacter {
 
     /** @return the character's max hit points */
     public int getMaxHP() { return myMaxHP; }
-
-    /** @return the character's minimum damage */
-    public int getMinDamage() {
-        return myMinDamage;
-    }
-
-    /** @return the character's maximum damage */
-    public int getMaxDamage() {
-        return myMaxDamage;
-    }
-
-    /** @return the character's attack speed */
-    public int getAttackSpeed() {
-        return myAttackSpeed;
-    }
-
-    /** @return the character's hit chance */
-    public double getHitChance() {
-        return myHitChance;
-    }
-
-    /** Sets the character's current hit points */
-    public void setHP(int theHP) {
-        myHP = theHP;
-    }
 
     public void setAttackLogger(Consumer<String> logger) {
         myAttackLogger = logger;
