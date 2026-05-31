@@ -1,5 +1,6 @@
 package dungeon.model.RoomEvent;
 
+import dungeon.model.Dungeon;
 import dungeon.model.characters.Hero;
 
 /**
@@ -14,8 +15,9 @@ public interface RoomEvent {
      * Triggers the event and applies its effect to the hero.
      *
      * @param theHero the hero to apply the event effect on
+     * @param theDungeon the dungeon instance
      * @return a String identifying the event type to the controller
      */
-    String trigger(final Hero theHero);
+    String trigger(final Hero theHero, final Dungeon theDungeon);
 }
 
