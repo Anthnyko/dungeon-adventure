@@ -28,8 +28,10 @@ public class Warrior extends Hero {
      * Constructs a new Warrior with predefined combat attributes.
      *
      * @param theName the name of the Warrior
+     * @param theHealingPotions the number of healing potions
+     * @param theVisionPotions the number of healing potions
      */
-    public Warrior(String theName) {
+    public Warrior(String theName, int theHealingPotions, int theVisionPotions) {
         super(theName,
                 125,  // HP
                 125,  // max HP
@@ -37,7 +39,9 @@ public class Warrior extends Hero {
                 60,   // max damage
                 4,    // attack speed
                 0.8,  // hit chance
-                0.2); // block chance (or dodge if you keep it)
+                0.2, // block chance
+                theVisionPotions,
+                theVisionPotions); 
         myMinCrushDamage = 75;
         myMaxCrushDamage = 150;
         myEnrageTimer = 0;
@@ -110,6 +114,15 @@ public class Warrior extends Hero {
     @Override
     public String getUltimateName() {
         return "Enrage";
+    }
+
+    /**
+     * Returns the name of this hero class.
+     *
+     * @return the class name "Warrior"
+     */
+    public String getClassName() {
+        return "Warrior";
     }
 
     /** Return Warrior's Enrage timer. */

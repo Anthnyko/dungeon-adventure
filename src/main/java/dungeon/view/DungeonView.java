@@ -1,8 +1,8 @@
 
 package dungeon.view;
 
-import dungeon.model.Dungeon;
-import dungeon.model.Room;
+import dungeon.model.Dungeon.Dungeon;
+import dungeon.model.Dungeon.Room;
 import dungeon.model.characters.Hero;
 import dungeon.model.characters.Monster;
 import dungeon.model.items.HealingPotion;
@@ -164,10 +164,12 @@ public class DungeonView {
     // ============================== Begin Player Stats display section ==============================
 
     /**
-     * Returns a formatted string displaying the player's current health points.
-     * 
+     * Returns a formatted, color-coded string displaying the hero's
+     * current and maximum health points. Color changes based on
+     * remaining HP: green above 75%, yellow between 25-75%, red below 25%.
+     *
      * @param theHero the hero whose health to display
-     * @return formatted health display string
+     * @return formatted health display string with color coding
      */
     public final String displayPlayerHP(final Hero theHero) {
         return
@@ -237,10 +239,12 @@ public class DungeonView {
     }
 
     /**
-     * Returns a formatted string displaying the monster's current health points.
-     * 
+     * Returns a formatted, color-coded string displaying the monster's
+     * current and maximum health points. Color changes based on
+     * remaining HP: green above 75%, yellow between 25-75%, red below 25%.
+     *
      * @param theMonster the monster whose health to display
-     * @return formatted health display string
+     * @return formatted health display string with color coding
      */
     public final String displayMonsterHP(final Monster theMonster) {
         return
@@ -499,15 +503,19 @@ public class DungeonView {
             + displayMonsterName(theMonster)
             + NEWLINE
             + displayMonsterHP(theMonster)
-            + NEWLINE
-            + TEXT_RED + "////////||||||||\\\\\\\\\\\\\\\\" + TEXT_COLOR_RESET
+        );
+        if (theMonster.getMyBleedTimer() > 0) {
+            System.out.println("Turns of Bleed: " + theMonster.getMyBleedTimer());
+        }
+        System.out.println(
+            TEXT_RED + "////////||||||||\\\\\\\\\\\\\\\\" + TEXT_COLOR_RESET
             + NEWLINE
         );
     }
 
     /**
-     * Returns a formatted string for the specified combat round.
-     * 
+     * Returns a formatted string displaying the current combat round number.
+     *
      * @param myRound the round number
      * @return formatted combat round display string
      */
@@ -539,7 +547,8 @@ public class DungeonView {
     }
 
     /**
-     * Displays a combat log header during battle.
+     * Displays a combat log header to separate combat events
+     * from status displays during battle.
      */
     public final void displayCombatLog() {
         System.out.println(
@@ -555,7 +564,7 @@ public class DungeonView {
 
     private final String ultCooldownDisplayHelper(final Hero theHero) {
         if (theHero.getCDTimer() > 0) {
-            return TEXT_BLACK + theHero.getUltimateName() + TEXT_COLOR_RESET
+            return TEXT_DIM + theHero.getUltimateName() + TEXT_COLOR_RESET
             + " (CD: " + theHero.getCDTimer() + " turns left)";
         } else {
             return theHero.getUltimateName();
@@ -564,7 +573,7 @@ public class DungeonView {
     
     private final String skillCooldownDisplayHelper(final Hero theHero) {
         if (theHero.getSkillTimer() > 0) {
-            return TEXT_BLACK + theHero.getSpecialSkillName() + TEXT_COLOR_RESET
+            return TEXT_DIM + theHero.getSpecialSkillName() + TEXT_COLOR_RESET
             + " (CD: " + theHero.getSkillTimer() + " turns left)";
         } else {
             return theHero.getSpecialSkillName();
@@ -575,7 +584,7 @@ public class DungeonView {
         if (theHero.getHealingPotion() > 0) {
             return TEXT_PURPLE + theHero.getHealingPotion() + TEXT_COLOR_RESET;
         } else {
-            return TEXT_BLACK + theHero.getHealingPotion() + TEXT_COLOR_RESET;
+            return TEXT_DIM + theHero.getHealingPotion() + TEXT_COLOR_RESET;
         }
     }
 
@@ -583,7 +592,7 @@ public class DungeonView {
         if (theHero.getVisionPotion() > 0) {
             return TEXT_PURPLE + theHero.getVisionPotion() + TEXT_COLOR_RESET;
         } else {
-            return TEXT_BLACK + theHero.getVisionPotion() + TEXT_COLOR_RESET;
+            return TEXT_DIM + theHero.getVisionPotion() + TEXT_COLOR_RESET;
         }
     }
 
@@ -595,7 +604,7 @@ public class DungeonView {
         } else if (theHero.getHP() < theHero.getMaxHP() * 0.25) {
             return TEXT_RED + theHero.getHP() + TEXT_COLOR_RESET;
         }
-        return TEXT_BLACK + theHero.getHP() + TEXT_COLOR_RESET;
+        return TEXT_DIM + theHero.getHP() + TEXT_COLOR_RESET;
     }
 
     private final String monsterHpColorHelper(final Monster theMonster) {
@@ -606,7 +615,7 @@ public class DungeonView {
         } else if (theMonster.getHP() < theMonster.getMaxHP() * 0.25) {
             return TEXT_RED + theMonster.getHP() + TEXT_COLOR_RESET;
         }
-        return TEXT_BLACK + theMonster.getHP() + TEXT_COLOR_RESET;
+        return TEXT_DIM + theMonster.getHP() + TEXT_COLOR_RESET;
     }
 
     // ==============================  End Display Helper Method Section  ==============================
@@ -623,7 +632,7 @@ public class DungeonView {
     }
 
     /**
-     * Prompts the player to confirm whether they want to save the game.
+     * Prompts the player to confirm if they want to save the game.
      */
     public final void promptSave() {
         System.out.print(
@@ -632,7 +641,28 @@ public class DungeonView {
             + "> Enter choice: "
         );
     }
+    
+    /**
+     * Displays the load menu with options to load a save,
+     * delete a save, or return to the main menu.
+     */
+    public final void promptLoad() {
+        System.out.print(
+            NEWLINE
+            + "[1] Load a save "
+            + NEWLINE
+            + "[2] Delete a save "
+            + NEWLINE
+            + "[3] Return to the main menu"
+            + NEWLINE
+            + "> Enter choice: "
+        );
+    }
 
+    /**
+     * Prompts the player to confirm whether they want to return
+     * to the main menu, typically shown at the end of a game.
+     */
     public final void promptReturnToMenu() {
         System.out.print(
             "Do you want to return to the main menu [Y/N]?"
@@ -641,6 +671,10 @@ public class DungeonView {
         );
     }
 
+    /**
+     * Displays the post-game menu with options to quit to the main menu,
+     * start a new game, or close the application entirely.
+     */
     public final void promptPostGame() {
         System.out.print(
             "[1] Quit to main menu "
@@ -652,9 +686,9 @@ public class DungeonView {
             + "> Enter choice: "
         );
     }
-
     /**
-     * Displays a blue separator line as a section ending marker.
+     * Displays a blue equals-sign separator line used to visually
+     * mark the end of a section in the UI output.
      */
     public final void endSectionBlue() {
         System.out.println(
@@ -675,7 +709,7 @@ public class DungeonView {
     // ============================== Begin End Game Display Section ==============================
 
     /**
-     * Displays the game loss screen when the player is defeated.
+     * Displays the game over screen when the hero's health reaches zero.
      */
     public final void displayLoss() {
         System.out.println(
@@ -691,7 +725,8 @@ public class DungeonView {
     }
 
     /**
-     * Displays the game victory screen when the player successfully escapes the dungeon.
+     * Displays the victory screen when the player successfully
+     * collects all 4 pillars and escapes through the dungeon exit.
      */
     public final void displayWin() {
         System.out.println(

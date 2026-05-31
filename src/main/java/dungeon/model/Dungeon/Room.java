@@ -1,4 +1,4 @@
-package dungeon.model;
+package dungeon.model.Dungeon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +79,17 @@ public class Room {
 
         generateRandomItems();
 
+        myEntrance = false;
+        myExit = false;
+        myPillar = false;
+    }
+
+    /**
+     * Constructs a new room with no items.
+     */
+    public Room(boolean isEmpty) {
+        myRandom = new Random();
+        myItems = new ArrayList<Item>();
         myEntrance = false;
         myExit = false;
         myPillar = false;
@@ -277,6 +288,15 @@ public class Room {
         final char temp = myPillarType;
         myPillarType = ' '; //So a pillar is not shown in the room anymore
         return temp;
+    }
+
+    /**
+     * Returns the type of pillar in this room.
+     * @return the pillar character ('A', 'E', 'I', 'P') or '.' if no pillar
+     */
+    public char getPillarType() {
+        if (myPillar) return myPillarType;
+        return '.';
     }
 
     /**

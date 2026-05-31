@@ -1,5 +1,11 @@
 package dungeon.view;
 
+/**
+ * Displays help and reference information to the player during gameplay.
+ *
+ * @author Jackson Steger
+ * @version 1.0
+ */
 public class HelpSection {
 
     // Text Colors 

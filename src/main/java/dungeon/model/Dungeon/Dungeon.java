@@ -1,4 +1,4 @@
-package dungeon.model;
+package dungeon.model.Dungeon;
 
 import dungeon.model.RoomEvent.FountainEvent;
 import dungeon.model.RoomEvent.PitEvent;
@@ -60,14 +60,23 @@ public class Dungeon {
      * @param theWidth the number of columns in the dungeon
      * @param theHeight the number of rows in the dungeon
      * @param theName the name of the dungeon
+     * @param forLoad true if the dungeon needs to be created for loading, false otherwise.
      */
-    public Dungeon(int theWidth, int theHeight, String theName) {
+    public Dungeon(final int theWidth, final int theHeight, final String theName, final boolean forLoad) {
         myRandom = new Random();
         myMonsterGenerator = new MonsterGenerator();
         myWidth = theWidth;
         myHeight = theHeight;
         myName = theName;
+        if (forLoad) {
+            intiializeRoomsForLoad();
+        }
+    }
 
+    /**
+     * Generates a new random layout of the dungeon.
+     */
+    public void generateDungeon() {
         mazeGeneration();
     }
 
@@ -109,6 +118,18 @@ public class Dungeon {
         }
     }
 
+    /**
+     * Initializes rooms with no items
+     */
+    private void intiializeRoomsForLoad() {
+        myRooms = new Room[myHeight][myWidth];
+        for (int row = 0; row < myHeight; row++) {
+            for (int col = 0; col < myWidth; col++) {
+                myRooms[row][col] = new Room(true);
+            }
+        }
+    }
+
     private void addRandomPaths() {
         for (int row = 0; row < myHeight; row++) {
             for (int col = 0; col < myWidth; col++) {
@@ -123,16 +144,16 @@ public class Dungeon {
     }
 
     private boolean isValidMaze() {
-        boolean[][] visited = new boolean[myHeight][myWidth];
-        Queue<int[]> queue = new LinkedList<>();
+        final boolean[][] visited = new boolean[myHeight][myWidth];
+        final Queue<int[]> queue = new LinkedList<>();
         queue.add(new int[]{myEntranceRow, myEntranceCol});
         visited[myEntranceRow][myEntranceCol] = true;
 
         //Check for valid path from entrance to exit
         while (!queue.isEmpty()) {
-            int[] current = queue.poll();
-            int r = current[0],  c = current[1];
-            Room room = myRooms[r][c];
+            final int[] current = queue.poll();
+            final int r = current[0],  c = current[1];
+            final Room room = myRooms[r][c];
 
             if (room.hasNorthDoor() && r > 0          && !visited[r-1][c]) { visited[r-1][c] = true; queue.add(new int[]{r-1, c}); }
             if (room.hasSouthDoor() && r < myHeight-1 && !visited[r+1][c]) { visited[r+1][c] = true; queue.add(new int[]{r+1, c}); }
@@ -153,10 +174,10 @@ public class Dungeon {
     }
 
     private void placePillars() {
-        char[] pillars = {'A', 'E', 'I', 'P'};
+        final char[] pillars = {'A', 'E', 'I', 'P'};
         final int minDistance = (myWidth + myHeight) / 4; //pillars minimum distance from entrance based on dungeon size
 
-        for (char pillar : pillars) {
+        for (final char pillar : pillars) {
             int row, col;
             do {
                 row = myRandom.nextInt(myHeight);
@@ -169,8 +190,8 @@ public class Dungeon {
         }
     }
     //private helper for placePillars()
-    private boolean hasAdjacentPillar(int theRow, int theCol) {
-        Room room = myRooms[theRow][theCol];
+    private boolean hasAdjacentPillar(final int theRow, final int theCol) {
+        final Room room = myRooms[theRow][theCol];
         return (isInBounds(theRow - 1, theCol) && myRooms[theRow - 1][theCol].hasPillar() && room.hasNorthDoor()) || // north
                 (isInBounds(theRow + 1, theCol) && myRooms[theRow + 1][theCol].hasPillar() && room.hasSouthDoor()) || // south
                 (isInBounds(theRow, theCol + 1) && myRooms[theRow][theCol + 1].hasPillar() && room.hasEastDoor())  || // east
@@ -180,7 +201,7 @@ public class Dungeon {
     private void placePits() {
         for (int row = 0; row < myHeight; row++) {
             for (int col = 0; col < myWidth; col++) {
-                Room room = myRooms[row][col];
+                final Room room = myRooms[row][col];
 
                 if (room.isEntrance() || room.isExit()) continue;
 
@@ -192,7 +213,7 @@ public class Dungeon {
     }
 
     private void placeFountains() {
-        int count = (myWidth * myHeight) / 10; // around 1 fountain per 10 rooms
+        final int count = (myWidth * myHeight) / 10; // around 1 fountain per 10 rooms
 
         for (int i = 0; i < count; i++) {
             int row, col;
@@ -208,7 +229,7 @@ public class Dungeon {
     private void placeMonsters() {
         for (int row = 0; row < myHeight; row++) {
             for (int col = 0; col < myWidth; col++) {
-                Room room = myRooms[row][col];
+                final Room room = myRooms[row][col];
 
                 if (room.isEntrance() || room.isExit()) continue;
 
@@ -231,31 +252,31 @@ public class Dungeon {
         }
     }
 
-    private String getRandomMonsterType(int theRow, int theCol) {
-        int entranceDistance = Math.abs(theRow - myEntranceRow) + Math.abs(theCol - myEntranceCol);
-        int minDistance = (myWidth + myHeight) / 4; //ogre minimum distance from entrance based on dungeon size
+    private String getRandomMonsterType(final int theRow, final int theCol) {
+        final int entranceDistance = Math.abs(theRow - myEntranceRow) + Math.abs(theCol - myEntranceCol);
+        final int minDistance = (myWidth + myHeight) / 4; //ogre minimum distance from entrance based on dungeon size
 
         if (entranceDistance <= minDistance) {
-            String[] types = {"Gremlin", "Skeleton"};
+            final String[] types = {"Gremlin", "Skeleton"};
             return types[myRandom.nextInt(types.length)];
         }
 
-        String[] types = {"Ogre", "Gremlin", "Skeleton"};
+        final String[] types = {"Ogre", "Gremlin", "Skeleton"};
         return types[myRandom.nextInt(types.length)];
     }
 
-    private boolean isSpecialRoom(int theRow, int theCol) {
-        Room room = myRooms[theRow][theCol];
+    private boolean isSpecialRoom(final int theRow, final int theCol) {
+        final Room room = myRooms[theRow][theCol];
         return room.isEntrance() || room.isExit() || room.hasPillar() || room.hasFountain();
     }
 
     // to prevent door mismatches between rooms
-    private void connectSouth(int theRow, int theCol) {
+    private void connectSouth(final int theRow, final int theCol) {
         if (theRow >= myHeight - 1) return;
         myRooms[theRow][theCol].setSouthDoor(true);
         myRooms[theRow+1][theCol].setNorthDoor(true);
     }
-    private void connectEast(int theRow, int theCol) {
+    private void connectEast(final int theRow, final int theCol) {
         if (theCol >= myWidth - 1) return;
         myRooms[theRow][theCol].setEastDoor(true);
         myRooms[theRow][theCol+1].setWestDoor(true);
@@ -267,7 +288,7 @@ public class Dungeon {
      * @param theDirection the direction to move ("NORTH", "SOUTH", "EAST", "WEST")
      * @return true if the move was successful, false if no door exists that way
      */
-    public boolean moveHero(String theDirection){
+    public boolean moveHero(final String theDirection){
         switch (theDirection.toUpperCase()){
             case "NORTH":
                 if (!getCurrentRoom().hasNorthDoor() || myHeroRow <= 0) return false;
@@ -299,8 +320,8 @@ public class Dungeon {
      * @return a list of valid direction strings from the current room
      */
     public List<String> getValidDirections(){
-        List<String> validDirections = new ArrayList<>();
-        Room current = getCurrentRoom();
+        final List<String> validDirections = new ArrayList<>();
+        final Room current = getCurrentRoom();
 
         if (current.hasNorthDoor()) validDirections.add("NORTH");
         if (current.hasSouthDoor()) validDirections.add("SOUTH");
@@ -317,6 +338,35 @@ public class Dungeon {
      */
     public Room getCurrentRoom() {
         return myRooms[myHeroRow][myHeroCol];
+    }
+
+    public int getHeroRow() {
+        return myHeroRow;
+    }
+
+    public int getHeroCol() {
+        return myHeroCol;
+    }
+
+    public int getDungeonWidth() {
+        return myWidth;
+    }
+
+    public int getDungeonHeight() {
+        return myHeight;
+    }
+
+    /**
+     * Sets the hero's position in the dungeon.
+     * 
+     * @param theRow the new row position
+     * @param theCol the new column position
+     */
+    public void setHeroPosition(final int theRow, final int theCol) {
+        if (theRow >= 0 && theRow < myHeight && theCol >= 0 && theCol < myWidth) {
+            myHeroRow = theRow;
+            myHeroCol = theCol;
+        }
     }
 
     /**
@@ -342,7 +392,7 @@ public class Dungeon {
      *
      * @return the room at the given row and column
      */
-    public Room getRoom(int theRow, int theCol) {
+    public Room getRoom(final int theRow, final int theCol) {
         return myRooms[theRow][theCol];
     }
 
@@ -360,7 +410,7 @@ public class Dungeon {
         }
     }
     //helper for getSurroundingRooms()
-    private boolean isInBounds(int theRow, int theCol) {
+    private boolean isInBounds(final int theRow, final int theCol) {
         return theRow >= 0 && theRow < myHeight && theCol >= 0 && theCol < myWidth;
     }
 
@@ -371,13 +421,13 @@ public class Dungeon {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
         for (int row = 0; row < myHeight; row++) {
 
-            StringBuilder top = new StringBuilder();
-            StringBuilder mid = new StringBuilder();
-            StringBuilder bot = new StringBuilder();
+            final StringBuilder top = new StringBuilder();
+            final StringBuilder mid = new StringBuilder();
+            final StringBuilder bot = new StringBuilder();
 
             for (int col = 0; col < myWidth; col++) {
 
@@ -388,7 +438,7 @@ public class Dungeon {
                     continue;
                 }
 
-                String[] parts = myRooms[row][col].toString().split("\n");
+                final String[] parts = myRooms[row][col].toString().split("\n");
 
                 if (row == myHeroRow && col == myHeroCol) {
                     parts[1] = parts[1].charAt(0) + "@" + parts[1].charAt(2);
@@ -413,16 +463,16 @@ public class Dungeon {
      * @return the fully revealed dungeon as a formatted string
      */
     public String toStringFullDungeon() {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
         for (int row = 0; row < myHeight; row++) {
 
-            StringBuilder top = new StringBuilder();
-            StringBuilder mid = new StringBuilder();
-            StringBuilder bot = new StringBuilder();
+            final StringBuilder top = new StringBuilder();
+            final StringBuilder mid = new StringBuilder();
+            final StringBuilder bot = new StringBuilder();
 
             for (int col = 0; col < myWidth; col++) {
-                String[] parts = myRooms[row][col].toString().split("\n");
+                final String[] parts = myRooms[row][col].toString().split("\n");
 
                 top.append(parts[0]).append(" ");
                 mid.append(parts[1]).append(" ");
@@ -437,7 +487,32 @@ public class Dungeon {
         return sb.toString();
     }
 
+    /**
+     * @return the name of the dungeon.
+     */
     public String getMyName() {
         return myName;
+    }
+
+    /**
+     * Sets where the entrance is in the dungeon.
+     * 
+     * @param theRow the row index
+     * @param theCol the column index
+     */
+    public void setEntrancePosition(final int theRow, final int theCol) {
+        myEntranceRow = theRow;
+        myEntranceCol = theCol;
+    }
+
+    /**
+     * Sets where the exit is in the dungeon.
+     * 
+     * @param theRow the row index
+     * @param theCol the column index
+     */
+    public void setExitPosition(final int theRow, final int theCol) {
+        myExitRow = theRow;
+        myExitCol = theCol;
     }
 }
