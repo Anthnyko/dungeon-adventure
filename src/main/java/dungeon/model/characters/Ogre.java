@@ -66,7 +66,7 @@ public class Ogre extends Monster {
                 2,    // attack speed
                 0.5,  // hit chance
                 0.05,  // heal chance
-                30,   // min heal
-                60);  // max heal
+                20,   // min heal
+                40);  // max heal
     }
 }
