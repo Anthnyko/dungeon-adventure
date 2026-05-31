@@ -20,8 +20,9 @@ public class PitEvent implements RoomEvent{
      * @return "PIT" to identify this event type to the controller
      */
     @Override
-    public void trigger(Hero theHero) {
+    public String trigger(final Hero theHero) {
         int damage = new Random().nextInt(20) + 1;
         theHero.takeDamage(damage);
+        return "PIT";
     }
 }
