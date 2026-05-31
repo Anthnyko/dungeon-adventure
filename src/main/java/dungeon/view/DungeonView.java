@@ -1,8 +1,8 @@
 
 package dungeon.view;
 
-import dungeon.model.Dungeon.Dungeon;
-import dungeon.model.Dungeon.Room;
+import dungeon.model.Maze.Dungeon;
+import dungeon.model.Maze.Room;
 import dungeon.model.characters.Hero;
 import dungeon.model.characters.Monster;
 import dungeon.model.items.HealingPotion;

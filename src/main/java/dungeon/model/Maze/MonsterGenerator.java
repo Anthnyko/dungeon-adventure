@@ -1,4 +1,4 @@
-package dungeon.model.Dungeon;
+package dungeon.model.Maze;
 
 import dungeon.model.characters.*;
 import java.sql.Connection;
