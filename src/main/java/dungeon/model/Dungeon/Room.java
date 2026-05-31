@@ -52,7 +52,7 @@ public class Room {
     private Monster myMonster;
 
     /** List of all events in this room */
-    private List<RoomEvent> myEvents = new ArrayList<>();
+    private final List<RoomEvent> myEvents = new ArrayList<>();
 
     /** Tracks if this room has a pillar */
     private boolean myPillar;
@@ -261,7 +261,6 @@ public class Room {
 
     /**
      * Removes the list of items in the room and returns them
-     * @return A list of all the items in the room
      */
     public void pickUpItems(final Hero theHero) {
         for (int i = 0; i < myItems.size(); i++) {
@@ -355,20 +354,17 @@ public class Room {
     @Override
     public String toString() {
 
-        final StringBuilder sb = new StringBuilder();
-
         // Top row
-        sb.append(myNorthDoor ? "*-*" : "***").append("\n");
 
-        // Middle row
-        sb.append(myWestDoor ? "|" : "*");
-        sb.append(getRoomSymbol());
-        sb.append(myEastDoor ? "|" : "*").append("\n");
+        return (myNorthDoor ? "*-*" : "***") + "\n" +
 
-        // Bottom row
-        sb.append(mySouthDoor ? "*-*" : "***");
+                // Middle row
+                (myWestDoor ? "|" : "*") +
+                getRoomSymbol() +
+                (myEastDoor ? "|" : "*") + "\n" +
 
-        return sb.toString();
+                // Bottom row
+                (mySouthDoor ? "*-*" : "***");
     }
 
     // Private helpers
