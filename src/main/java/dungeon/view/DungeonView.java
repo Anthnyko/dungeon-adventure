@@ -562,8 +562,12 @@ public class DungeonView {
             + displayMonsterName(theMonster)
             + NEWLINE
             + displayMonsterHP(theMonster)
-            + NEWLINE
-            + TEXT_RED + "////////||||||||\\\\\\\\\\\\\\\\" + TEXT_COLOR_RESET
+        );
+        if (theMonster.getMyBleedTimer() > 0) {
+            System.out.println("Turns of Bleed: " + theMonster.getMyBleedTimer());
+        }
+        System.out.println(
+            TEXT_RED + "////////||||||||\\\\\\\\\\\\\\\\" + TEXT_COLOR_RESET
             + NEWLINE
         );
     }
@@ -691,6 +695,23 @@ public class DungeonView {
     public final void promptSave() {
         System.out.print(
             "Do you want to save [Y/N]?"
+            + NEWLINE
+            + "> Enter choice: "
+        );
+    }
+
+    /**
+     * Displays the load menu with options to load a save,
+     * delete a save, or return to the main menu.
+     */
+    public final void promptLoad() {
+        System.out.print(
+            NEWLINE
+            + "[1] Load a save "
+            + NEWLINE
+            + "[2] Delete a save "
+            + NEWLINE
+            + "[3] Return to the main menu"
             + NEWLINE
             + "> Enter choice: "
         );

@@ -10,7 +10,7 @@ import java.util.*;
 
 /**
  * Represents a randomly generated dungeon maze.
- * <p>
+ *
  * The dungeon is a 2D grid of room objects connected by doors.
  * The dungeon class is responsible for:
  * Generating the maze,
@@ -33,6 +33,11 @@ public class Dungeon {
     private int myEntranceRow;
     /** The column index of the entrance room */
     private int myEntranceCol;
+
+    /** The row index of the exit room */
+    private int myExitRow;
+    /** The column index of the exit room */
+    private int myExitCol;
 
     /** The row index of the room the hero is in */
     private int myHeroRow;
@@ -67,7 +72,7 @@ public class Dungeon {
      * @param theHeight the number of rows in the dungeon
      * @param theName the name of the dungeon
      */
-    public Dungeon(int theWidth, int theHeight, String theName) {
+    public Dungeon(int theWidth, int theHeight, String theName, final boolean forLoad) {
         myRandom = new Random();
         myMonsterGenerator = new MonsterGenerator();
         myWidth = theWidth;
@@ -79,7 +84,15 @@ public class Dungeon {
             case "The Hard Dungeon" -> (int) Math.ceil(myWidth * myHeight * 0.35);
             default -> (int) Math.ceil(myWidth * myHeight * 0.3);
         };
+        if (forLoad) {
+            intiializeRoomsForLoad();
+        }
+    }
 
+    /**
+     * Generates a new random layout of the dungeon.
+     */
+    public void generateDungeon() {
         mazeGeneration();
     }
 
@@ -96,8 +109,6 @@ public class Dungeon {
             myRooms[myEntranceRow][myEntranceCol].setRevealed(true); //sets the entrance room as revealed
 
             //Pick exit
-            int myExitCol;
-            int myExitRow;
             do {
                 myExitRow = myRandom.nextInt(myHeight);
                 myExitCol = myRandom.nextInt(myWidth);
@@ -121,6 +132,18 @@ public class Dungeon {
         for (int row = 0; row < myHeight; row++) {
             for (int col = 0; col < myWidth; col++) {
                 myRooms[row][col] = new Room();
+            }
+        }
+    }
+
+    /**
+     * Initializes rooms with no items
+     */
+    private void intiializeRoomsForLoad() {
+        myRooms = new Room[myHeight][myWidth];
+        for (int row = 0; row < myHeight; row++) {
+            for (int col = 0; col < myWidth; col++) {
+                myRooms[row][col] = new Room(true);
             }
         }
     }
@@ -506,6 +529,51 @@ public class Dungeon {
         return myRooms[myHeroRow][myHeroCol];
     }
 
+    public int getHeroRow() {
+        return myHeroRow;
+    }
+
+    public int getHeroCol() {
+        return myHeroCol;
+    }
+
+    public int getMyEntranceRow() {
+        return myEntranceRow;
+    }
+
+    public int getMyEntranceCol() {
+        return myEntranceCol;
+    }
+
+    public int getMyExitRow() {
+        return myExitRow;
+    }
+
+    public int getMyExitCol() {
+        return myExitCol;
+    }
+
+    public int getDungeonWidth() {
+        return myWidth;
+    }
+
+    public int getDungeonHeight() {
+        return myHeight;
+    }
+
+    /**
+     * Sets the hero's position in the dungeon.
+     * 
+     * @param theRow the new row position
+     * @param theCol the new column position
+     */
+    public void setHeroPosition(final int theRow, final int theCol) {
+        if (theRow >= 0 && theRow < myHeight && theCol >= 0 && theCol < myWidth) {
+            myHeroRow = theRow;
+            myHeroCol = theCol;
+        }
+    }
+
     /**
      * Returns true or false if the hero is in the exit room or not.
      *
@@ -624,7 +692,32 @@ public class Dungeon {
         return sb.toString();
     }
 
+    /**
+     * @return the name of the dungeon.
+     */
     public String getMyName() {
         return myName;
+    }
+
+    /**
+     * Sets where the entrance is in the dungeon.
+     * 
+     * @param theRow the row index
+     * @param theCol the column index
+     */
+    public void setEntrancePosition(final int theRow, final int theCol) {
+        myEntranceRow = theRow;
+        myEntranceCol = theCol;
+    }
+
+    /**
+     * Sets where the exit is in the dungeon.
+     * 
+     * @param theRow the row index
+     * @param theCol the column index
+     */
+    public void setExitPosition(final int theRow, final int theCol) {
+        myExitRow = theRow;
+        myExitCol = theCol;
     }
 }
