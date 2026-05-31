@@ -1,11 +1,12 @@
 package dungeon.model.characters;
 
 import java.util.Random;
+import java.util.function.Consumer;
 
 /**
  * Abstract base class representing any character in the dungeon.
  * Both heroes and monsters share these core combat attributes.
- *
+ * <p>
  * This class defines the common structure for all character types
  * but does not implement combat logic in Iteration 1.
  *
@@ -15,10 +16,10 @@ import java.util.Random;
 public abstract class DungeonCharacter {
 
     /** The character's name. */
-    protected String myCharName;
+    protected final String myCharName;
 
     /** Max hit points of the character. */
-    protected int myMaxHP;
+    protected final int myMaxHP;
 
     /** Current hit points of the character. */
     protected int myHP;
@@ -43,6 +44,8 @@ public abstract class DungeonCharacter {
 
     /** Rolls random value for abilities. */
     protected Random rng = new Random();
+
+    protected Consumer<String> myAttackLogger;
 
 
     /**
@@ -83,21 +86,46 @@ public abstract class DungeonCharacter {
         if (numAttacks < 1) numAttacks = 1;
 
         for (int i = 0; i < numAttacks; i++) {
+
+            // 🔹 Hook: Monster can override this to add blockChance
+            if (!beforeHit(theTarget)) {
+                continue; // skip this swing
+            }
+
             if (rng.nextDouble() < myHitChance) {
-                final int damage = myMinDamage + (int)(rng.nextDouble() * (myMaxDamage - myMinDamage + 1));
+                final int damage = myMinDamage +
+                        (int)(rng.nextDouble() * (myMaxDamage - myMinDamage + 1));
+
                 myLastDamageDealt = damage;
-                System.out.println(myCharName + " attacks " + theTarget.getCharName() + " for " + damage + " damage!");
                 theTarget.takeDamage(damage);
+
+                if (myAttackLogger != null) {
+                    myAttackLogger.accept(myCharName + " hits " +
+                            theTarget.getCharName() + " (-" + damage + ")");
+                }
+
             } else {
-                System.out.println(myCharName + " misses " + theTarget.myCharName + "...");
+                myLastDamageDealt = 0;
+
+                System.out.println(myCharName + " misses " + theTarget.getCharName() + "...");
+
+                if (myAttackLogger != null) {
+                    myAttackLogger.accept(myCharName + " misses " + theTarget.getCharName());
+                }
             }
 
-            if (!theTarget.isAlive()) {
-                break;
-            }
+            if (!theTarget.isAlive()) break;
         }
-
     }
+
+    /**
+     * Hook for subclasses to modify behavior before a hit.
+     * Return false to cancel this attack (e.g., Hero blocks).
+     */
+    protected boolean beforeHit(DungeonCharacter theTarget) {
+        return true;
+    }
+
 
     /**
      * Performs a single basic attack against the specified target.
@@ -122,7 +150,6 @@ public abstract class DungeonCharacter {
         }
     }
 
-
     /**
      * Determines whether the character is still alive.
      *
@@ -145,6 +172,19 @@ public abstract class DungeonCharacter {
         System.out.println(myCharName + " takes " + damage + " damage! (HP: " + myHP + ")");
     }
 
+    /**
+     * Applies bleed damage to the Monster.
+     *
+     * @param damage the amount of damage taken
+     */
+    public void takeBleedDamage(int damage) {
+        myHP -= damage;
+        if (myHP <= 0) {
+            myHP = 0;
+        }
+        System.out.println(myCharName + " bleeds " + damage + " damage! (HP: " + myHP + ")");
+    }
+
     public void applyHeal(int theHealAmount) {
         myHP += theHealAmount;
         if (myHP >= myMaxHP) {
@@ -154,14 +194,8 @@ public abstract class DungeonCharacter {
     }
 
     /**
-     * Displays current combat status, including HP, potions,
-     * cooldown timers, and any other relevant combat information.
-     */
-    public abstract void displayStatus();
-
-    /**
      * Returns last damage dealt by the character.
-     *
+     * <p>
      * Used for combat logging.
      * @return last damage dealt
      */
@@ -186,23 +220,7 @@ public abstract class DungeonCharacter {
     /** @return the character's max hit points */
     public int getMaxHP() { return myMaxHP; }
 
-    /** @return the minimum damage value */
-    public int getMinDamage() {
-        return myMinDamage;
-    }
-
-    /** @return the maximum damage value */
-    public int getMaxDamage() {
-        return myMaxDamage;
-    }
-
-    /** @return the character's attack speed */
-    public int getAttackSpeed() {
-        return myAttackSpeed;
-    }
-
-    /** @return the probability of landing an attack */
-    public double getHitChance() {
-        return myHitChance;
+    public void setAttackLogger(Consumer<String> logger) {
+        myAttackLogger = logger;
     }
 }

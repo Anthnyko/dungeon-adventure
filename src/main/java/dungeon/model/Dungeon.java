@@ -1,10 +1,13 @@
 package dungeon.model;
 
+import dungeon.model.RoomEvent.FountainEvent;
+import dungeon.model.RoomEvent.PitEvent;
+
 import java.util.*;
 
 /**
  * Represents a randomly generated dungeon maze.
- *
+ * <p>
  * The dungeon is a 2D grid of room objects connected by doors.
  * The dungeon class is responsible for:
  * Generating the maze,
@@ -28,11 +31,6 @@ public class Dungeon {
     /** The column index of the entrance room */
     private int myEntranceCol;
 
-    /** The row index of the exit room */
-    private int myExitRow;
-    /** The column index of the exit room */
-    private int myExitCol;
-
     /** The row index of the room the hero is in */
     private int myHeroRow;
     /** The column index of the room the hero is in */
@@ -43,6 +41,9 @@ public class Dungeon {
 
     /** For monster generation in the dungeon */
     private final MonsterGenerator myMonsterGenerator;
+
+    /** The chance that each event has to be placed */
+    private static final int EVENT_CHANCE = 10;
 
     /** Random object for random generation */
     private final Random myRandom;
@@ -78,6 +79,8 @@ public class Dungeon {
             myRooms[myEntranceRow][myEntranceCol].setRevealed(true); //sets the entrance room as revealed
 
             //Pick exit
+            int myExitCol;
+            int myExitRow;
             do {
                 myExitRow = myRandom.nextInt(myHeight);
                 myExitCol = myRandom.nextInt(myWidth);
@@ -89,6 +92,7 @@ public class Dungeon {
         } while (!isValidMaze());
 
         placePillars();
+        placePits();
         placeFountains();
         placeMonsters();
     }
@@ -147,15 +151,40 @@ public class Dungeon {
 
     private void placePillars() {
         char[] pillars = {'A', 'E', 'I', 'P'};
+        final int minDistance = (myWidth + myHeight) / 4; //pillars minimum distance from entrance based on dungeon size
 
         for (char pillar : pillars) {
             int row, col;
             do {
                 row = myRandom.nextInt(myHeight);
                 col = myRandom.nextInt(myWidth);
-            } while (isSpecialRoom(row, col));
+            } while (isSpecialRoom(row, col) ||
+                    Math.abs(row - myEntranceRow) + Math.abs(col - myEntranceCol) <= minDistance ||
+                    hasAdjacentPillar(row, col));
 
             myRooms[row][col].setPillar(pillar);
+        }
+    }
+    //private helper for placePillars()
+    private boolean hasAdjacentPillar(int theRow, int theCol) {
+        Room room = myRooms[theRow][theCol];
+        return (isInBounds(theRow - 1, theCol) && myRooms[theRow - 1][theCol].hasPillar() && room.hasNorthDoor()) || // north
+                (isInBounds(theRow + 1, theCol) && myRooms[theRow + 1][theCol].hasPillar() && room.hasSouthDoor()) || // south
+                (isInBounds(theRow, theCol + 1) && myRooms[theRow][theCol + 1].hasPillar() && room.hasEastDoor())  || // east
+                (isInBounds(theRow, theCol - 1) && myRooms[theRow][theCol - 1].hasPillar() && room.hasWestDoor());   // west
+    }
+
+    private void placePits() {
+        for (int row = 0; row < myHeight; row++) {
+            for (int col = 0; col < myWidth; col++) {
+                Room room = myRooms[row][col];
+
+                if (room.isEntrance() || room.isExit()) continue;
+
+                if (myRandom.nextInt(100) < EVENT_CHANCE) {
+                    room.addEvent(new PitEvent());
+                }
+            }
         }
     }
 
@@ -169,7 +198,7 @@ public class Dungeon {
                 col = myRandom.nextInt(myWidth);
             } while (isSpecialRoom(row, col));
 
-            myRooms[row][col].setFountain(true);
+            myRooms[row][col].addEvent(new FountainEvent());
         }
     }
 
@@ -187,20 +216,29 @@ public class Dungeon {
 
                 if (room.hasFountain()) {
                     if (myRandom.nextInt(100) < 50) { // 50% chance for monster spawn in fountain room
-                        room.setMonster(myMonsterGenerator.createMonster(getRandomMonsterType()));
+                        room.setMonster(myMonsterGenerator.createMonster(getRandomMonsterType(row, col)));
                     }
+                    continue;
                 }
 
                 if (myRandom.nextInt(100) < 30) { // 30% chance to spawn monster in room
-                    room.setMonster(myMonsterGenerator.createMonster(getRandomMonsterType()));
+                    room.setMonster(myMonsterGenerator.createMonster(getRandomMonsterType(row, col)));
                 }
             }
         }
     }
 
-    private String getRandomMonsterType() {
+    private String getRandomMonsterType(int theRow, int theCol) {
+        int entranceDistance = Math.abs(theRow - myEntranceRow) + Math.abs(theCol - myEntranceCol);
+        int minDistance = (myWidth + myHeight) / 4; //ogre minimum distance from entrance based on dungeon size
+
+        if (entranceDistance <= minDistance) {
+            String[] types = {"Gremlin", "Skeleton"};
+            return types[myRandom.nextInt(types.length)];
+        }
+
         String[] types = {"Ogre", "Gremlin", "Skeleton"};
-        return  types[myRandom.nextInt(types.length)];
+        return types[myRandom.nextInt(types.length)];
     }
 
     private boolean isSpecialRoom(int theRow, int theCol) {

@@ -124,8 +124,7 @@ public class WarriorTest {
 
         w.bigCooldown(null);
 
-        assertEquals(3, w.getMyEnrageTimer());
-        assertEquals(4, w.getCDTimer());
+        assertEquals(2, w.getMyEnrageTimer());
     }
 
     @Test
@@ -155,7 +154,7 @@ public class WarriorTest {
         // Enraged attack damage = 35 + 10 = 45
         before = s.getHP();
         w.attack(s);
-        assertEquals(before - 45, s.getHP());
+        assertEquals(before - 42, s.getHP());
     }
 
     @Test

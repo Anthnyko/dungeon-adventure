@@ -5,7 +5,7 @@ package dungeon.model.characters;
  * and rely on speed and precision to outmaneuver enemies. This class
  * defines the Thief's base stats and provides stubs for its special
  * abilities, which are implemented in later iterations.
- *
+ * <p>
  * The Thief has two unique abilities:
  * - surpriseAttack: the Thief's special skill
  * - garrote: the Thief's ultimate cooldown ability
@@ -87,13 +87,11 @@ public class Thief extends Hero {
         if (roll < 0.40) {
             System.out.println(getCharName() + " performs a Surprise Attack! Extra turn gained!");
             singleAttack(theTarget);
-            myLastDamageDealt = theTarget.getLastDamageDealt();
             myExtraTurn = true;
 
-        } else if (roll < 0.80) {
+        } else if (roll < 0.85) {
             System.out.println(getCharName() + " attempts a Surprise Attack but only lands a normal hit.");
             singleAttack(theTarget);
-            myLastDamageDealt = theTarget.getLastDamageDealt();
             myExtraTurn = false;
 
         } else {
@@ -115,12 +113,12 @@ public class Thief extends Hero {
         }
 
         System.out.println(getCharName() + " uses Garrote!");
-
+        theTarget.takeDamage(45);
         if (theTarget instanceof Monster monster) {
-            monster.applyBleed(5);
+            monster.applyBleed(8);
         }
 
-        myCDTimer = 3;
+        myCDTimer = 4;
 
         myLastDamageDealt = 0;
         myLastHeal = 0;

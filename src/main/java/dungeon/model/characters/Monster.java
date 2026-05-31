@@ -68,6 +68,27 @@ public abstract class Monster extends DungeonCharacter {
         myDiedFromBleed = false;
     }
 
+    @Override
+    protected boolean beforeHit(DungeonCharacter theTarget) {
+        if (theTarget instanceof Hero hero) {
+
+            // Block roll
+            if (rng.nextDouble() < hero.getBlockChance()) {
+                myLastDamageDealt = 0;
+
+                System.out.println(theTarget.getCharName() + " blocks the attack!");
+
+                if (myAttackLogger != null) {
+                    myAttackLogger.accept(hero.getCharName() + " blocks the attack!");
+                }
+
+                return false; // cancel this swing
+            }
+        }
+
+        return true; // proceed normally
+    }
+
     /**
      * Attempts to heal the monster.
      * This method will be called during combat
@@ -107,10 +128,8 @@ public abstract class Monster extends DungeonCharacter {
      */
     public int processBleed() {
         if (myBleedTimer > 0) {
-            takeDamage(myBleedDamage);
+            takeBleedDamage(myBleedDamage);
             myBleedTimer--;
-
-            System.out.println(myCharName + " takes " + myBleedDamage + " bleed damage!");
 
             if (!isAlive()) {
                 myDiedFromBleed = true;
@@ -119,38 +138,6 @@ public abstract class Monster extends DungeonCharacter {
             return myBleedDamage;
         }
         return 0;
-    }
-
-    /**
-     * Displays the monster's current combat status, including HP.
-     */
-    @Override
-    public void displayStatus() {
-        System.out.println("=== MONSTER STATUS ===");
-        System.out.println("Name: " + myCharName);
-        System.out.println("HP: " + myHP + "/" + myMaxHP);
-        System.out.println("====================");
-    }
-
-    /**
-     * @return the probability that the monster successfully heals
-     */
-    public double getMyHealChance() {
-        return myHealChance;
-    }
-
-    /**
-     * @return the minimum amount of HP the monster can heal
-     */
-    public int getMyMinHeal() {
-        return myMinHeal;
-    }
-
-    /**
-     * @return the maximum amount of HP the monster can heal
-     */
-    public int getMyMaxHeal() {
-        return myMaxHeal;
     }
 
     /**

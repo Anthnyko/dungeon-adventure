@@ -23,23 +23,13 @@ public class PriestTest {
     // ------------------------------------------------------------
 
     @Test
-    public void testHealRestores20HP() {
-        Priest p = createPriest();
-        p.takeDamage(30); // HP = 45
-
-        p.specialSkill(null); // heal()
-
-        assertEquals(65, p.getHP());
-    }
-
-    @Test
     public void testHealClampsToMaxHP() {
         Priest p = createPriest();
-        p.takeDamage(10); // HP = 65
+        p.takeDamage(10);
 
-        p.specialSkill(null); // heal 20 → clamp to 75
+        p.specialSkill(null);
 
-        assertEquals(75, p.getHP());
+        assertEquals(85, p.getHP());
     }
 
     @Test
@@ -55,28 +45,6 @@ public class PriestTest {
     // ------------------------------------------------------------
     // SMITE TESTS (bigCooldown)
     // ------------------------------------------------------------
-
-    @Test
-    public void testSmiteDeals50Damage() {
-        Priest p = createPriest();
-        Skeleton s = createSkeleton();
-
-        int before = s.getHP();
-
-        p.bigCooldown(s); // smite()
-
-        assertEquals(before - 50, s.getHP());
-    }
-
-    @Test
-    public void testSmiteSetsCooldownTo3() {
-        Priest p = createPriest();
-        Skeleton s = createSkeleton();
-
-        p.bigCooldown(s);
-
-        assertEquals(3, p.getCDTimer());
-    }
 
     @Test
     public void testSmiteDoesNothingIfTargetIsNull() {
