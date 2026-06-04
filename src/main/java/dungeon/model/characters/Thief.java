@@ -22,13 +22,13 @@ public class Thief extends Hero {
      */
     public Thief(String theName) {
         super(theName,
-                75,   // HP
-                75,   // max HP
+                85,   // HP
+                85,   // max HP
                 20,   // min damage
                 40,   // max damage
                 6,    // attack speed
                 0.8,  // hit chance
-                0.4); // block chance (or dodge if you keep it)
+                0.45); // block chance (or dodge if you keep it)
         myExtraTurn = false;
     }
 
@@ -115,7 +115,7 @@ public class Thief extends Hero {
         System.out.println(getCharName() + " uses Garrote!");
         theTarget.takeDamage(45);
         if (theTarget instanceof Monster monster) {
-            monster.applyBleed(8);
+            monster.applyBleed(4);
         }
 
         myCDTimer = 4;
