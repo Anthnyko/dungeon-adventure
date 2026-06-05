@@ -1,7 +1,6 @@
 package dungeon.controller;
 
 import dungeon.model.characters.Monster;
-import dungeon.model.characters.Warrior;
 import dungeon.view.DungeonView;
 import dungeon.model.characters.Hero;
 
