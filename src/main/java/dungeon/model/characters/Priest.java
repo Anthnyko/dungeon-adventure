@@ -28,17 +28,17 @@ public class Priest extends Hero {
      */
     public Priest(String theName, int theHealingPotions, int theVisionPotions) {
         super(theName,
-                85,   // HP
-                85,   // max HP
+                100,   // HP
+                100,   // max HP
                 25,   // min damage
                 45,   // max damage
                 5,    // attack speed
                 0.7,  // hit chance
-                0.3, // block chance
+                0.3,
                 theHealingPotions,
-                theVisionPotions); 
-        myMinHeal = 20;
-        myMaxHeal = 40;
+                theVisionPotions); // block chance
+        myMinHeal = 30;
+        myMaxHeal = 45;
         mySkillTimer = 0;
     }
 
@@ -114,7 +114,7 @@ public class Priest extends Hero {
         final int smiteDmg = 70;
         final double roll = rng.nextDouble();
 
-        if (roll < 0.60) {
+        if (roll < 0.65) {
             System.out.println(getCharName() + " casts Smite!");
             theTarget.takeDamage(smiteDmg);
             myCDTimer = 4;
