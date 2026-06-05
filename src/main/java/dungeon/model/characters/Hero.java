@@ -272,6 +272,7 @@ public abstract class Hero extends DungeonCharacter {
     /** @return the name of the class */
     public abstract String getClassName();
 
+    /** @return the duration of the ultimate skill */
     public abstract int getMyUltimateDuration();
 
     @Override
