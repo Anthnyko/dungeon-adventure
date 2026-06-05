@@ -22,7 +22,7 @@ public class Warrior extends Hero {
     protected final int myMaxCrushDamage;
 
     /** Tracks turn duration of Enrage. */
-    protected int myEnrageTimer;
+//    protected int myUltimateTimer;
 
 
     /**
@@ -45,12 +45,12 @@ public class Warrior extends Hero {
                 theVisionPotions); 
         myMinCrushDamage = 75;
         myMaxCrushDamage = 150;
-        myEnrageTimer = 0;
+        myUltimateDuration = 0;
     }
 
     @Override
     public void attack(final DungeonCharacter theTarget) {
-        if (myEnrageTimer > 0) {
+        if (myUltimateDuration > 0) {
             // temporarily boost damage
             int originalMin = myMinDamage;
             int originalMax = myMaxDamage;
@@ -63,8 +63,8 @@ public class Warrior extends Hero {
             // restore original values
             myMinDamage = originalMin;
             myMaxDamage = originalMax;
-            myEnrageTimer--;
-            if (myEnrageTimer == 0) {
+            myUltimateDuration--;
+            if (myUltimateDuration == 0) {
                System.out.println("Enrage has worn off...");
                myCDTimer = 5;
             }
@@ -102,7 +102,7 @@ public class Warrior extends Hero {
     @Override
     public void resetStatusEffects() {
         super.resetStatusEffects();
-        myEnrageTimer = 0;
+        myUltimateDuration = 0;
     }
 
     /** Returns Warrior's special skill name. */
@@ -126,8 +126,10 @@ public class Warrior extends Hero {
         return "Warrior";
     }
 
-    /** Return Warrior's Enrage timer. */
-    public int getMyEnrageTimer() {return myEnrageTimer;}
+    /** Return the ultimates duration timer. */
+    public int getMyUltimateDuration() {
+        return myUltimateDuration;
+    }
 
     /**
      * Executes the Warrior's crushing blow ability.
@@ -161,7 +163,7 @@ public class Warrior extends Hero {
     private void enrage() {
         System.out.println(getCharName() + " becomes enraged! (+25 HP)");
         myHP += 25;
-        myEnrageTimer = 2;
+        myUltimateDuration = 2;
 
         myLastDamageDealt = 0;
         myLastHeal = 25;

@@ -622,8 +622,10 @@ public class DungeonView {
 
     private final String ultCooldownDisplayHelper(final Hero theHero) {
         if (theHero.getCDTimer() > 0) {
-            return TEXT_BLACK + theHero.getUltimateName() + TEXT_COLOR_RESET
+            return TEXT_DIM + theHero.getUltimateName() + TEXT_COLOR_RESET
             + " (CD: " + theHero.getCDTimer() + " turns left)";
+        } else if (theHero.getMyUltimateDuration() > 0) {
+            return TEXT_YELLOW + theHero.getUltimateName() + TEXT_YELLOW;
         } else {
             return theHero.getUltimateName();
         }
@@ -631,7 +633,7 @@ public class DungeonView {
     
     private final String skillCooldownDisplayHelper(final Hero theHero) {
         if (theHero.getSkillTimer() > 0) {
-            return TEXT_BLACK + theHero.getSpecialSkillName() + TEXT_COLOR_RESET
+            return TEXT_DIM + theHero.getSpecialSkillName() + TEXT_COLOR_RESET
             + " (CD: " + theHero.getSkillTimer() + " turns left)";
         } else {
             return theHero.getSpecialSkillName();
@@ -642,7 +644,7 @@ public class DungeonView {
         if (theHero.getHealingPotion() > 0) {
             return TEXT_PURPLE + theHero.getHealingPotion() + TEXT_COLOR_RESET;
         } else {
-            return TEXT_BLACK + theHero.getHealingPotion() + TEXT_COLOR_RESET;
+            return TEXT_DIM + theHero.getHealingPotion() + TEXT_COLOR_RESET;
         }
     }
 
@@ -650,7 +652,7 @@ public class DungeonView {
         if (theHero.getVisionPotion() > 0) {
             return TEXT_PURPLE + theHero.getVisionPotion() + TEXT_COLOR_RESET;
         } else {
-            return TEXT_BLACK + theHero.getVisionPotion() + TEXT_COLOR_RESET;
+            return TEXT_DIM + theHero.getVisionPotion() + TEXT_COLOR_RESET;
         }
     }
 
@@ -662,7 +664,7 @@ public class DungeonView {
         } else if (theHero.getHP() < theHero.getMaxHP() * 0.25) {
             return TEXT_RED + theHero.getHP() + TEXT_COLOR_RESET;
         }
-        return TEXT_BLACK + theHero.getHP() + TEXT_COLOR_RESET;
+        return TEXT_DIM + theHero.getHP() + TEXT_COLOR_RESET;
     }
 
     private final String monsterHpColorHelper(final Monster theMonster) {
@@ -673,7 +675,7 @@ public class DungeonView {
         } else if (theMonster.getHP() < theMonster.getMaxHP() * 0.25) {
             return TEXT_RED + theMonster.getHP() + TEXT_COLOR_RESET;
         }
-        return TEXT_BLACK + theMonster.getHP() + TEXT_COLOR_RESET;
+        return TEXT_DIM + theMonster.getHP() + TEXT_COLOR_RESET;
     }
 
     // ==============================  End Display Helper Method Section  ==============================

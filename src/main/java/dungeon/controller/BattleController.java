@@ -160,14 +160,14 @@ public class BattleController {
                         + "> Enter choice: "
                     );
                     choice = -1;
-                } else if (choice == 3 && myHero instanceof Warrior warrior && warrior.getMyEnrageTimer() > 0) {
+                } else if (choice == 3 && myHero.getMyUltimateDuration() > 0) {
                     System.out.print(
-                            "Enrage is still active!"
+                            "Ultimate is still active!"
                                     + NEWLINE
                                     + "> Enter choice: "
                     );
                     choice = -1;
-                } else if (choice == 3 && myHero instanceof Warrior warrior && warrior.getMyEnrageTimer() == 0) {
+                } else if (choice == 3 && myHero.getMyUltimateDuration() == 0) {
                     myHero.bigCooldown(myMonster);
                     logAbility(myHero.getUltimateName());
                     System.out.print("> Enter choice: ");
@@ -213,17 +213,9 @@ public class BattleController {
         myHero.performAction(choice, myMonster);
 
         switch (choice) {
-            case 2:
-                logAbility(myHero.getSpecialSkillName());
-                break;
-
-            case 3:
-                logAbility(myHero.getUltimateName());
-                break;
-
-            case 4:
-                log(myDungeonView.displayPlayerName(myHero) + " +" + myHero.getLastHeal() + " HP");
-                break;
+            case 2 -> logAbility(myHero.getSpecialSkillName());
+            case 3 -> logAbility(myHero.getUltimateName());
+            case 4 -> log(myDungeonView.displayPlayerName(myHero) + " +" + myHero.getLastHeal() + " HP");  
         }
 
         // Monster healing after taking damage

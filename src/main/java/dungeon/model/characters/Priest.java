@@ -83,6 +83,11 @@ public class Priest extends Hero {
         return "Priest";
     }
 
+    /** Return the ultimates duration timer. */
+    public int getMyUltimateDuration() {
+        return myUltimateDuration;
+    }
+
     /**
      * Executes the Priest's healing ability.
      */
