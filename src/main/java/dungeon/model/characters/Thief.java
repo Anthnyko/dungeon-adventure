@@ -30,9 +30,9 @@ public class Thief extends Hero {
                 40,   // max damage
                 6,    // attack speed
                 0.8,  // hit chance
-                0.45,
+                0.45, // block chance (or dodge if you keep it)
                 theHealingPotions,
-                theVisionPotions); // block chance (or dodge if you keep it)
+                theVisionPotions);
         myExtraTurn = false;
     }
 

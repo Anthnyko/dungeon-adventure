@@ -34,9 +34,9 @@ public class Priest extends Hero {
                 45,   // max damage
                 5,    // attack speed
                 0.7,  // hit chance
-                0.3,
+                0.3, // block chance
                 theHealingPotions,
-                theVisionPotions); // block chance
+                theVisionPotions);
         myMinHeal = 30;
         myMaxHeal = 45;
         mySkillTimer = 0;
