@@ -107,8 +107,8 @@ public final class DungeonAdventure {
         }
 
         switch (playerChoice) {
-            case 1 -> createGame();
-            case 2 -> loadGame(); 
+            case 1 -> createGame(); // Starts a new game
+            case 2 -> loadGame(); // load a saved game
             case 3 -> helpPage(); // help menu
             case 4 -> aboutPage(); // about info
             case 5 -> closeGame(); // quit game
@@ -177,7 +177,7 @@ public final class DungeonAdventure {
         // Validate player class selection
         int playerChoice = -1;
         myDungeonView.promptHeroSelection();
-        while (playerChoice < 1 || playerChoice > 3) {
+        do {
             try {
                 final String input = myScanner.nextLine().trim();
                 playerChoice = Integer.parseInt(input);
@@ -196,7 +196,7 @@ public final class DungeonAdventure {
                     + "> Enter choice: "
                 );
             }
-        } 
+        } while (playerChoice < 1 || playerChoice > 3);
         return playerChoice;
     }
 

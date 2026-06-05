@@ -40,6 +40,9 @@ public abstract class Hero extends DungeonCharacter {
     /** Track whether thief gains extra turn from special skill. */
     protected boolean myExtraTurn;
 
+    /** Tracks turn duration of the ultimate skill. */
+    protected int myUltimateDuration;
+
     /**
      * Constructs a new Hero with the given combat attributes.
      *
@@ -59,6 +62,7 @@ public abstract class Hero extends DungeonCharacter {
         myBlockChance = theBlockChance;
         myPillarsFound = new ArrayList<>();
         myCDTimer = 0;
+        myUltimateDuration = 0;
     }
 
     /**
@@ -268,6 +272,7 @@ public abstract class Hero extends DungeonCharacter {
     /** @return the name of the class */
     public abstract String getClassName();
 
+    public abstract int getMyUltimateDuration();
 
     @Override
     public String toString() {

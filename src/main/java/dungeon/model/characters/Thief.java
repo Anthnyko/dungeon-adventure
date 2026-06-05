@@ -80,6 +80,11 @@ public class Thief extends Hero {
         return "Thief";
     }
 
+    /** Return the ultimates duration timer. */
+    public int getMyUltimateDuration() {
+        return myUltimateDuration;
+    }
+
     /** Sets extra turn to false. */
     @Override
     public void consumeExtraTurn() {
