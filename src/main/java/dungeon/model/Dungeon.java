@@ -86,14 +86,9 @@ public class Dungeon {
         };
         if (forLoad) {
             intiializeRoomsForLoad();
+        } else {
+            mazeGeneration();
         }
-    }
-
-    /**
-     * Generates a new random layout of the dungeon.
-     */
-    public void generateDungeon() {
-        mazeGeneration();
     }
 
     private void mazeGeneration() {

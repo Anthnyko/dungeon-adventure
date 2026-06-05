@@ -651,7 +651,6 @@ public final class DungeonAdventure {
         switch (playerChoice) {
             case 1 -> loadGame();
             case 2 -> deleteSave();
-        
             default -> throw new IllegalArgumentException("Invalid input: "  + playerChoice);
         }
     }
@@ -677,7 +676,6 @@ public final class DungeonAdventure {
             RestoreResult result = restore.restoreGameState(loadedState);
             myDungeon = result.myDungeon;
             myHero = result.myHero;
-//            restoreGameState(loadedState);
             gameLoop();
         }
     }
