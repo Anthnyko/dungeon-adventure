@@ -36,7 +36,7 @@ public abstract class Monster extends DungeonCharacter {
     protected int myBleedTimer;
 
     /** Amount of bleed damage per tick. */
-    protected final int myBleedDamage = 5;
+    protected final int myBleedDamage = 10;
 
     /** Checks if monster died from bleed damage. */
     protected boolean myDiedFromBleed;

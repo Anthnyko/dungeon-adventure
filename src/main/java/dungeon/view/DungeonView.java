@@ -131,14 +131,14 @@ public class DungeonView {
             + "    Ultimate Skill: Enrage" 
             + TEXT_COLOR_RESET 
             + NEWLINE
-            + TEXT_PINK + "[2] Priest (85 HP): "
+            + TEXT_PINK + "[2] Priest (100 HP): "
             + NEWLINE
             + "    Special Skill: Heal"
             + NEWLINE 
             + "    Ultimate Skill: Smite" 
             + TEXT_COLOR_RESET 
             + NEWLINE
-            + TEXT_DIM + "[3] Thief (75 HP): "
+            + TEXT_DIM + "[3] Thief (85 HP): "
             + NEWLINE
             + "    Special Skill: Surprise Attack"
             + NEWLINE 
