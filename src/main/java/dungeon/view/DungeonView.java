@@ -62,11 +62,7 @@ public class DungeonView {
             + NEWLINE
             + "[2] Load a saved game "
             + NEWLINE
-            + "[3] Help menu "
-            + NEWLINE
-            + "[4] About "
-            + NEWLINE
-            + "[5] Quit "
+            + "[3] Quit "
             + TEXT_COLOR_RESET
             + NEWLINE
             + "> Enter choice: "
@@ -292,8 +288,6 @@ public class DungeonView {
             + "[V] Use vision potion "
             + NEWLINE
             + "[F] Save game "
-            + NEWLINE
-            + "[B] Help "
             + NEWLINE
             + "[Q] Quit "
             + TEXT_COLOR_RESET
@@ -749,11 +743,7 @@ public class DungeonView {
             + NEWLINE
         );
     }
-
-    public final void displayHelpSection() {
-
-    }
-
+    
     // ==============================   End Misc Display Section   ==============================
 
 
