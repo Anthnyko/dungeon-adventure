@@ -108,7 +108,7 @@ public final class DungeonAdventure {
 
         switch (playerChoice) {
             case 1 -> createGame(); // Starts a new game
-            case 2 -> loadGame(); // load a saved game
+            case 2 -> loadMenu(); // load a saved game
             case 3 -> helpPage(); // help menu
             case 4 -> aboutPage(); // about info
             case 5 -> closeGame(); // quit game
@@ -242,9 +242,9 @@ public final class DungeonAdventure {
      */
     public void setMyHero(int thePlayerChoice, String theHeroName) {
         myHero = switch (thePlayerChoice) {
-            case 1 -> new Warrior(theHeroName, 0, 0);
-            case 2 -> new Priest(theHeroName, 0, 0);
-            case 3 -> new Thief(theHeroName, 0, 0);
+            case 1 -> new Warrior(theHeroName, 3, 1);
+            case 2 -> new Priest(theHeroName, 3, 1);
+            case 3 -> new Thief(theHeroName,3, 1);
             default -> throw new IllegalArgumentException("Invalid class choice: " + thePlayerChoice);
         }; 
     }
@@ -651,6 +651,7 @@ public final class DungeonAdventure {
         switch (playerChoice) {
             case 1 -> loadGame();
             case 2 -> deleteSave();
+            case 3 -> mainMenu();
             default -> throw new IllegalArgumentException("Invalid input: "  + playerChoice);
         }
     }

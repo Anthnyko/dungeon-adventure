@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 public class HeroTest {
 
     private Hero createHero() {
-        return new Thief("TestHero");
+        return new Thief("TestHero", 0, 0);
     }
 
     @Test

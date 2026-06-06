@@ -59,6 +59,8 @@ public abstract class Hero extends DungeonCharacter {
     public Hero(String theName, int theHP, int theMaxHP, int theMinDamage, int theMaxDamage, int theAttackSpeed,
                 double theHitChance, double theBlockChance, int theHealingPotions, int theVisionPotions) {
         super(theName, theHP, theMaxHP,theMinDamage, theMaxDamage, theAttackSpeed, theHitChance);
+        myHealingPotions = theHealingPotions;
+        myVisionPotions = theVisionPotions;
         myBlockChance = theBlockChance;
         myPillarsFound = new ArrayList<>();
         myCDTimer = 0;
@@ -198,10 +200,10 @@ public abstract class Hero extends DungeonCharacter {
     /**
      * Returns the characters of the collected pillars
      * 
-     * @return the pillars collected (ex. [A, I])
+     * @return a copy of the pillars collected (ex. [A, I])
      */
     public List<Character> getMyPillars() {
-        return myPillarsFound;
+        return new ArrayList<>(myPillarsFound);
     }
 
     /**

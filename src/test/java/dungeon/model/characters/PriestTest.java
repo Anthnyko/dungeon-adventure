@@ -10,7 +10,7 @@ public class PriestTest {
 
     /** Helper to create a Priest with a fixed name. */
     private Priest createPriest() {
-        return new Priest("TestPriest");
+        return new Priest("TestPriest", 0, 0);
     }
 
     /** Helper to create a Skeleton target. */

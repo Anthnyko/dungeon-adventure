@@ -2,7 +2,6 @@ package dungeon.model;
 
 import dungeon.model.RoomEvent.FountainEvent;
 import dungeon.model.RoomEvent.PitEvent;
-import dungeon.model.characters.Hero;
 import dungeon.model.characters.Warrior;
 import dungeon.model.items.HealingPotion;
 import org.junit.Test;
@@ -38,7 +37,7 @@ public class RoomTest {
     @Test
     public void testPickUpItemsEmptiesRoom() {
         Room room = new Room();
-        Warrior warrior = new Warrior("test");
+        Warrior warrior = new Warrior("test", 0, 0);
         room.addItem(new HealingPotion());
         room.pickUpItems(warrior);
         assertFalse(room.hasItems());
@@ -56,9 +55,9 @@ public class RoomTest {
 
     @Test
     public void testTriggerEvent() {
-        Dungeon dungeon = new Dungeon(5, 5, "The Easy Dungeon");
+        Dungeon dungeon = new Dungeon(5, 5, "The Easy Dungeon", false);
         Room room = new Room();
-        Warrior warrior = new Warrior("test");
+        Warrior warrior = new Warrior("test", 0, 0);
         room.addEvent(new PitEvent());
 
         int hpBefore = warrior.getHP();
@@ -72,7 +71,7 @@ public class RoomTest {
     @Test
     public void testHasItems() {
         Room room = new Room();
-        Warrior warrior = new Warrior("test");
+        Warrior warrior = new Warrior("test", 0, 0);
         room.addItem(new HealingPotion());
         assertTrue(room.hasItems());
 

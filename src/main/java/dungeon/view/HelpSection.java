@@ -41,6 +41,10 @@ public class HelpSection {
         );
     }
 
+    private static void printBullet(String text) {
+        System.out.println("  " + TEXT_YELLOW + "-" + TEXT_COLOR_RESET + " " + text);
+    }
+
     private final void printDivider() {
         System.out.println(TEXT_DIM + "  " + "─".repeat(TERMINAL_WIDTH) + TEXT_COLOR_RESET);
     }
