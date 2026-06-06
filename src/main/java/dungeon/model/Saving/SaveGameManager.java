@@ -12,14 +12,26 @@ import java.util.*;
  * @version 1.0
  */
 public class SaveGameManager {
-    private static final String DB_URL = "jdbc:sqlite:dungeon_saves.db";
+    private final String myDbUrl;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
-     * Constructs a SaveGameManager and initializes the SQLite database.
+     * Constructs a SaveGameManager and initializes the SQLite database
+     * with the standard save database (should be used for the main game).
      * Creates the saves table if it does not already exist.
      */
     public SaveGameManager() {
+        this.myDbUrl = "jdbc:sqlite:dungeon_saves.db";
+        initializeDatabase();
+    }
+
+    /**
+     * Constructs a SaveGameManager and initializes the SQLite database 
+     * with a custom database url.
+     * Creates the saves table if it does not already exist.
+     */
+    public SaveGameManager(String dbUrl) {
+        this.myDbUrl = dbUrl;
         initializeDatabase();
     }
 
@@ -27,7 +39,7 @@ public class SaveGameManager {
      * Initializes the SQLite database and creates the saves table if it doesn't exist.
      */
     private void initializeDatabase() {
-        try (Connection conn = DriverManager.getConnection(DB_URL);
+        try (Connection conn = DriverManager.getConnection(myDbUrl);
              Statement stmt = conn.createStatement()) {
             
             String sql = "CREATE TABLE IF NOT EXISTS saves ("   + System.lineSeparator() 
@@ -68,7 +80,7 @@ public class SaveGameManager {
      * @return true if save was successful, false otherwise
      */
     public boolean saveGame(GameState state, String saveName) {
-        try (Connection conn = DriverManager.getConnection(DB_URL)) {
+        try (Connection conn = DriverManager.getConnection(myDbUrl)) {
             // Check if save with this name already exists
             String checkSql = "SELECT id FROM saves WHERE save_name = ?";
             try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
@@ -162,7 +174,7 @@ public class SaveGameManager {
     public GameState loadGame(String saveName) {
         String sql = "SELECT * FROM saves WHERE save_name = ?";
         
-        try (Connection conn = DriverManager.getConnection(DB_URL);
+        try (Connection conn = DriverManager.getConnection(myDbUrl);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setString(1, saveName);
@@ -207,7 +219,7 @@ public class SaveGameManager {
         List<String> saves = new ArrayList<>();
         String sql = "SELECT save_name, save_time, hero_name, hero_class FROM saves ORDER BY save_time DESC";
         
-        try (Connection conn = DriverManager.getConnection(DB_URL);
+        try (Connection conn = DriverManager.getConnection(myDbUrl);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             
@@ -235,7 +247,7 @@ public class SaveGameManager {
     public boolean deleteSave(String saveName) {
         String sql = "DELETE FROM saves WHERE save_name = ?";
         
-        try (Connection conn = DriverManager.getConnection(DB_URL);
+        try (Connection conn = DriverManager.getConnection(myDbUrl);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setString(1, saveName);

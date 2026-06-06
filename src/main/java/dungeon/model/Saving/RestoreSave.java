@@ -69,14 +69,7 @@ public class RestoreSave {
         // Restore hero HP
         myHero.setHP(state.myHeroHP);
         
-        // Restore hero items and pillars
-        for (int i = 0; i < state.myHealingPotions; i++) {
-            myHero.gainHealingPotion();
-        }
-        for (int i = 0; i < state.myVisionPotions; i++) {
-            myHero.gainVisionPotion();
-        }
-        
+        // Restore hero pillars
         if (state.myPillarsFound != null) {
             for (final char pillar : state.myPillarsFound) {
                 myHero.gainPillar(pillar);

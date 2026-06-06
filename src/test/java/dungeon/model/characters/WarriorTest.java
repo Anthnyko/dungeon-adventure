@@ -12,7 +12,7 @@ public class WarriorTest {
 
     /** Creates a Warrior with a fixed name. */
     private Warrior createWarrior() {
-        return new Warrior("TestWarrior");
+        return new Warrior("TestWarrior", 0, 0);
     }
 
     /** Creates a Skeleton target. */
@@ -124,7 +124,7 @@ public class WarriorTest {
 
         w.bigCooldown(null);
 
-        assertEquals(2, w.getMyEnrageTimer());
+        assertEquals(2, w.getMyUltimateDuration());
     }
 
     @Test
@@ -181,7 +181,7 @@ public class WarriorTest {
         w.attack(d);
 
         // Now EnrageTimer should be 0
-        assertEquals(0, w.getMyEnrageTimer());
+        assertEquals(0, w.getMyUltimateDuration());
 
         // Damage should return to normal (35)
         int before = d.getHP();

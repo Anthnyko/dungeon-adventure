@@ -41,7 +41,7 @@ public class Warrior extends Hero {
                 4,    // attack speed
                 0.8,  // hit chance
                 0.2, // block chance
-                theVisionPotions,
+                theHealingPotions,
                 theVisionPotions); 
         myMinCrushDamage = 75;
         myMaxCrushDamage = 150;
