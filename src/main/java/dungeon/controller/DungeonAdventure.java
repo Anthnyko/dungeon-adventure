@@ -85,21 +85,21 @@ public final class DungeonAdventure {
     private final void mainMenu() {
         int playerChoice = -1;
         myDungeonView.displayMainMenu();
-        while (playerChoice < 1 || playerChoice > 5) {
+        while (playerChoice < 1 || playerChoice > 3) {
             try {
                 final String input = myScanner.nextLine().trim();
                 playerChoice = Integer.parseInt(input);
 
-                if (playerChoice < 1 || playerChoice > 5) {
+                if (playerChoice < 1 || playerChoice > 3) {
                     System.out.print(
-                        "Invalid input. Please enter a choice between 1-5."
+                        "Invalid input. Please enter a choice between 1-3."
                         + NEWLINE
                         + "> Enter choice: "
                     );
                 }
             } catch (final NumberFormatException e){
                 System.out.print(
-                    "Invalid input. please enter a number between 1-5"
+                    "Invalid input. please enter a number between 1-3"
                     + NEWLINE
                     + "> Enter choice: "
                 );
@@ -109,9 +109,7 @@ public final class DungeonAdventure {
         switch (playerChoice) {
             case 1 -> createGame(); // Starts a new game
             case 2 -> loadMenu(); // load a saved game
-            case 3 -> helpPage(); // help menu
-            case 4 -> aboutPage(); // about info
-            case 5 -> closeGame(); // quit game
+            case 3 -> closeGame(); // quit game
             default -> throw new IllegalArgumentException("Invalid choice: " + playerChoice);
         }
     }
@@ -290,7 +288,6 @@ public final class DungeonAdventure {
                 || (userChoice.equals("H") && myHero.getHealingPotion() > 0  && myHero.getMaxHP() != myHero.getHP()) 
                 || (userChoice.equals("V") && myHero.getVisionPotion() > 0)
                 || userChoice.equals("F")
-                || userChoice.equals("B") 
                 || userChoice.equals("Q")
                 || userChoice.equals("M")) {
                 validInput = true;
@@ -386,9 +383,6 @@ public final class DungeonAdventure {
             case "W", "A", "S", "D" -> move(thePlayerChoice);
             case "H" -> myHero.useHealingPotion();
             case "V" -> myHero.useVisionPotion(myDungeon);
-            case "B" -> {
-                // TODO: implement help menu
-            }
             case "F" -> {
                 saveGame();
             }
@@ -466,44 +460,6 @@ public final class DungeonAdventure {
                 mainMenu();
             }
         }
-    }
-
-    /**
-     * Displays the about page with game information.
-     * Currently a placeholder that allows the player to return to the main menu.
-     */
-    private final void aboutPage() {
-        // TODO: implement the about page
-        System.out.println("Press [1] to return to main menu.");
-        int playerChoice = -1;
-        while (playerChoice != 1) {
-            try {
-                final String input = myScanner.nextLine().trim();
-                playerChoice = Integer.parseInt(input);
-                if (playerChoice > 1 || playerChoice < 1) {
-                    System.out.print(
-                        "Invalid input. please enter 1 to return to the main menu."
-                        + NEWLINE
-                        + "> Enter choice: "
-                    );
-                }
-            } catch (final NumberFormatException e) {
-                System.out.print(
-                    "Invalid input. please enter 1 to return to the main menu."
-                    + NEWLINE
-                    + "> Enter choice: "
-                );
-            }
-        }
-        mainMenu();
-    }
-
-    /**
-     * Displays the help page with game instructions and controls.
-     * Currently a placeholder for future implementation.
-     */
-    private final void helpPage() {
-        //TODO: implement the help page
     }
 
     /**
