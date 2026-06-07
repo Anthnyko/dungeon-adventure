@@ -14,10 +14,13 @@ import java.util.Random;
  */
 public class FountainEvent implements RoomEvent {
 
+    /** The percentage chance a monster spawns after a heal or potion effect */
     private static final int MONSTER_SPAWN_CHANCE = 50;
 
+    /** The amount of damage dealt per turn by the mind effect */
     private static final int MIND_DAMAGE = 2;
 
+    /** The number of turns the mind effect lasts */
     private static final int MIND_DURATION = 6;
 
     private final Random myRandom = new Random();
@@ -30,7 +33,14 @@ public class FountainEvent implements RoomEvent {
      */
     @Override
     public String trigger(final Hero theHero, final Dungeon theDungeon) {
-        int effect = myRandom.nextInt(4);
+        int effectCount;
+        if (theHero.getPillarCount() < 4) {
+            effectCount = 4;
+        } else {
+            effectCount = 3;
+        }
+
+        int effect = myRandom.nextInt(effectCount);
         switch (effect) {
             case 0 -> { // give the hero a full heal
                 theHero.applyHeal(theHero.getMaxHP());
@@ -48,6 +58,7 @@ public class FountainEvent implements RoomEvent {
                 if (myRandom.nextInt(100) < MONSTER_SPAWN_CHANCE) {
                     theDungeon.spawnMonsterAtHero();
                 }
+                return "FOUNTAIN_POTION";
             }
             case 3 -> {
                 theDungeon.revealRandomPillar();
