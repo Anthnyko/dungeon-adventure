@@ -23,18 +23,22 @@ public class Priest extends Hero {
      * Constructs a new Priest with predefined combat attributes.
      *
      * @param theName the name of the Priest
+     * @param theHealingPotions the number of healing potions
+     * @param theVisionPotions the number of healing potions
      */
-    public Priest(String theName) {
+    public Priest(String theName, int theHealingPotions, int theVisionPotions) {
         super(theName,
-                85,   // HP
-                85,   // max HP
+                100,   // HP
+                100,   // max HP
                 25,   // min damage
                 45,   // max damage
                 5,    // attack speed
                 0.7,  // hit chance
-                0.3); // block chance
-        myMinHeal = 20;
-        myMaxHeal = 40;
+                0.3, // block chance
+                theHealingPotions,
+                theVisionPotions); 
+        myMinHeal = 30;
+        myMaxHeal = 45;
         mySkillTimer = 0;
     }
 
@@ -71,6 +75,20 @@ public class Priest extends Hero {
     }
 
     /**
+     * Returns the name of this hero class.
+     *
+     * @return the class name "Priest"
+     */
+    public String getClassName() {
+        return "Priest";
+    }
+
+    /** Return the ultimates duration timer. */
+    public int getMyUltimateDuration() {
+        return myUltimateDuration;
+    }
+
+    /**
      * Executes the Priest's healing ability.
      */
     private void heal() {
@@ -101,7 +119,7 @@ public class Priest extends Hero {
         final int smiteDmg = 70;
         final double roll = rng.nextDouble();
 
-        if (roll < 0.60) {
+        if (roll < 0.65) {
             System.out.println(getCharName() + " casts Smite!");
             theTarget.takeDamage(smiteDmg);
             myCDTimer = 4;

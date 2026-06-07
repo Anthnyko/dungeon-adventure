@@ -22,14 +22,17 @@ public class Warrior extends Hero {
     protected final int myMaxCrushDamage;
 
     /** Tracks turn duration of Enrage. */
-    protected int myEnrageTimer;
+//    protected int myUltimateTimer;
+
 
     /**
      * Constructs a new Warrior with predefined combat attributes.
      *
      * @param theName the name of the Warrior
+     * @param theHealingPotions the number of healing potions
+     * @param theVisionPotions the number of healing potions
      */
-    public Warrior(String theName) {
+    public Warrior(String theName, int theHealingPotions, int theVisionPotions) {
         super(theName,
                 125,  // HP
                 125,  // max HP
@@ -37,15 +40,17 @@ public class Warrior extends Hero {
                 60,   // max damage
                 4,    // attack speed
                 0.8,  // hit chance
-                0.2); // block chance (or dodge if you keep it)
+                0.2, // block chance
+                theHealingPotions,
+                theVisionPotions); 
         myMinCrushDamage = 75;
         myMaxCrushDamage = 150;
-        myEnrageTimer = 0;
+        myUltimateDuration = 0;
     }
 
     @Override
     public void attack(final DungeonCharacter theTarget) {
-        if (myEnrageTimer > 0) {
+        if (myUltimateDuration > 0) {
             // temporarily boost damage
             int originalMin = myMinDamage;
             int originalMax = myMaxDamage;
@@ -58,8 +63,8 @@ public class Warrior extends Hero {
             // restore original values
             myMinDamage = originalMin;
             myMaxDamage = originalMax;
-            myEnrageTimer--;
-            if (myEnrageTimer == 0) {
+            myUltimateDuration--;
+            if (myUltimateDuration == 0) {
                System.out.println("Enrage has worn off...");
                myCDTimer = 5;
             }
@@ -97,7 +102,7 @@ public class Warrior extends Hero {
     @Override
     public void resetStatusEffects() {
         super.resetStatusEffects();
-        myEnrageTimer = 0;
+        myUltimateDuration = 0;
     }
 
     /** Returns Warrior's special skill name. */
@@ -112,8 +117,19 @@ public class Warrior extends Hero {
         return "Enrage";
     }
 
-    /** Return Warrior's Enrage timer. */
-    public int getMyEnrageTimer() {return myEnrageTimer;}
+    /**
+     * Returns the name of this hero class.
+     *
+     * @return the class name "Warrior"
+     */
+    public String getClassName() {
+        return "Warrior";
+    }
+
+    /** Return the ultimates duration timer. */
+    public int getMyUltimateDuration() {
+        return myUltimateDuration;
+    }
 
     /**
      * Executes the Warrior's crushing blow ability.
@@ -147,7 +163,7 @@ public class Warrior extends Hero {
     private void enrage() {
         System.out.println(getCharName() + " becomes enraged! (+25 HP)");
         myHP += 25;
-        myEnrageTimer = 2;
+        myUltimateDuration = 2;
 
         myLastDamageDealt = 0;
         myLastHeal = 25;

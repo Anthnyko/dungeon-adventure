@@ -40,6 +40,9 @@ public abstract class Hero extends DungeonCharacter {
     /** Track whether thief gains extra turn from special skill. */
     protected boolean myExtraTurn;
 
+    /** Tracks turn duration of the ultimate skill. */
+    protected int myUltimateDuration;
+
     /**
      * Constructs a new Hero with the given combat attributes.
      *
@@ -54,13 +57,14 @@ public abstract class Hero extends DungeonCharacter {
      */
 
     public Hero(String theName, int theHP, int theMaxHP, int theMinDamage, int theMaxDamage, int theAttackSpeed,
-                double theHitChance, double theBlockChance) {
+                double theHitChance, double theBlockChance, int theHealingPotions, int theVisionPotions) {
         super(theName, theHP, theMaxHP,theMinDamage, theMaxDamage, theAttackSpeed, theHitChance);
+        myHealingPotions = theHealingPotions;
+        myVisionPotions = theVisionPotions;
         myBlockChance = theBlockChance;
-        myHealingPotions = 3;
-        myVisionPotions = 1;
         myPillarsFound = new ArrayList<>();
         myCDTimer = 0;
+        myUltimateDuration = 0;
     }
 
     /**
@@ -196,10 +200,10 @@ public abstract class Hero extends DungeonCharacter {
     /**
      * Returns the characters of the collected pillars
      * 
-     * @return the pillars collected (ex. [A, I])
+     * @return a copy of the pillars collected (ex. [A, I])
      */
     public List<Character> getMyPillars() {
-        return myPillarsFound;
+        return new ArrayList<>(myPillarsFound);
     }
 
     /**
@@ -266,6 +270,12 @@ public abstract class Hero extends DungeonCharacter {
 
     /** @return the name of ultimate skill */
     public abstract String getUltimateName();
+
+    /** @return the name of the class */
+    public abstract String getClassName();
+
+    /** @return the duration of the ultimate skill */
+    public abstract int getMyUltimateDuration();
 
     @Override
     public String toString() {

@@ -62,11 +62,7 @@ public class DungeonView {
             + NEWLINE
             + "[2] Load a saved game "
             + NEWLINE
-            + "[3] Help menu "
-            + NEWLINE
-            + "[4] About "
-            + NEWLINE
-            + "[5] Quit "
+            + "[3] Quit "
             + TEXT_COLOR_RESET
             + NEWLINE
             + "> Enter choice: "
@@ -131,14 +127,14 @@ public class DungeonView {
             + "    Ultimate Skill: Enrage" 
             + TEXT_COLOR_RESET 
             + NEWLINE
-            + TEXT_PINK + "[2] Priest (85 HP): "
+            + TEXT_PINK + "[2] Priest (100 HP): "
             + NEWLINE
             + "    Special Skill: Heal"
             + NEWLINE 
             + "    Ultimate Skill: Smite" 
             + TEXT_COLOR_RESET 
             + NEWLINE
-            + TEXT_DIM + "[3] Thief (75 HP): "
+            + TEXT_DIM + "[3] Thief (85 HP): "
             + NEWLINE
             + "    Special Skill: Surprise Attack"
             + NEWLINE 
@@ -292,8 +288,6 @@ public class DungeonView {
             + "[V] Use vision potion "
             + NEWLINE
             + "[F] Save game "
-            + NEWLINE
-            + "[B] Help "
             + NEWLINE
             + "[Q] Quit "
             + TEXT_COLOR_RESET
@@ -562,8 +556,12 @@ public class DungeonView {
             + displayMonsterName(theMonster)
             + NEWLINE
             + displayMonsterHP(theMonster)
-            + NEWLINE
-            + TEXT_RED + "////////||||||||\\\\\\\\\\\\\\\\" + TEXT_COLOR_RESET
+        );
+        if (theMonster.getMyBleedTimer() > 0) {
+            System.out.println("Turns of Bleed: " + theMonster.getMyBleedTimer());
+        }
+        System.out.println(
+            TEXT_RED + "////////||||||||\\\\\\\\\\\\\\\\" + TEXT_COLOR_RESET
             + NEWLINE
         );
     }
@@ -618,8 +616,10 @@ public class DungeonView {
 
     private final String ultCooldownDisplayHelper(final Hero theHero) {
         if (theHero.getCDTimer() > 0) {
-            return TEXT_BLACK + theHero.getUltimateName() + TEXT_COLOR_RESET
+            return TEXT_DIM + theHero.getUltimateName() + TEXT_COLOR_RESET
             + " (CD: " + theHero.getCDTimer() + " turns left)";
+        } else if (theHero.getMyUltimateDuration() > 0) {
+            return TEXT_YELLOW + theHero.getUltimateName() + TEXT_YELLOW;
         } else {
             return theHero.getUltimateName();
         }
@@ -627,7 +627,7 @@ public class DungeonView {
     
     private final String skillCooldownDisplayHelper(final Hero theHero) {
         if (theHero.getSkillTimer() > 0) {
-            return TEXT_BLACK + theHero.getSpecialSkillName() + TEXT_COLOR_RESET
+            return TEXT_DIM + theHero.getSpecialSkillName() + TEXT_COLOR_RESET
             + " (CD: " + theHero.getSkillTimer() + " turns left)";
         } else {
             return theHero.getSpecialSkillName();
@@ -638,7 +638,7 @@ public class DungeonView {
         if (theHero.getHealingPotion() > 0) {
             return TEXT_PURPLE + theHero.getHealingPotion() + TEXT_COLOR_RESET;
         } else {
-            return TEXT_BLACK + theHero.getHealingPotion() + TEXT_COLOR_RESET;
+            return TEXT_DIM + theHero.getHealingPotion() + TEXT_COLOR_RESET;
         }
     }
 
@@ -646,7 +646,7 @@ public class DungeonView {
         if (theHero.getVisionPotion() > 0) {
             return TEXT_PURPLE + theHero.getVisionPotion() + TEXT_COLOR_RESET;
         } else {
-            return TEXT_BLACK + theHero.getVisionPotion() + TEXT_COLOR_RESET;
+            return TEXT_DIM + theHero.getVisionPotion() + TEXT_COLOR_RESET;
         }
     }
 
@@ -658,7 +658,7 @@ public class DungeonView {
         } else if (theHero.getHP() < theHero.getMaxHP() * 0.25) {
             return TEXT_RED + theHero.getHP() + TEXT_COLOR_RESET;
         }
-        return TEXT_BLACK + theHero.getHP() + TEXT_COLOR_RESET;
+        return TEXT_DIM + theHero.getHP() + TEXT_COLOR_RESET;
     }
 
     private final String monsterHpColorHelper(final Monster theMonster) {
@@ -669,7 +669,7 @@ public class DungeonView {
         } else if (theMonster.getHP() < theMonster.getMaxHP() * 0.25) {
             return TEXT_RED + theMonster.getHP() + TEXT_COLOR_RESET;
         }
-        return TEXT_BLACK + theMonster.getHP() + TEXT_COLOR_RESET;
+        return TEXT_DIM + theMonster.getHP() + TEXT_COLOR_RESET;
     }
 
     // ==============================  End Display Helper Method Section  ==============================
@@ -691,6 +691,23 @@ public class DungeonView {
     public final void promptSave() {
         System.out.print(
             "Do you want to save [Y/N]?"
+            + NEWLINE
+            + "> Enter choice: "
+        );
+    }
+
+    /**
+     * Displays the load menu with options to load a save,
+     * delete a save, or return to the main menu.
+     */
+    public final void promptLoad() {
+        System.out.print(
+            NEWLINE
+            + "[1] Load a save "
+            + NEWLINE
+            + "[2] Delete a save "
+            + NEWLINE
+            + "[3] Return to the main menu"
             + NEWLINE
             + "> Enter choice: "
         );
@@ -726,11 +743,7 @@ public class DungeonView {
             + NEWLINE
         );
     }
-
-    public final void displayHelpSection() {
-
-    }
-
+    
     // ==============================   End Misc Display Section   ==============================
 
 

@@ -12,7 +12,7 @@ public class ThiefTest {
 
     /** Creates a Thief with a fixed name. */
     private Thief createThief() {
-        return new Thief("TestThief");
+        return new Thief("TestThief", 0, 0);
     }
 
     /** Creates a Skeleton target. */
