@@ -238,7 +238,7 @@ public final class DungeonAdventure {
      * @param theHeroName the name given to the hero
      * @throws IllegalArgumentException if thePlayerChoice is not 1, 2, or 3
      */
-    public void setMyHero(final int thePlayerChoice, final String theHeroName) {
+    private void setMyHero(final int thePlayerChoice, final String theHeroName) {
         myHero = switch (thePlayerChoice) {
             case 1 -> new Warrior(theHeroName, 3, 1);
             case 2 -> new Priest(theHeroName, 3, 1);
