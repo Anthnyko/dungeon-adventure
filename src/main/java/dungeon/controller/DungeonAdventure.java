@@ -155,7 +155,7 @@ public final class DungeonAdventure {
             myDungeonView.displayPlayerStatus(myHero);
             myDungeonView.displayInGameMenu();
 
-            String userChoice = getValidPlayerChoice();
+            final String userChoice = getValidPlayerChoice();
             exitReason = handlePlayerChoice(userChoice);
 
             if(checkWinCondidtion() && exitReason == null) {
@@ -238,7 +238,7 @@ public final class DungeonAdventure {
      * @param theHeroName the name given to the hero
      * @throws IllegalArgumentException if thePlayerChoice is not 1, 2, or 3
      */
-    public void setMyHero(int thePlayerChoice, String theHeroName) {
+    public void setMyHero(final int thePlayerChoice, final String theHeroName) {
         myHero = switch (thePlayerChoice) {
             case 1 -> new Warrior(theHeroName, 3, 1);
             case 2 -> new Priest(theHeroName, 3, 1);
@@ -350,7 +350,7 @@ public final class DungeonAdventure {
         }
         if (theRoom.hasFountain()) {
             myDungeonView.displayFountainInteraction();
-            String fountainEvent = theRoom.triggerEvent("FOUNTAIN", myHero, myDungeon);
+            final String fountainEvent = theRoom.triggerEvent("FOUNTAIN", myHero, myDungeon);
             switch (fountainEvent) {
                 case "FOUNTAIN_HEAL" -> myDungeonView.displayFountainHeal();
                 case "FOUNTAIN_TELEPORT" -> myDungeonView.displayFountainTeleport();
@@ -629,8 +629,8 @@ public final class DungeonAdventure {
         } while (loadedState == null);
 
         if (loadedState != null) {
-            RestoreSave restore = new RestoreSave();
-            RestoreResult result = restore.restoreGameState(loadedState);
+            final RestoreSave restore = new RestoreSave();
+            final RestoreResult result = restore.restoreGameState(loadedState);
             myDungeon = result.myDungeon;
             myHero = result.myHero;
             gameLoop();

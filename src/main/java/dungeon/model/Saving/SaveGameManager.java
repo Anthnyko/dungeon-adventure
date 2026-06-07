@@ -1,9 +1,16 @@
 package dungeon.model.Saving;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Manages saving and loading game state using SQLite database.
@@ -30,7 +37,7 @@ public class SaveGameManager {
      * with a custom database url.
      * Creates the saves table if it does not already exist.
      */
-    public SaveGameManager(String dbUrl) {
+    public SaveGameManager(final String dbUrl) {
         this.myDbUrl = dbUrl;
         initializeDatabase();
     }
@@ -42,7 +49,7 @@ public class SaveGameManager {
         try (Connection conn = DriverManager.getConnection(myDbUrl);
              Statement stmt = conn.createStatement()) {
             
-            String sql = "CREATE TABLE IF NOT EXISTS saves ("   + System.lineSeparator() 
+            final String sql = "CREATE TABLE IF NOT EXISTS saves ("   + System.lineSeparator() 
                     + "id INTEGER PRIMARY KEY AUTOINCREMENT,"   + System.lineSeparator() 
                     + "save_name TEXT UNIQUE NOT NULL,"         + System.lineSeparator() 
                     + "save_time TEXT NOT NULL,"                + System.lineSeparator() 
@@ -67,7 +74,7 @@ public class SaveGameManager {
                     + ");";
             
             stmt.execute(sql);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             System.err.println("Error initializing database: " + e.getMessage());
         }
     }
@@ -79,13 +86,13 @@ public class SaveGameManager {
      * @param saveName the name for this save file
      * @return true if save was successful, false otherwise
      */
-    public boolean saveGame(GameState state, String saveName) {
+    public boolean saveGame(final GameState state, final String saveName) {
         try (Connection conn = DriverManager.getConnection(myDbUrl)) {
             // Check if save with this name already exists
-            String checkSql = "SELECT id FROM saves WHERE save_name = ?";
+            final String checkSql = "SELECT id FROM saves WHERE save_name = ?";
             try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
                 checkStmt.setString(1, saveName);
-                ResultSet rs = checkStmt.executeQuery();
+                final ResultSet rs = checkStmt.executeQuery();
                 
                 if (rs.next()) {
                     // Update existing save
@@ -95,7 +102,7 @@ public class SaveGameManager {
                     return insertSave(conn, state, saveName);
                 }
             }
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             System.err.println("Error saving game: " + e.getMessage());
             return false;
         }
@@ -104,8 +111,8 @@ public class SaveGameManager {
     /**
      * Inserts a new save record into the database.
      */
-    private boolean insertSave(Connection conn, GameState state, String saveName) throws SQLException {
-        String sql = "INSERT INTO saves (save_name, save_time, hero_name, hero_class, hero_hp, "
+    private boolean insertSave(final Connection conn, final GameState state, final String saveName) throws SQLException {
+        final String sql = "INSERT INTO saves (save_name, save_time, hero_name, hero_class, hero_hp, "
                 + "healing_potions, vision_potions, pillars_found, skill_timer, cd_timer, dungeon_width, "
                 + "dungeon_height, dungeon_name, hero_row, hero_col, entrance_row, entrance_col, exit_row, exit_col, "
                 + "room_data)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -141,8 +148,8 @@ public class SaveGameManager {
     /**
      * Updates an existing save record in the database.
      */
-    private boolean updateSave(Connection conn, GameState state, String saveName) throws SQLException {
-        String sql = "UPDATE saves SET save_time = ?, hero_hp = ?, healing_potions = ?, "
+    private boolean updateSave(final Connection conn, final GameState state, final String saveName) throws SQLException {
+        final String sql = "UPDATE saves SET save_time = ?, hero_hp = ?, healing_potions = ?, "
                 + "vision_potions = ?, pillars_found = ?, skill_timer = ?, cd_timer = ?, hero_row = ?, "
                 + "hero_col = ?, room_data = ? WHERE save_name = ?";
         
@@ -171,17 +178,17 @@ public class SaveGameManager {
      * @param saveName the name of the save to load
      * @return the GameState object, or null if not found
      */
-    public GameState loadGame(String saveName) {
-        String sql = "SELECT * FROM saves WHERE save_name = ?";
+    public GameState loadGame(final String saveName) {
+        final String sql = "SELECT * FROM saves WHERE save_name = ?";
         
         try (Connection conn = DriverManager.getConnection(myDbUrl);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setString(1, saveName);
-            ResultSet rs = pstmt.executeQuery();
+            final ResultSet rs = pstmt.executeQuery();
             
             if (rs.next()) {
-                GameState state = new GameState();
+                final GameState state = new GameState();
                 state.myHeroName = rs.getString("hero_name");
                 state.myHeroClass = rs.getString("hero_class");
                 state.myHeroHP = rs.getInt("hero_hp");
@@ -204,7 +211,7 @@ public class SaveGameManager {
                 System.out.println("Save file not found: " + saveName);
                 return null;
             }
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             System.err.println("Error loading game: " + e.getMessage());
             return null;
         }
@@ -216,22 +223,22 @@ public class SaveGameManager {
      * @return list of save names with timestamps
      */
     public List<String> listSaves() {
-        List<String> saves = new ArrayList<>();
-        String sql = "SELECT save_name, save_time, hero_name, hero_class FROM saves ORDER BY save_time DESC";
+        final List<String> saves = new ArrayList<>();
+        final String sql = "SELECT save_name, save_time, hero_name, hero_class FROM saves ORDER BY save_time DESC";
         
         try (Connection conn = DriverManager.getConnection(myDbUrl);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             
             while (rs.next()) {
-                String info = String.format("%s | %s (%s - %s)", 
+                final String info = String.format("%s | %s (%s - %s)", 
                         rs.getString("save_name"),
                         rs.getString("save_time"),
                         rs.getString("hero_name"),
                         rs.getString("hero_class"));
                 saves.add(info);
             }
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             System.err.println("Error listing saves: " + e.getMessage());
         }
         
@@ -244,20 +251,20 @@ public class SaveGameManager {
      * @param saveName the name of the save to delete
      * @return true if deletion was successful, false otherwise
      */
-    public boolean deleteSave(String saveName) {
-        String sql = "DELETE FROM saves WHERE save_name = ?";
+    public boolean deleteSave(final String saveName) {
+        final String sql = "DELETE FROM saves WHERE save_name = ?";
         
         try (Connection conn = DriverManager.getConnection(myDbUrl);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setString(1, saveName);
-            int affectedRows = pstmt.executeUpdate();
+            final int affectedRows = pstmt.executeUpdate();
             
             if (affectedRows > 0) {
                 System.out.println("Save deleted successfully: " + saveName);
                 return true;
             }
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             System.err.println("Error deleting save: " + e.getMessage());
         }
         
@@ -271,11 +278,11 @@ public class SaveGameManager {
      * @param pillars the list of pillar characters to serialize
      * @return a comma-separated string of pillars, or an empty string if the list is empty or null
      */
-    private String serializePillars(List<Character> pillars) {
+    private String serializePillars(final List<Character> pillars) {
         if (pillars == null || pillars.isEmpty()) {
             return "";
         }
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         for (int i = 0; i < pillars.size(); i++) {
             sb.append(pillars.get(i));
             if (i < pillars.size() - 1) {
@@ -292,12 +299,12 @@ public class SaveGameManager {
      * @param pillarsStr the comma-separated string of pillar characters
      * @return a list of pillar characters, or an empty list if the string is empty or null
      */
-    private List<Character> deserializePillars(String pillarsStr) {
-        List<Character> pillars = new ArrayList<>();
+    private List<Character> deserializePillars(final String pillarsStr) {
+        final List<Character> pillars = new ArrayList<>();
         if (pillarsStr == null || pillarsStr.isEmpty()) {
             return pillars;
         }
-        for (String s : pillarsStr.split(",")) {
+        for (final String s : pillarsStr.split(",")) {
             if (!s.isEmpty()) {
                 pillars.add(s.charAt(0));
             }
@@ -312,11 +319,11 @@ public class SaveGameManager {
      * @param roomData the 2D array of room data to serialize
      * @return a serialized string representation of the room data, or an empty string if null
      */
-    private String serializeRoomData(String[][] roomData) {
+    private String serializeRoomData(final String[][] roomData) {
         if (roomData == null) {
             return "";
         }
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         for (int i = 0; i < roomData.length; i++) {
             for (int j = 0; j < roomData[i].length; j++) {
                 sb.append(roomData[i][j] != null ? roomData[i][j] : "");
@@ -335,13 +342,13 @@ public class SaveGameManager {
      * @param data the serialized room data string from the database
      * @return a 2D array of room data strings, or an empty array if the string is null or empty
      */
-    private String[][] deserializeRoomData(String data) {
+    private String[][] deserializeRoomData(final String data) {
         if (data == null || data.isEmpty()) {
             return new String[0][0];
         }
         String[] rows = data.split(";", -1);
         rows = Arrays.stream(rows).filter(r -> !r.isEmpty()).toArray(String[]::new);
-        String[][] roomData = new String[rows.length][];
+        final String[][] roomData = new String[rows.length][];
         for (int i = 0; i < rows.length; i++) {
             roomData[i] = rows[i].split("~");
         }

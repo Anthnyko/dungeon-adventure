@@ -65,8 +65,8 @@ public abstract class DungeonCharacter {
      * @param theAttackSpeed number of actions per round
      * @param theHitChance   probability of landing an attack
      */
-    protected DungeonCharacter(String theName, int theHP, int theMaxHP, int theMinDamage, int theMaxDamage,
-                               int theAttackSpeed, double theHitChance) {
+    protected DungeonCharacter(final String theName, final int theHP, final int theMaxHP, final int theMinDamage, final int theMaxDamage,
+                               final int theAttackSpeed, final double theHitChance) {
 
         myCharName = theName;
         myMaxHP = theMaxHP;
@@ -83,7 +83,7 @@ public abstract class DungeonCharacter {
      *
      * @param theTarget the character being attacked
      */
-    public void attack(DungeonCharacter theTarget) {
+    public void attack(final DungeonCharacter theTarget) {
         if (theTarget == null || !theTarget.isAlive()) {
             return;
         }
@@ -128,7 +128,7 @@ public abstract class DungeonCharacter {
      * Hook for subclasses to modify behavior before a hit.
      * Return false to cancel this attack (e.g., Hero blocks).
      */
-    protected boolean beforeHit(DungeonCharacter theTarget) {
+    protected boolean beforeHit(final DungeonCharacter theTarget) {
         return true;
     }
 
@@ -141,13 +141,13 @@ public abstract class DungeonCharacter {
      *
      * @param theTarget the character being attacked
      */
-    public void singleAttack(DungeonCharacter theTarget) {
+    public void singleAttack(final DungeonCharacter theTarget) {
         if (!isAlive() || theTarget == null || !theTarget.isAlive()) {
             return;
         }
 
         if (rng.nextDouble() < myHitChance) {
-            int dmg = myMinDamage + rng.nextInt(myMaxDamage - myMinDamage + 1);
+            final int dmg = myMinDamage + rng.nextInt(myMaxDamage - myMinDamage + 1);
             myLastDamageDealt = dmg;
             theTarget.takeDamage(dmg);
         } else {
@@ -170,7 +170,7 @@ public abstract class DungeonCharacter {
      *
      * @param damage the amount of damage taken
      */
-    public void takeDamage(int damage) {
+    public void takeDamage(final int damage) {
         myHP -= damage;
         if (myHP <= 0) {
             myHP = 0;
@@ -183,7 +183,7 @@ public abstract class DungeonCharacter {
      *
      * @param damage the amount of damage taken
      */
-    public void takeBleedDamage(int damage) {
+    public void takeBleedDamage(final int damage) {
         myHP -= damage;
         if (myHP <= 0) {
             myHP = 0;
@@ -191,7 +191,7 @@ public abstract class DungeonCharacter {
         System.out.println(myCharName + " bleeds " + damage + " damage! (HP: " + myHP + ")");
     }
 
-    public void takeTickDamage(int theDamage, int theDuration) {
+    public void takeTickDamage(final int theDamage, final int theDuration) {
         myTickDamage = Math.max(myTickDamage, theDamage);
         myTickTurnsRemaining = Math.max(myTickTurnsRemaining, theDuration);
     }
@@ -203,7 +203,7 @@ public abstract class DungeonCharacter {
         }
     }
 
-    public void applyHeal(int theHealAmount) {
+    public void applyHeal(final int theHealAmount) {
         myHP += theHealAmount;
         if (myHP >= myMaxHP) {
             myHP = myMaxHP;
@@ -236,14 +236,14 @@ public abstract class DungeonCharacter {
     }
 
     /** Sets the character's current hit points */
-    public void setHP(int theHP) {
+    public void setHP(final int theHP) {
         myHP = theHP;
     }
 
     /** @return the character's max hit points */
     public int getMaxHP() { return myMaxHP; }
 
-    public void setAttackLogger(Consumer<String> logger) {
+    public void setAttackLogger(final Consumer<String> logger) {
         myAttackLogger = logger;
     }
 }

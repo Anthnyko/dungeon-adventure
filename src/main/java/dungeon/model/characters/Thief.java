@@ -22,7 +22,7 @@ public class Thief extends Hero {
      * @param theHealingPotions the number of healing potions
      * @param theVisionPotions the number of healing potions
      */
-    public Thief(String theName, int theHealingPotions, int theVisionPotions) {
+    public Thief(final String theName, final int theHealingPotions, final int theVisionPotions) {
         super(theName,
                 85,   // HP
                 85,   // max HP
@@ -43,7 +43,7 @@ public class Thief extends Hero {
      * @param theTarget the target of the special skill
      */
     @Override
-    public void specialSkill(DungeonCharacter theTarget) {
+    public void specialSkill(final DungeonCharacter theTarget) {
         surpriseAttack(theTarget);
     }
 
@@ -54,7 +54,7 @@ public class Thief extends Hero {
      * @param theTarget the target of the ultimate attack
      */
     @Override
-    public void bigCooldown(DungeonCharacter theTarget) {
+    public void bigCooldown(final DungeonCharacter theTarget) {
         garrote(theTarget);
     }
 
@@ -96,7 +96,7 @@ public class Thief extends Hero {
      *
      * @param theTarget the target of the surprise attack
      */
-    private void surpriseAttack(DungeonCharacter theTarget) {
+    private void surpriseAttack(final DungeonCharacter theTarget) {
         if (theTarget == null || !theTarget.isAlive()) {
             return;
         }
@@ -126,14 +126,14 @@ public class Thief extends Hero {
      *
      * @param theTarget the target of the garrote attack
      */
-    private void garrote(DungeonCharacter theTarget) {
+    private void garrote(final DungeonCharacter theTarget) {
         if (theTarget == null || !theTarget.isAlive()) {
             return;
         }
 
         System.out.println(getCharName() + " uses Garrote!");
         theTarget.takeDamage(45);
-        if (theTarget instanceof Monster monster) {
+        if (theTarget instanceof final Monster monster) {
             monster.applyBleed(4);
         }
 

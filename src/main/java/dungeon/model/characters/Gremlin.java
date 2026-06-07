@@ -37,7 +37,7 @@ public class Gremlin extends Monster {
      * @param rs the ResultSet from the Monsters table containing this Gremlin's stats
      * @throws SQLException if any of the expected columns are missing or cannot be read from the ResultSet
      */
-    public Gremlin(ResultSet rs) throws SQLException {
+    public Gremlin(final ResultSet rs) throws SQLException {
         super(rs.getString("Name"),
                 rs.getInt("HP"),
                 rs.getInt("MaxHP"),

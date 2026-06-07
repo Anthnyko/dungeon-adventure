@@ -36,7 +36,7 @@ public class Skeleton extends Monster {
      * @param rs the ResultSet from the Monsters table containing this Skeleton's stats
      * @throws SQLException if any of the expected columns are missing or cannot be read from the ResultSet
      */
-    public Skeleton(ResultSet rs) throws SQLException {
+    public Skeleton(final ResultSet rs) throws SQLException {
         super(rs.getString("Name"),
                 rs.getInt("HP"),
                 rs.getInt("MaxHP"),

@@ -1,10 +1,15 @@
 package dungeon.model;
 
-import dungeon.model.characters.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import dungeon.model.characters.Gremlin;
+import dungeon.model.characters.Monster;
+import dungeon.model.characters.Ogre;
+import dungeon.model.characters.PillarGuardian;
+import dungeon.model.characters.Skeleton;
 
 /**
  * Responsible for creating Monster instances using data retrieved from the
@@ -30,7 +35,7 @@ public class MonsterGenerator {
     public MonsterGenerator() {
         try {
             myConn = DriverManager.getConnection("jdbc:sqlite:MonsterDatabase.db");
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -44,9 +49,9 @@ public class MonsterGenerator {
      * @throws IllegalArgumentException if the given type does not match any known monster
      * @throws RuntimeException if the database query fails
      */
-    public Monster createMonster(String type) {
+    public Monster createMonster(final String type) {
         try {
-            ResultSet rs = myConn.createStatement().executeQuery("SELECT * FROM Monsters WHERE Name='" + type + "'");
+            final ResultSet rs = myConn.createStatement().executeQuery("SELECT * FROM Monsters WHERE Name='" + type + "'");
             return switch (type) {
                 case "Ogre" -> new Ogre(rs);
                 case "Gremlin" -> new Gremlin(rs);
@@ -54,7 +59,7 @@ public class MonsterGenerator {
                 case "Pillar Guardian" -> new PillarGuardian(rs);
                 default -> throw new IllegalArgumentException("Unknown monster type");
             };
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             throw new RuntimeException(e);
         }
     }

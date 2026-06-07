@@ -35,7 +35,7 @@ public class InstanceCapture {
      * 
      * @return a GameState object containing all necessary game information
      */
-    public static GameState captureGameState(Hero theHero, Dungeon theDungeon) {
+    public static GameState captureGameState(final Hero theHero, final Dungeon theDungeon) {
         final GameState state = new GameState();
         
         // Dungeon info
@@ -73,7 +73,7 @@ public class InstanceCapture {
      * 
      * Format per room: "N|S|E|W|Pillar|Monster|Items|Revealed|Events"
      */
-    private static String[][] captureRoomData(Dungeon theDungeon) {
+    private static String[][] captureRoomData(final Dungeon theDungeon) {
         final int width = theDungeon.getDungeonWidth();
         final int height = theDungeon.getDungeonHeight();
         final String[][] roomData = new String[height][width];

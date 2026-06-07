@@ -35,7 +35,7 @@ public class RestoreSave {
         public final Dungeon myDungeon;
         public final Hero myHero;
 
-        public RestoreResult(Dungeon theDungeon, Hero theHero) {
+        public RestoreResult(final Dungeon theDungeon, final Hero theHero) {
             myDungeon = theDungeon;
             myHero = theHero;
         }
@@ -48,10 +48,10 @@ public class RestoreSave {
      */
     public RestoreResult restoreGameState(final GameState state) {
         // Initialize dungeon with saved dimensions
-        Dungeon myDungeon = new Dungeon(state.myDungeonWidth, state.myDungeonHeight, state.myDungeonName, true);
+        final Dungeon myDungeon = new Dungeon(state.myDungeonWidth, state.myDungeonHeight, state.myDungeonName, true);
         
         // Recreate hero from saved class
-        Hero myHero = switch (state.myHeroClass) {
+        final Hero myHero = switch (state.myHeroClass) {
             case "Warrior" -> new Warrior(state.myHeroName, state.myHealingPotions, state.myVisionPotions);
             case "Priest" -> new Priest(state.myHeroName, state.myHealingPotions, state.myVisionPotions);
             case "Thief" -> new Thief(state.myHeroName, state.myHealingPotions, state.myVisionPotions);
@@ -84,7 +84,7 @@ public class RestoreSave {
      * 
      * @param roomData the 2D array of serialized room strings
      */
-    private void restoreRoomData(final String[][] roomData, Dungeon myDungeon) {
+    private void restoreRoomData(final String[][] roomData, final Dungeon myDungeon) {
         final MonsterGenerator monsterGen = new MonsterGenerator();
         
         for (int row = 0; row < roomData.length; row++) {

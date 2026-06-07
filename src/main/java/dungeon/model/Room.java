@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import dungeon.model.RoomEvent.*;
+import dungeon.model.RoomEvent.AlarmEvent;
+import dungeon.model.RoomEvent.FountainEvent;
+import dungeon.model.RoomEvent.PitEvent;
+import dungeon.model.RoomEvent.PoisonEvent;
+import dungeon.model.RoomEvent.RoomEvent;
 import dungeon.model.characters.Hero;
 import dungeon.model.characters.Monster;
 import dungeon.model.items.HealingPotion;
@@ -85,7 +89,7 @@ public class Room {
     /**
      * Constructs a new room with no items.
      */
-    public Room(boolean isEmpty) {
+    public Room(final boolean isEmpty) {
         myRandom = new Random();
         myItems = new ArrayList<Item>();
         myEntrance = false;
@@ -202,7 +206,7 @@ public class Room {
      * @return true if the room has a pit
      */
     public boolean hasPit() {
-        for (RoomEvent event : myEvents) {
+        for (final RoomEvent event : myEvents) {
             if (event instanceof PitEvent) return true;
         }
         return false;
@@ -212,7 +216,7 @@ public class Room {
      * @return true if the room has a pit
      */
     public boolean hasPoison() {
-        for (RoomEvent event : myEvents) {
+        for (final RoomEvent event : myEvents) {
             if (event instanceof PoisonEvent) return true;
         }
         return false;
@@ -222,7 +226,7 @@ public class Room {
      * @return true if the room has an alarm
      */
     public boolean hasAlarm() {
-        for (RoomEvent event : myEvents) {
+        for (final RoomEvent event : myEvents) {
             if (event instanceof AlarmEvent) return true;
         }
         return false;
@@ -232,7 +236,7 @@ public class Room {
      * @return true if the room has a fountain
      */
     public boolean hasFountain() {
-        for (RoomEvent event : myEvents) {
+        for (final RoomEvent event : myEvents) {
             if (event instanceof FountainEvent) return true;
         }
         return false;
@@ -335,7 +339,7 @@ public class Room {
      * @return a string of the event type triggered ("PIT", "FOUNTAIN")
      */
     public String triggerEvent(final String theEventType, final Hero theHero, final Dungeon theDungeon) {
-        for (RoomEvent event : new ArrayList<>(myEvents)) {
+        for (final RoomEvent event : new ArrayList<>(myEvents)) {
             if (event instanceof PitEvent && theEventType.equals("PIT")) {
                 myEvents.remove(event);
                 return event.trigger(theHero, theDungeon);

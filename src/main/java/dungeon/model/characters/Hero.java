@@ -56,8 +56,8 @@ public abstract class Hero extends DungeonCharacter {
      * @param theBlockChance   probability of dodging an incoming attack
      */
 
-    public Hero(String theName, int theHP, int theMaxHP, int theMinDamage, int theMaxDamage, int theAttackSpeed,
-                double theHitChance, double theBlockChance, int theHealingPotions, int theVisionPotions) {
+    public Hero(final String theName, final int theHP, final int theMaxHP, final int theMinDamage, final int theMaxDamage, final int theAttackSpeed,
+                final double theHitChance, final double theBlockChance, final int theHealingPotions, final int theVisionPotions) {
         super(theName, theHP, theMaxHP,theMinDamage, theMaxDamage, theAttackSpeed, theHitChance);
         myHealingPotions = theHealingPotions;
         myVisionPotions = theVisionPotions;
@@ -93,7 +93,7 @@ public abstract class Hero extends DungeonCharacter {
         myHealingPotions--;
 
         if (healPotionValue + myHP > myMaxHP) {
-            int healValue = myMaxHP - myHP;
+            final int healValue = myMaxHP - myHP;
             myHP = myMaxHP;
             System.out.println("You used healing potion! (+" + healValue +" HP)");
             return healValue;
@@ -107,7 +107,7 @@ public abstract class Hero extends DungeonCharacter {
     /**
      * Uses a vision potion if available.
      */
-    public void useVisionPotion(Dungeon theDungeon) {
+    public void useVisionPotion(final Dungeon theDungeon) {
         if (myVisionPotions <= 0) {
             System.out.println("You have no vision potions!");
             return;

@@ -55,9 +55,9 @@ public abstract class Monster extends DungeonCharacter {
      * @param theMinHeal     the minimum amount of HP restored when healing
      * @param theMaxHeal     the maximum amount of HP restored when healing
      */
-    public Monster(String theName, int theHP, int theMaxHP,int theMinDamage, int theMaxDamage,
-                   int theAttackSpeed, double theHitChance,
-                   double theHealChance, int theMinHeal, int theMaxHeal) {
+    public Monster(final String theName, final int theHP, final int theMaxHP,final int theMinDamage, final int theMaxDamage,
+                   final int theAttackSpeed, final double theHitChance,
+                   final double theHealChance, final int theMinHeal, final int theMaxHeal) {
 
         super(theName, theHP, theMaxHP, theMinDamage, theMaxDamage, theAttackSpeed, theHitChance);
 
@@ -69,8 +69,8 @@ public abstract class Monster extends DungeonCharacter {
     }
 
     @Override
-    protected boolean beforeHit(DungeonCharacter theTarget) {
-        if (theTarget instanceof Hero hero) {
+    protected boolean beforeHit(final DungeonCharacter theTarget) {
+        if (theTarget instanceof final Hero hero) {
 
             // Block roll
             if (rng.nextDouble() < hero.getBlockChance()) {
