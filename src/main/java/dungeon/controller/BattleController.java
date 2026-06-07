@@ -119,9 +119,9 @@ public class BattleController {
      */
     public String getCombatSummary() {
         if (!myHero.isAlive()) {
-            return myHero.getCharName() + " is defeated by " + myDungeonView.displayMonsterName(myMonster);
+            return myHero.getCharName() + " is defeated by " + myMonster.getCharName();
         }
-        return myHero.getCharName() + " defeated " + myDungeonView.displayMonsterName(myMonster);
+        return myHero.getCharName() + " defeated " + myMonster.getCharName();
     }
 
     /**
