@@ -18,7 +18,7 @@ import java.util.*;
  * Keeping track of the hero
  *
  * @author Ibrahim Mohamud
- * @version 1.1
+ * @version 1.3
  */
 public class Dungeon {
     /** The 2D grid of rooms that make up the dungeon */
@@ -26,16 +26,19 @@ public class Dungeon {
 
     /** The number of columns in the dungeon */
     private final int myWidth;
+
     /** The number of rows in the dungeon */
     private final int myHeight;
 
     /** The row index of the entrance room */
     private int myEntranceRow;
+
     /** The column index of the entrance room */
     private int myEntranceCol;
 
     /** The row index of the room the hero is in */
     private int myHeroRow;
+
     /** The column index of the room the hero is in */
     private int myHeroCol;
 
@@ -44,6 +47,7 @@ public class Dungeon {
 
     /** the row of the alerted monster for the alarm event, -1 if no monster is alerted */
     private int myAlertedMonsterRow = -1;
+
     /** the column of the alerted monster for the alarm event, -1 if no monster is alerted */
     private int myAlertedMonsterCol = -1;
 
@@ -83,6 +87,12 @@ public class Dungeon {
         mazeGeneration();
     }
 
+    /**
+     * Generates a valid dungeon maze by repeatedly initializing rooms,
+     * placing the entrance and exit, and adding random paths until a valid
+     * traversable maze is made. Then places all dungeon contents such as events,
+     * monsters, and pillars.
+     */
     private void mazeGeneration() {
         do {
             initializeRooms();
@@ -116,6 +126,9 @@ public class Dungeon {
         placeMonsters();
     }
 
+    /**
+     * Initializes the 2D grid of rooms with empty rooms.
+     */
     private void initializeRooms() {
         myRooms = new Room[myHeight][myWidth];
         for (int row = 0; row < myHeight; row++) {
@@ -125,6 +138,10 @@ public class Dungeon {
         }
     }
 
+    /**
+     * Randomly connects rooms with doors in the east and south directions
+     * to create a maze of paths.
+     */
     private void addRandomPaths() {
         for (int row = 0; row < myHeight; row++) {
             for (int col = 0; col < myWidth; col++) {
@@ -138,6 +155,12 @@ public class Dungeon {
         }
     }
 
+    /**
+     * Checks if the maze is valid by verifying that every room is reachable
+     * from the entrance using BFS traversal.
+     *
+     * @return true if all rooms are reachable, false otherwise
+     */
     private boolean isValidMaze() {
         boolean[][] visited = new boolean[myHeight][myWidth];
         Queue<int[]> queue = new LinkedList<>();
@@ -168,6 +191,9 @@ public class Dungeon {
         return true;
     }
 
+    /**
+     * Places the four pillars of OO (A, E, I, P) in the dungeon.
+     */
     private void placePillars() {
         char[] pillars = {'A', 'E', 'I', 'P'};
         final int minDistance = (myWidth + myHeight) / 4; //pillars minimum distance from entrance based on dungeon size
@@ -184,7 +210,16 @@ public class Dungeon {
             myRooms[row][col].setPillar(pillar);
         }
     }
-    //private helper for placePillars()
+
+    /**
+     * Checks if the room at the given position has an adjacent room with a pillar
+     * connected through an open door.
+     * Helper for placePillars().
+     *
+     * @param theRow the row of the room to check
+     * @param theCol the column of the room to check
+     * @return true if an adjacent connected room has a pillar, false otherwise
+     */
     private boolean hasAdjacentPillar(int theRow, int theCol) {
         Room room = myRooms[theRow][theCol];
         return (isInBounds(theRow - 1, theCol) && myRooms[theRow - 1][theCol].hasPillar() && room.hasNorthDoor()) || // north
@@ -193,6 +228,9 @@ public class Dungeon {
                 (isInBounds(theRow, theCol - 1) && myRooms[theRow][theCol - 1].hasPillar() && room.hasWestDoor());   // west
     }
 
+    /**
+     * Randomly places pit trap events throughout the dungeon.
+     */
     private void placePits() {
         for (int row = 0; row < myHeight; row++) {
             for (int col = 0; col < myWidth; col++) {
@@ -207,6 +245,9 @@ public class Dungeon {
         }
     }
 
+    /**
+     * Randomly places poison trap events throughout the dungeon.
+     */
     private void placePoisons() {
         for (int row = 0; row < myHeight; row++) {
             for (int col = 0; col < myWidth; col++) {
@@ -221,6 +262,9 @@ public class Dungeon {
         }
     }
 
+    /**
+     * Randomly places alarm trap events throughout the dungeon.
+     */
     private void placeAlarms() {
         for (int row = 0; row < myHeight; row++) {
             for (int col = 0; col < myWidth; col++) {
@@ -235,8 +279,10 @@ public class Dungeon {
         }
     }
 
-
-
+    /**
+     * Places fountain events throughout the dungeon based on dungeon size.
+     * Approximately one fountain is placed per 10 rooms.
+     */
     private void placeFountains() {
         int count = (myWidth * myHeight) / 10; // around 1 fountain per 10 rooms
 
@@ -251,6 +297,12 @@ public class Dungeon {
         }
     }
 
+    /**
+     * Places monsters throughout the dungeon up to the maximum monster count
+     * which is dependent on difficulty.
+     * Pillar rooms receive a Pillar Guardian monster.
+     * Regular rooms have a 30% chance to receive a random monster.
+     */
     private void placeMonsters() {
         int monstersPlaced = 0;
 
@@ -275,6 +327,15 @@ public class Dungeon {
         }
     }
 
+    /**
+     * Returns the type of monster to spawn at the given position.
+     * Rooms close to the entrance only spawn Gremlins or Skeletons.
+     * Rooms far from the entrance can also spawn Ogres.
+     *
+     * @param theRow the row of the room
+     * @param theCol the column of the room
+     * @return the name of the monster type to spawn
+     */
     private String getRandomMonsterType(int theRow, int theCol) {
         int entranceDistance = Math.abs(theRow - myEntranceRow) + Math.abs(theCol - myEntranceCol);
         int minDistance = (myWidth + myHeight) / 4; //ogre minimum distance from entrance based on dungeon size
@@ -288,27 +349,55 @@ public class Dungeon {
         return types[myRandom.nextInt(types.length)];
     }
 
+    /**
+     * Checks if the room at the given position is a special room.
+     * Special rooms include the entrance, exit, pillar rooms, and fountain rooms.
+     * This is to check for these rooms so that certain content should not be placed
+     * in them.
+     *
+     * @param theRow the row of the room
+     * @param theCol the column of the room
+     * @return true if the room is a special room, false otherwise
+     */
     private boolean isSpecialRoom(int theRow, int theCol) {
         Room room = myRooms[theRow][theCol];
         return room.isEntrance() || room.isExit() || room.hasPillar() || room.hasFountain();
     }
 
-    // to prevent door mismatches between rooms
+    /**
+     * Connects the room at the given position to the room directly south of it
+     * by setting their respective doors.
+     *
+     * @param theRow the row of the northern room
+     * @param theCol the column of the northern room
+     */
     private void connectSouth(int theRow, int theCol) {
         if (theRow >= myHeight - 1) return;
         myRooms[theRow][theCol].setSouthDoor(true);
         myRooms[theRow+1][theCol].setNorthDoor(true);
     }
+
+    /**
+     * Connects the room at the given position to the room directly east of it
+     * by setting their respective doors.
+     *
+     * @param theRow the row of the western room
+     * @param theCol the column of the western room
+     */
     private void connectEast(int theRow, int theCol) {
         if (theCol >= myWidth - 1) return;
         myRooms[theRow][theCol].setEastDoor(true);
         myRooms[theRow][theCol+1].setWestDoor(true);
     }
 
+    /**
+     * Spawns a random monster in the hero's current room.
+     * Used by fountain effects that have a chance to summon a monster.
+     */
     public void spawnMonsterAtHero() {
         if (!myRooms[myHeroRow][myHeroCol].hasMonster()) {
             myRooms[myHeroRow][myHeroCol].setMonster(
-                    myMonsterGenerator.createMonster(getRandomMonsterType(myHeroRow, myHeroCol)));;
+                    myMonsterGenerator.createMonster(getRandomMonsterType(myHeroRow, myHeroCol)));
         }
     }
 
@@ -343,6 +432,10 @@ public class Dungeon {
         return true;
     }
 
+    /**
+     * Teleports the hero to a random room in the dungeon.
+     * The hero cannot be teleported to their current room.
+     */
     public void teleportHeroRandom() {
         int row;
         int col;
@@ -373,16 +466,48 @@ public class Dungeon {
         return validDirections;
     }
 
+    /**
+     * Triggers the alarm event by locking onto the nearest non-pillar monster
+     * and moving it toward the hero each turn.
+     * If no monster exists one will be spawned in an adjacent room.
+     */
     public void triggerAlarm() {
         if (myAlertedMonsterRow == -1) {
             int[] nearest = findNearestMonster();
             if (nearest != null) {
                 myAlertedMonsterRow = nearest[0];
                 myAlertedMonsterCol = nearest[1];
+            } else {
+                // no monster was found, spawn one in an adjacent room
+                int[][] neighbors = {
+                        {myHeroRow - 1, myHeroCol},
+                        {myHeroRow + 1, myHeroCol},
+                        {myHeroRow, myHeroCol + 1},
+                        {myHeroRow, myHeroCol - 1},
+                };
+                for (int[] neighbor : neighbors) {
+                    int nr = neighbor[0];
+                    int nc = neighbor[1];
+                    if (isInBounds(nr, nc) && !myRooms[nr][nc].hasMonster()
+                            && !myRooms[nr][nc].isEntrance() && !myRooms[nr][nc].isExit()
+                            && !myRooms[nr][nc].hasPillar()) {
+                        myRooms[nr][nc].setMonster(
+                                myMonsterGenerator.createMonster(getRandomMonsterType(nr, nc))
+                        );
+                        myAlertedMonsterRow = nr;
+                        myAlertedMonsterCol = nc;
+                        break;
+                    }
+                }
             }
         }
     }
 
+    /**
+     * Reveals the location of a random pillar on the dungeon map
+     * that has not yet been collected by the hero.
+     * Does nothing if no pillars remain.
+     */
     public void revealRandomPillar() {
         List<int[]> pillarRooms = new ArrayList<>();
         for (int row = 0; row < myHeight; row++) {
@@ -398,6 +523,13 @@ public class Dungeon {
         }
     }
 
+    /**
+     * Find the nearest non-pillar monster to the hero.
+     * Helper for triggerAlarm().
+     *
+     * @return the row and column of the nearest monster as an int array
+     *         or null if no monsters exist.
+     */
     private int[] findNearestMonster() {
         int[] nearest = null;
         int shortestDistance = Integer.MAX_VALUE;
@@ -416,6 +548,45 @@ public class Dungeon {
         return nearest;
     }
 
+    /**
+     * Moves the alerted monster one step closer to the hero each turn
+     * using BFS to pathfind through open doors.
+     */
+    public void moveAlarmMonsterCloser() {
+        if (myAlertedMonsterRow == -1) return;
+
+        // don't move if the monster is already in the hero's room
+        if (myAlertedMonsterRow == myHeroRow &&  myAlertedMonsterCol == myHeroCol) return;
+
+        // check if monster was defeated
+        if (!myRooms[myAlertedMonsterRow][myAlertedMonsterCol].hasMonster()) {
+            myAlertedMonsterRow = -1;
+            myAlertedMonsterCol = -1;
+            return;
+        }
+
+        int[] nextStep = getNextStepTowardHero(myAlertedMonsterRow, myAlertedMonsterCol);
+        if (nextStep == null) return;
+
+        if (!myRooms[nextStep[0]][nextStep[1]].hasMonster()) {
+            Monster monster = myRooms[myAlertedMonsterRow][myAlertedMonsterCol].getMonster();
+            myRooms[myAlertedMonsterRow][myAlertedMonsterCol].removeMonster();
+            myRooms[nextStep[0]][nextStep[1]].setMonster(monster);
+            myAlertedMonsterRow = nextStep[0];
+            myAlertedMonsterCol = nextStep[1];
+        }
+    }
+
+    /**
+     * Uses BFS to find the next step the alarm monster should take toward the hero
+     * following only rooms connected by open doors.
+     * Helper for moveAlarmMonsterCloser().
+     *
+     * @param theMonsterRow the row of the monster
+     * @param theMonsterCol the column of the monster
+     * @return the next step toward the hero as an int array
+     *         or null if no path exists
+     */
     private int[] getNextStepTowardHero(final int theMonsterRow, final int theMonsterCol) {
         if (theMonsterRow == myHeroRow && theMonsterCol == myHeroCol) return null;
 
@@ -472,31 +643,6 @@ public class Dungeon {
         return null;
     }
 
-    public void moveAlarmMonsterCloser() {
-        if (myAlertedMonsterRow == -1) return;
-
-        // don't move if the monster is already in the hero's room
-        if (myAlertedMonsterRow == myHeroRow &&  myAlertedMonsterCol == myHeroCol) return;
-
-        // check if monster was defeated
-        if (!myRooms[myAlertedMonsterRow][myAlertedMonsterCol].hasMonster()) {
-            myAlertedMonsterRow = -1;
-            myAlertedMonsterCol = -1;
-            return;
-        }
-
-        int[] nextStep = getNextStepTowardHero(myAlertedMonsterRow, myAlertedMonsterCol);
-        if (nextStep == null) return;
-
-        if (!myRooms[nextStep[0]][nextStep[1]].hasMonster()) {
-            Monster monster = myRooms[myAlertedMonsterRow][myAlertedMonsterCol].getMonster();
-            myRooms[myAlertedMonsterRow][myAlertedMonsterCol].removeMonster();
-            myRooms[nextStep[0]][nextStep[1]].setMonster(monster);
-            myAlertedMonsterRow = nextStep[0];
-            myAlertedMonsterCol = nextStep[1];
-        }
-    }
-
     /**
      * Returns the room the hero is currently in.
      *
@@ -546,7 +692,14 @@ public class Dungeon {
             }
         }
     }
-    //helper for getSurroundingRooms()
+
+    /**
+     * returns whether the given position is within the bounds of the dungeon.
+     *
+     * @param theRow the row to check
+     * @param theCol the column to check
+     * @return true if the position is within bounds, false otherwise
+     */
     private boolean isInBounds(int theRow, int theCol) {
         return theRow >= 0 && theRow < myHeight && theCol >= 0 && theCol < myWidth;
     }
@@ -624,6 +777,11 @@ public class Dungeon {
         return sb.toString();
     }
 
+    /**
+     * Returns the name of the dungeon.
+     *
+     * @return the dungeon name
+     */
     public String getMyName() {
         return myName;
     }
