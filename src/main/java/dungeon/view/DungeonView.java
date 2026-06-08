@@ -26,7 +26,6 @@ public class DungeonView {
     private static final String TEXT_BLUE           = "\u001B[34m";
     private static final String TEXT_PINK           = "\u001B[35m";
     private static final String TEXT_PURPLE         = "\u001B[36m";
-    private static final String TEXT_BLACK          = "\u001B[30m";
     private static final String TEXT_DIM            = "\u001B[2m";
 
     private static final String SEPERATOR_EQUALS        = "==================================================";
