@@ -332,7 +332,6 @@ public class Dungeon {
 
         for (int row = 0; row < myHeight; row++) {
             for (int col = 0; col < myWidth; col++) {
-                if (monstersPlaced >= myMaxMonsters) return;
 
                 final Room room = myRooms[row][col];
 
@@ -343,7 +342,7 @@ public class Dungeon {
                     continue;
                 }
 
-                if (myRandom.nextInt(100) < 30) { // 30% chance to spawn monster in room
+                if (monstersPlaced < myMaxMonsters && myRandom.nextInt(100) < 30) { // 30% chance to spawn monster in room
                     room.setMonster(myMonsterGenerator.createMonster(getRandomMonsterType(row, col)));
                     monstersPlaced++;
                 }
@@ -676,34 +675,94 @@ public class Dungeon {
         return myRooms[myHeroRow][myHeroCol];
     }
 
+    /**
+     * Returns the row index of the hero's current position.
+     *
+     * @return the hero's row index
+     */
     public int getHeroRow() {
         return myHeroRow;
     }
 
+    /**
+     * Returns the column index of the hero's current position.
+     *
+     * @return the hero's column index
+     */
     public int getHeroCol() {
         return myHeroCol;
     }
 
+    /**
+     * Returns the row index of the alerted monster's current position.
+     * Returns -1 if no monster is currently alerted.
+     *
+     * @return the alerted monster's row index, or -1 if none
+     */
+    public int getAlertedMonsterRow() {
+        return myAlertedMonsterRow;
+    }
+
+    /**
+     * Returns the column index of the alerted monster's current position.
+     * Returns -1 if no monster is currently alerted.
+     *
+     * @return the alerted monster's column index, or -1 if none
+     */
+    public int getAlertedMonsterCol() {
+        return myAlertedMonsterCol;
+    }
+
+    /**
+     * Returns the row index of the dungeon entrance.
+     *
+     * @return the entrance row index
+     */
     public int getMyEntranceRow() {
         return myEntranceRow;
     }
 
+    /**
+     * Returns the column index of the dungeon entrance.
+     *
+     * @return the entrance column index
+     */
     public int getMyEntranceCol() {
         return myEntranceCol;
     }
 
+    /**
+     * Returns the row index of the dungeon exit.
+     *
+     * @return the exit row index
+     */
     public int getMyExitRow() {
         return myExitRow;
     }
 
+    /**
+     * Returns the column index of the dungeon exit.
+     *
+     * @return the exit column index
+     */
     public int getMyExitCol() {
         return myExitCol;
     }
 
+    /**
+     * Returns the number of columns in the dungeon.
+     *
+     * @return the dungeon width
+     */
     public int getDungeonWidth() {
         return myWidth;
     }
 
+    /**
+     * Returns the number of rows in the dungeon.
+     *
+     * @return the dungeon height
+     */
     public int getDungeonHeight() {
         return myHeight;
     }
@@ -867,4 +926,5 @@ public class Dungeon {
         myExitRow = theRow;
         myExitCol = theCol;
     }
+
 }

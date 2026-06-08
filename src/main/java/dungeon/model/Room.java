@@ -403,6 +403,7 @@ public class Room {
 
         int count = 0;
         if (hasPit()) count++;
+        if (hasAlarm()) count++;
         if (hasMonster()) count++;
         if (hasFountain()) count++;
         if (hasPoison()) count++;

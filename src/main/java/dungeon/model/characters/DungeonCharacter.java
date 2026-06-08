@@ -221,6 +221,12 @@ public abstract class DungeonCharacter {
         return myLastDamageDealt;
     }
 
+    /** @return number of turns remaining for the damage over time effect */
+    public int getTickTurnsRemaining() {
+        return myTickTurnsRemaining;
+    }
+
+    /** @return the last heal value */
     public int getLastHeal() {
         return myLastHeal;
     }
