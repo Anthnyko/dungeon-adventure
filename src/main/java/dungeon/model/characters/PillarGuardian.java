@@ -30,7 +30,7 @@ public class PillarGuardian extends Monster {
      * @param rs the ResultSet from the Monsters table containing this Pillar Guardian's stats
      * @throws SQLException if any of the expected columns are missing or cannot be read from the ResultSet
      */
-    public PillarGuardian(ResultSet rs) throws SQLException {
+    public PillarGuardian(final ResultSet rs) throws SQLException {
         super(rs.getString("Name"),
                 rs.getInt("HP"),
                 rs.getInt("MaxHP"),

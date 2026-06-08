@@ -38,7 +38,7 @@ public class Ogre extends Monster {
      * @param rs the ResultSet from the Monsters table containing this Ogre's stats
      * @throws SQLException if any of the expected columns are missing or cannot be read from the ResultSet
      */
-    public Ogre(ResultSet rs) throws SQLException {
+    public Ogre(final ResultSet rs) throws SQLException {
         super(rs.getString("Name"),
                 rs.getInt("HP"),
                 rs.getInt("MaxHP"),

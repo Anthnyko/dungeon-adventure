@@ -314,7 +314,7 @@ public class DungeonView {
      * Displays rooms in the dungeon for the player to see.
      * Rooms unvisited by the player will be displayed in '?'.
      * 
-     * @param theDungeon
+     * @param theDungeon dungeon to be displayed
      */
     public final void displayDungeon(final Dungeon theDungeon) {
         System.out.println(
@@ -483,7 +483,7 @@ public class DungeonView {
     /**
      * Displays all rooms in the dungeon for the user to see.
      * 
-     * @param theDungeon
+     * @param theDungeon dungeon to be displayed
      */
     public final void displayFullDungeon(final Dungeon theDungeon) {
         System.out.println(

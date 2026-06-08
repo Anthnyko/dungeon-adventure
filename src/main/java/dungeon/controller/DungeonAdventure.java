@@ -63,7 +63,7 @@ public final class DungeonAdventure {
      * Starts the game by initializing the game setup and running the main game loop.
      * Orchestrates the overall flow of the dungeon adventure game.
      */
-    private final void createGame() {
+    private void createGame() {
         gameSetup();
         gameLoop();
     }
@@ -72,7 +72,7 @@ public final class DungeonAdventure {
      * Initializes the game setup including hero creation, dungeon initialization,
      * and any necessary game state preparation.
      */
-    private final void gameSetup() {
+    private void gameSetup() {
         dungeonDifficultyChoice();
         setMyHero(classChoice(), nameChoice());
         myDungeonView.displayIntro(myDungeon);
@@ -82,7 +82,7 @@ public final class DungeonAdventure {
      * Displays the main menu and handles player navigation through menu options.
      * Allows the player to start a new game, load a saved game, view help, view about info, or quit.
      */
-    private final void mainMenu() {
+    private void mainMenu() {
         int playerChoice = -1;
         myDungeonView.displayMainMenu();
         while (playerChoice < 1 || playerChoice > 3) {
@@ -125,7 +125,7 @@ public final class DungeonAdventure {
      * Executes the main game loop, processing player turns and game events until
      * the game reaches a terminal state (win or loss).
      */
-    private final void gameLoop() {
+    private void gameLoop() {
 
         myActiveGame = true;
         GameExitReason exitReason = null;
@@ -155,10 +155,10 @@ public final class DungeonAdventure {
             myDungeonView.displayPlayerStatus(myHero);
             myDungeonView.displayInGameMenu();
 
-            String userChoice = getValidPlayerChoice();
+            final String userChoice = getValidPlayerChoice();
             exitReason = handlePlayerChoice(userChoice);
 
-            if(checkWinCondidtion() && exitReason == null) {
+            if(checkWinCondition() && exitReason == null) {
                 exitReason = GameExitReason.WIN_CONDITION_MET;
             }
         }
@@ -171,7 +171,7 @@ public final class DungeonAdventure {
      * 
      * @return the player's hero class selection (1-3)
      */
-    private final int classChoice() {
+    private int classChoice() {
         // Validate player class selection
         int playerChoice = -1;
         myDungeonView.promptHeroSelection();
@@ -204,7 +204,7 @@ public final class DungeonAdventure {
      * 
      * @return the player's chosen hero name
      */
-    private final String nameChoice() {
+    private String nameChoice() {
          // Set the player's name with a max 15 characters
         String heroName;
         boolean validName = false;
@@ -238,7 +238,7 @@ public final class DungeonAdventure {
      * @param theHeroName the name given to the hero
      * @throws IllegalArgumentException if thePlayerChoice is not 1, 2, or 3
      */
-    public void setMyHero(int thePlayerChoice, String theHeroName) {
+    private void setMyHero(final int thePlayerChoice, final String theHeroName) {
         myHero = switch (thePlayerChoice) {
             case 1 -> new Warrior(theHeroName, 3, 1);
             case 2 -> new Priest(theHeroName, 3, 1);
@@ -252,7 +252,7 @@ public final class DungeonAdventure {
      * Creates a dungeon of the appropriate size based on the selection:
      * Easy (5x5), Medium (7x7), or Hard (10x10).
      */
-    private final void dungeonDifficultyChoice() {
+    private void dungeonDifficultyChoice() {
         int playerChoice = -1;
         while (playerChoice < 1 || playerChoice > 3) {
             try {
@@ -350,7 +350,7 @@ public final class DungeonAdventure {
         }
         if (theRoom.hasFountain()) {
             myDungeonView.displayFountainInteraction();
-            String fountainEvent = theRoom.triggerEvent("FOUNTAIN", myHero, myDungeon);
+            final String fountainEvent = theRoom.triggerEvent("FOUNTAIN", myHero, myDungeon);
             switch (fountainEvent) {
                 case "FOUNTAIN_HEAL" -> myDungeonView.displayFountainHeal();
                 case "FOUNTAIN_TELEPORT" -> myDungeonView.displayFountainTeleport();
@@ -377,7 +377,7 @@ public final class DungeonAdventure {
      * 
      * @param thePlayerChoice the character representing the player's choice
      */
-    private final GameExitReason handlePlayerChoice(final String thePlayerChoice) {
+    private GameExitReason handlePlayerChoice(final String thePlayerChoice) {
 
         switch (thePlayerChoice) {
             case "W", "A", "S", "D" -> move(thePlayerChoice);
@@ -400,7 +400,7 @@ public final class DungeonAdventure {
      * Handles the player's movement within the dungeon, updating position, cooldowns,
      * and evaluating effects of the new room.
      */
-    private final void move(final String theDirection) {
+    private void move(final String theDirection) {
         myHero.tickCooldowns();
         myHero.tickDamage();
         switch (theDirection) {
@@ -419,7 +419,7 @@ public final class DungeonAdventure {
      * 
      * @param theMonster the enemy monster to engage in combat
      */
-    private final void handleCombat(final Monster theMonster, final Room theRoom) {
+    private void handleCombat(final Monster theMonster, final Room theRoom) {
         final BattleController battle = new BattleController(myHero);
         battle.startBattle(theMonster);
         if (!battle.monsterIsAlive()) {
@@ -431,7 +431,7 @@ public final class DungeonAdventure {
      * Checks if the win condition has been met (reaching the exit
      * with all 4 pillars).
      */
-    private final boolean checkWinCondidtion() {
+    private boolean checkWinCondition() {
         return myHero.getPillarCount() == 4 && myDungeon.isExitReached();
     }
 
@@ -440,7 +440,7 @@ public final class DungeonAdventure {
      * 
      * @param theExitReason true if the player won, false if the player lost
      */
-    private final void endGame(final GameExitReason theExitReason) {
+    private void endGame(final GameExitReason theExitReason) {
         switch (theExitReason) {
             case WIN_CONDITION_MET -> {
                 myDungeonView.displayWin();
@@ -465,12 +465,12 @@ public final class DungeonAdventure {
     /**
      * Closes and exits the game application.
      */
-    private final void closeGame() {
+    private void closeGame() {
         System.out.println("Closing Game...");
         System.exit(0);
     }
 
-    private final GameExitReason returnToMenu() {
+    private GameExitReason returnToMenu() {
         boolean validInput = false;
         String userChoice;
         myDungeonView.promptReturnToMenu();;
@@ -487,18 +487,17 @@ public final class DungeonAdventure {
                 );
             }           
         } while(!validInput);
-        switch (userChoice) {
-            case "Y":
+        return switch (userChoice) {
+            case "Y" -> {
                 saveGame();
-                return GameExitReason.PLAYER_QUIT;
-            case "N":
-                return null;
-            default:
-                throw new IllegalArgumentException("Invalid input: " + userChoice);
-        }
+                yield GameExitReason.PLAYER_QUIT;
+            }
+            case "N" -> null;
+            default -> throw new IllegalArgumentException("Invalid input: " + userChoice);
+        };
     }
 
-    private final void postGamePrompt() {
+    private void postGamePrompt() {
         int playerChoice = -1;
         myDungeonView.promptPostGame();
         
@@ -532,7 +531,7 @@ public final class DungeonAdventure {
     /**
      * Asks the player if they want to save the game
      */
-    private final void saveGame() {
+    private void saveGame() {
         boolean validInput = false;
         String userChoice;
         myDungeonView.promptSave();
@@ -569,7 +568,7 @@ public final class DungeonAdventure {
      * Shows all available saves with timestamps, hero names, and classes.
      * Allows the player to load a save or delete a save file.
      */
-    private final void loadMenu() {
+    private void loadMenu() {
         final List<String> saves = mySaveGameManager.listSaves();
         if (saves.isEmpty()) {
             System.out.println("No saves available.");
@@ -617,9 +616,9 @@ public final class DungeonAdventure {
      * Continues prompting until a valid save is found, then restores the game state
      * and resumes the game loop.
      */
-    private final void loadGame() {
+    private void loadGame() {
         System.out.print("> Enter save name to load: ");
-        GameState loadedState = null;
+        GameState loadedState;
         do {
             final String saveName = myScanner.nextLine().trim();
             loadedState = mySaveGameManager.loadGame(saveName);
@@ -628,13 +627,11 @@ public final class DungeonAdventure {
             }
         } while (loadedState == null);
 
-        if (loadedState != null) {
-            RestoreSave restore = new RestoreSave();
-            RestoreResult result = restore.restoreGameState(loadedState);
-            myDungeon = result.myDungeon;
-            myHero = result.myHero;
-            gameLoop();
-        }
+        final RestoreSave restore = new RestoreSave();
+        final RestoreResult result = restore.restoreGameState(loadedState);
+        myDungeon = result.myDungeon;
+        myHero = result.myHero;
+        gameLoop();
     }
 
     /**
@@ -642,9 +639,9 @@ public final class DungeonAdventure {
      * If the save is not found, displays an error message.
      * Returns to the load menu after attempting deletion.
      */
-    private final void deleteSave() {
+    private void deleteSave() {
         System.out.print("> Enter save name to delete: ");
-        boolean isDeleted = false;
+        boolean isDeleted;
         final String saveName = myScanner.nextLine().trim();    
         isDeleted = mySaveGameManager.deleteSave(saveName);    
         if (!isDeleted) {

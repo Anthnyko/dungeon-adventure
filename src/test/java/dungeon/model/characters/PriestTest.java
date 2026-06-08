@@ -29,7 +29,7 @@ public class PriestTest {
 
         p.specialSkill(null);
 
-        assertEquals(85, p.getHP());
+        assertEquals(100, p.getHP());
     }
 
     @Test

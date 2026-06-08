@@ -21,10 +21,6 @@ public class Warrior extends Hero {
     /** Maximum damage the character can deal on Crushing Blow. */
     protected final int myMaxCrushDamage;
 
-    /** Tracks turn duration of Enrage. */
-//    protected int myUltimateTimer;
-
-
     /**
      * Constructs a new Warrior with predefined combat attributes.
      *
@@ -32,7 +28,7 @@ public class Warrior extends Hero {
      * @param theHealingPotions the number of healing potions
      * @param theVisionPotions the number of healing potions
      */
-    public Warrior(String theName, int theHealingPotions, int theVisionPotions) {
+    public Warrior(final String theName, final int theHealingPotions, final int theVisionPotions) {
         super(theName,
                 125,  // HP
                 125,  // max HP
@@ -52,8 +48,8 @@ public class Warrior extends Hero {
     public void attack(final DungeonCharacter theTarget) {
         if (myUltimateDuration > 0) {
             // temporarily boost damage
-            int originalMin = myMinDamage;
-            int originalMax = myMaxDamage;
+            final int originalMin = myMinDamage;
+            final int originalMax = myMaxDamage;
 
             myMinDamage += 7;
             myMaxDamage += 7;
@@ -80,7 +76,7 @@ public class Warrior extends Hero {
      * @param theTarget the target of the special skill
      */
     @Override
-    public void specialSkill(DungeonCharacter theTarget) {
+    public void specialSkill(final DungeonCharacter theTarget) {
         crushingBlow(theTarget);
     }
 
@@ -91,7 +87,7 @@ public class Warrior extends Hero {
      * @param theTarget the target of the ultimate attack
      */
     @Override
-    public void bigCooldown(DungeonCharacter theTarget) {
+    public void bigCooldown(final DungeonCharacter theTarget) {
         enrage();
     }
 
@@ -103,6 +99,9 @@ public class Warrior extends Hero {
     public void resetStatusEffects() {
         super.resetStatusEffects();
         myUltimateDuration = 0;
+        if (myHP > myMaxHP) {
+            myHP = myMaxHP;
+        }
     }
 
     /** Returns Warrior's special skill name. */
@@ -137,7 +136,7 @@ public class Warrior extends Hero {
      *
      * @param theTarget the target of the crushing blow
      */
-    private void crushingBlow(DungeonCharacter theTarget) {
+    private void crushingBlow(final DungeonCharacter theTarget) {
         if (theTarget == null || !theTarget.isAlive()) {
             return;
         }

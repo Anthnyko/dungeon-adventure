@@ -26,7 +26,7 @@ public class Priest extends Hero {
      * @param theHealingPotions the number of healing potions
      * @param theVisionPotions the number of healing potions
      */
-    public Priest(String theName, int theHealingPotions, int theVisionPotions) {
+    public Priest(final String theName, final int theHealingPotions, final int theVisionPotions) {
         super(theName,
                 100,   // HP
                 100,   // max HP
@@ -47,7 +47,7 @@ public class Priest extends Hero {
      * This method delegates to the private heal method.
      */
     @Override
-    public void specialSkill(DungeonCharacter theTarget) {
+    public void specialSkill(final DungeonCharacter theTarget) {
         heal();
     }
 
@@ -58,7 +58,7 @@ public class Priest extends Hero {
      * @param theTarget the target of the ultimate attack
      */
     @Override
-    public void bigCooldown(DungeonCharacter theTarget) {
+    public void bigCooldown(final DungeonCharacter theTarget) {
         smite(theTarget);
     }
 
@@ -92,7 +92,7 @@ public class Priest extends Hero {
      * Executes the Priest's healing ability.
      */
     private void heal() {
-        int heal = myMinHeal + rng.nextInt(myMaxHeal - myMinHeal + 1);
+        final int heal = myMinHeal + rng.nextInt(myMaxHeal - myMinHeal + 1);
 
         if (heal + myHP > myMaxHP) {
             myLastHeal = myMaxHP - myHP;
@@ -112,7 +112,7 @@ public class Priest extends Hero {
      *
      * @param theTarget the target of the smite attack
      */
-    private void smite(DungeonCharacter theTarget) {
+    private void smite(final DungeonCharacter theTarget) {
         if (theTarget == null || !theTarget.isAlive()) {
             return;
         }
