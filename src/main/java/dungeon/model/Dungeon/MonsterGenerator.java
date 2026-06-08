@@ -1,4 +1,4 @@
-package dungeon.model;
+package dungeon.model.Dungeon;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

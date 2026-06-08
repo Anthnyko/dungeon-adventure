@@ -4,8 +4,8 @@ package dungeon.controller;
 import java.util.List;
 import java.util.Scanner;
 
-import dungeon.model.Dungeon;
-import dungeon.model.Room;
+import dungeon.model.Dungeon.Dungeon;
+import dungeon.model.Dungeon.Room;
 import dungeon.model.Saving.GameState;
 import dungeon.model.Saving.InstanceCapture;
 import dungeon.model.Saving.RestoreSave;

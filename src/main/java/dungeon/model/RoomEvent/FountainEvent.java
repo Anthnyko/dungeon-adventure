@@ -1,6 +1,6 @@
 package dungeon.model.RoomEvent;
 
-import dungeon.model.Dungeon;
+import dungeon.model.Dungeon.Dungeon;
 import dungeon.model.characters.Hero;
 
 import java.util.Random;

@@ -1,9 +1,9 @@
 package dungeon.model.characters;
 
-import dungeon.model.Dungeon;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import dungeon.model.Dungeon.Dungeon;
 
 /**
  * Abstract base class for all hero types in the dungeon game.

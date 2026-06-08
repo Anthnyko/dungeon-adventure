@@ -2,8 +2,8 @@ package dungeon.model.Saving;
 
 import java.util.List;
 
-import dungeon.model.Dungeon;
-import dungeon.model.Room;
+import dungeon.model.Dungeon.Dungeon;
+import dungeon.model.Dungeon.Room;
 import dungeon.model.RoomEvent.AlarmEvent;
 import dungeon.model.RoomEvent.FountainEvent;
 import dungeon.model.RoomEvent.PitEvent;
