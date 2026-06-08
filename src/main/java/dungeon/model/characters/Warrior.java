@@ -103,6 +103,9 @@ public class Warrior extends Hero {
     public void resetStatusEffects() {
         super.resetStatusEffects();
         myUltimateDuration = 0;
+        if (myHP > myMaxHP) {
+            myHP = myMaxHP;
+        }
     }
 
     /** Returns Warrior's special skill name. */
