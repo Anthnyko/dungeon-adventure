@@ -619,19 +619,17 @@ public final class DungeonAdventure {
     private void loadGame() {
         System.out.print("> Enter save name to load: ");
         GameState loadedState;
-        do {
-            final String saveName = myScanner.nextLine().trim();
-            loadedState = mySaveGameManager.loadGame(saveName);
-            if (loadedState == null) {
-                System.out.print("> Enter save name: ");
-            }
-        } while (loadedState == null);
-
-        final RestoreSave restore = new RestoreSave();
-        final RestoreResult result = restore.restoreGameState(loadedState);
-        myDungeon = result.myDungeon;
-        myHero = result.myHero;
-        gameLoop();
+        final String saveName = myScanner.nextLine().trim();   
+        loadedState = mySaveGameManager.loadGame(saveName); 
+        if (loadedState != null) {           
+            final RestoreSave restore = new RestoreSave();
+            final RestoreResult result = restore.restoreGameState(loadedState);
+            myDungeon = result.myDungeon;
+            myHero = result.myHero;
+            gameLoop();
+        } else {
+            loadMenu();
+        }
     }
 
     /**
