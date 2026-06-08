@@ -23,7 +23,26 @@ public class FountainEvent implements RoomEvent {
     /** The number of turns the mind effect lasts */
     private static final int MIND_DURATION = 6;
 
+    /** Forces the fountain event to the specific number event*/
+    private final int myForcedEffect;
+
     private final Random myRandom = new Random();
+
+    /**
+     * Constructs a FountainEvent with a random effect.
+     */
+    public FountainEvent() {
+        myForcedEffect = -1;
+    }
+
+    /**
+     * Constructs a FountainEvent with a specific effect for testing purposes.
+     *
+     * @param theForcedEffect the effect to force (HEAL=0, TELEPORT=1, POTION=2, MIND=3)
+     */
+    public FountainEvent(final int theForcedEffect) {
+        myForcedEffect = theForcedEffect;
+    }
 
     /**
      * Triggers the fountain, healing the hero for 40 hit points.
@@ -40,7 +59,12 @@ public class FountainEvent implements RoomEvent {
             effectCount = 3;
         }
 
-        int effect = myRandom.nextInt(effectCount);
+        int effect;
+        if (myForcedEffect == -1) {
+            effect = myRandom.nextInt(effectCount);
+        } else {
+            effect = myForcedEffect;
+        }
         switch (effect) {
             case 0 -> { // give the hero a full heal
                 theHero.applyHeal(theHero.getMaxHP());
