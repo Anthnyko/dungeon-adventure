@@ -105,22 +105,22 @@ public class InstanceCapture {
      * Serializes a list of items into a comma-separated string for database storage.
      * Each item type is represented by a single character (H=HealingPotion, V=VisionPotion).
      * 
-     * @param items the list of items to serialize
+     * @param theItems the list of items to serialize
      * @return a serialized string representation of the items, or "none" if empty
      */
-    private static String serializeItems(final List<Item> items) {
-        if (items == null || items.isEmpty()) {
+    private static String serializeItems(final List<Item> theItems) {
+        if (theItems == null || theItems.isEmpty()) {
             return "none";
         }
         final StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < items.size(); i++) {
-            final Item item = items.get(i);
+        for (int i = 0; i < theItems.size(); i++) {
+            final Item item = theItems.get(i);
             if (item instanceof HealingPotion) {
                 sb.append("H");
             } else if (item instanceof VisionPotion) {
                 sb.append("V");
             }
-            if (i < items.size() - 1) sb.append(",");
+            if (i < theItems.size() - 1) sb.append(",");
         }
         return sb.toString();
     }
@@ -129,16 +129,16 @@ public class InstanceCapture {
      * Serializes a list of room events into a comma-separated string for database storage.
      * Each event type is represented by a code (P=Pit, F=Fountain, Po=Poison, A=Alarm).
      * 
-     * @param events the list of room events to serialize
+     * @param theEvents the list of room events to serialize
      * @return a serialized string representation of the events, or "none" if empty
      */
-    private static String serializeEvents(final List<RoomEvent> events) {
-        if (events == null || events.isEmpty()) {
+    private static String serializeEvents(final List<RoomEvent> theEvents) {
+        if (theEvents == null || theEvents.isEmpty()) {
             return "none";
         }
         final StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < events.size(); i++) {
-            final RoomEvent event = events.get(i);
+        for (int i = 0; i < theEvents.size(); i++) {
+            final RoomEvent event = theEvents.get(i);
             if (event instanceof PitEvent) {
                 sb.append("P");
             } else if (event instanceof FountainEvent) {
@@ -148,7 +148,7 @@ public class InstanceCapture {
             } else if (event instanceof AlarmEvent) {
                 sb.append("Al");
             }
-            if (i < events.size() - 1) sb.append(",");
+            if (i < theEvents.size() - 1) sb.append(",");
         }
         return sb.toString();
     }

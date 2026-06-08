@@ -44,34 +44,34 @@ public class RestoreSave {
     /**
      * Restores the dungeon and room states from a saved GameState.
      * 
-     * @param state the GameState to restore from
+     * @param theState the GameState to restore from
      */
-    public RestoreResult restoreGameState(final GameState state) {
+    public RestoreResult restoreGameState(final GameState theState) {
         // Initialize dungeon with saved dimensions
-        final Dungeon myDungeon = new Dungeon(state.myDungeonWidth, state.myDungeonHeight, state.myDungeonName, true);
+        final Dungeon myDungeon = new Dungeon(theState.myDungeonWidth, theState.myDungeonHeight, theState.myDungeonName, true);
         
         // Recreate hero from saved class
-        final Hero myHero = switch (state.myHeroClass) {
-            case "Warrior" -> new Warrior(state.myHeroName, state.myHealingPotions, state.myVisionPotions);
-            case "Priest" -> new Priest(state.myHeroName, state.myHealingPotions, state.myVisionPotions);
-            case "Thief" -> new Thief(state.myHeroName, state.myHealingPotions, state.myVisionPotions);
-            default -> throw new IllegalArgumentException("Invalid class choice: " + state.myHeroClass);
+        final Hero myHero = switch (theState.myHeroClass) {
+            case "Warrior" -> new Warrior(theState.myHeroName, theState.myHealingPotions, theState.myVisionPotions);
+            case "Priest" -> new Priest(theState.myHeroName, theState.myHealingPotions, theState.myVisionPotions);
+            case "Thief" -> new Thief(theState.myHeroName, theState.myHealingPotions, theState.myVisionPotions);
+            default -> throw new IllegalArgumentException("Invalid class choice: " + theState.myHeroClass);
         }; 
         
         // Restore room states
-        restoreRoomData(state.myRoomData, myDungeon);
-        myDungeon.setEntrancePosition(state.myEntranceRow, state.myEntranceCol);
-        myDungeon.setExitPosition(state.myExitRow, state.myExitCol);
+        restoreRoomData(theState.myRoomData, myDungeon);
+        myDungeon.setEntrancePosition(theState.myEntranceRow, theState.myEntranceCol);
+        myDungeon.setExitPosition(theState.myExitRow, theState.myExitCol);
 
         // Restore hero position in dungeon
-        myDungeon.setHeroPosition(state.myHeroRow, state.myHeroCol);
+        myDungeon.setHeroPosition(theState.myHeroRow, theState.myHeroCol);
         
         // Restore hero HP
-        myHero.setHP(state.myHeroHP);
+        myHero.setHP(theState.myHeroHP);
         
         // Restore hero pillars
-        if (state.myPillarsFound != null) {
-            for (final char pillar : state.myPillarsFound) {
+        if (theState.myPillarsFound != null) {
+            for (final char pillar : theState.myPillarsFound) {
                 myHero.gainPillar(pillar);
             }
         }
@@ -82,15 +82,15 @@ public class RestoreSave {
     /**
      * Restores the state of all rooms from serialized room data.
      * 
-     * @param roomData the 2D array of serialized room strings
+     * @param theRoomData the 2D array of serialized room strings
      */
-    private void restoreRoomData(final String[][] roomData, final Dungeon myDungeon) {
+    private void restoreRoomData(final String[][] theRoomData, final Dungeon theDungeon) {
         final MonsterGenerator monsterGen = new MonsterGenerator();
         
-        for (int row = 0; row < roomData.length; row++) {
-            for (int col = 0; col < roomData[row].length; col++) {
-                final String[] parts = roomData[row][col].split("\\|");
-                final Room room = myDungeon.getRoom(row, col);
+        for (int row = 0; row < theRoomData.length; row++) {
+            for (int col = 0; col < theRoomData[row].length; col++) {
+                final String[] parts = theRoomData[row][col].split("\\|");
+                final Room room = theDungeon.getRoom(row, col);
                 
                 if (parts.length >= 9) {
                     // Restore doors
