@@ -77,7 +77,7 @@ public class Room {
      */
     public Room() {
         myRandom = new Random();
-        myItems = new ArrayList<Item>();
+        myItems = new ArrayList<>();
 
         generateRandomItems();
 
@@ -91,7 +91,7 @@ public class Room {
      */
     public Room(final boolean isEmpty) {
         myRandom = new Random();
-        myItems = new ArrayList<Item>();
+        myItems = new ArrayList<>();
         myEntrance = false;
         myExit = false;
         myPillar = false;
@@ -285,10 +285,10 @@ public class Room {
      * Removes the list of items in the room and returns them
      */
     public void pickUpItems(final Hero theHero) {
-        for (int i = 0; i < myItems.size(); i++) {
-            if (myItems.get(i) instanceof HealingPotion) {
+        for (Item myItem : myItems) {
+            if (myItem instanceof HealingPotion) {
                 theHero.gainHealingPotion();
-            } else if (myItems.get(i) instanceof VisionPotion) {
+            } else if (myItem instanceof VisionPotion) {
                 theHero.gainVisionPotion();
             }
         }  
@@ -323,7 +323,7 @@ public class Room {
     /**
      * Triggers a specific room event by type and applies its effect to the hero.
      * If no matching event is found, nothing happens.
-     *
+     * <p>
      *  * Valid event types:
      *  * <ul>
      *  *     <li>"PIT" ? triggers the pit trap, dealing damage to the hero</li>

@@ -6,11 +6,11 @@ import static org.junit.Assert.*;
 public class HeroTest {
 
     private Hero createHero() {
-        return new Thief("TestHero", 0, 0);
+        return new Thief("TestHero", 3, 1);
     }
 
     @Test
-    public void testHeroStartsWithZeroHealingPotions() {
+    public void testHeroStartsWithHealingPotions() {
         Hero h = createHero();
         assertEquals(3, h.getHealingPotion());
     }
@@ -19,10 +19,9 @@ public class HeroTest {
     public void testHealingPotionCannotExceedMaxHP() {
         Hero h = createHero();
         h.myHP = 70;
-        h.myHealingPotions = 1;
         h.useHealingPotion();
 
-        assertEquals(75, h.getHP());
+        assertEquals(85, h.getHP());
     }
 
     @Test

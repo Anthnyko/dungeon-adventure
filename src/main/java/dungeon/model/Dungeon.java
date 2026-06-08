@@ -16,7 +16,7 @@ import dungeon.model.characters.Monster;
 
 /**
  * Represents a randomly generated dungeon maze.
- *
+ * <p>
  * The dungeon is a 2D grid of room objects connected by doors.
  * The dungeon class is responsible for:
  * Generating the maze,
@@ -95,7 +95,7 @@ public class Dungeon {
             default -> (int) Math.ceil(myWidth * myHeight * 0.3);
         };
         if (forLoad) {
-            intiializeRoomsForLoad();
+            initializeRoomsForLoad();
         } else {
             mazeGeneration();
         }
@@ -153,7 +153,7 @@ public class Dungeon {
     /**
      * Initializes rooms with no items
      */
-    private void intiializeRoomsForLoad() {
+    private void initializeRoomsForLoad() {
         myRooms = new Room[myHeight][myWidth];
         for (int row = 0; row < myHeight; row++) {
             for (int col = 0; col < myWidth; col++) {
@@ -728,15 +728,6 @@ public class Dungeon {
      */
     public boolean isExitReached() {
         return getCurrentRoom().isExit();
-    }
-
-    /**
-     * Returns true or false if the hero is in a pillar room or not.
-     *
-     * @return true if the hero is in a pillar room, false otherwise
-     */
-    public boolean isPillarReached() {
-        return getCurrentRoom().hasPillar();
     }
 
     /**

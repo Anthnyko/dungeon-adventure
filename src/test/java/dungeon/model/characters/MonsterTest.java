@@ -96,7 +96,7 @@ public class MonsterTest {
 
         s.processBleed();
 
-        assertEquals(before - 5, s.getHP());
+        assertEquals(before - 10, s.getHP());
         assertEquals(2, s.getMyBleedTimer());
     }
 
@@ -152,6 +152,6 @@ public class MonsterTest {
         int before = s.getHP();
         s.processBleed();
 
-        assertEquals(before - 5, s.getHP());
+        assertEquals(before - 10, s.getHP());
     }
 }

@@ -131,14 +131,11 @@ public class RestoreSave {
                     // Restore events
                     if (!parts[8].equals("none")) {
                         for (final String eventCode : parts[8].split(",")) {
-                            if (eventCode.equals("P")) {
-                                room.addEvent(new PitEvent());
-                            } else if (eventCode.equals("F")) {
-                                room.addEvent(new FountainEvent());
-                            } else if (eventCode.equals("Po")) {
-                                room.addEvent(new PoisonEvent());
-                            } else if (eventCode.equals("Al")) {
-                                room.addEvent(new AlarmEvent());
+                            switch (eventCode) {
+                                case "P" -> room.addEvent(new PitEvent());
+                                case "F" -> room.addEvent(new FountainEvent());
+                                case "Po" -> room.addEvent(new PoisonEvent());
+                                case "Al" -> room.addEvent(new AlarmEvent());
                             }
                         }
                     }
