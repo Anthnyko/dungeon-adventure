@@ -133,7 +133,7 @@ public class BattleController {
         int choice = -1;
         myDungeonView.promptActionChoice(myHero);
 
-        while (choice < 1 || choice > 4) {
+        while (choice < 1) {
             try {
                 final String input = myScanner.nextLine().trim();
                 choice = Integer.parseInt(input);

@@ -21,10 +21,6 @@ public class Warrior extends Hero {
     /** Maximum damage the character can deal on Crushing Blow. */
     protected final int myMaxCrushDamage;
 
-    /** Tracks turn duration of Enrage. */
-//    protected int myUltimateTimer;
-
-
     /**
      * Constructs a new Warrior with predefined combat attributes.
      *

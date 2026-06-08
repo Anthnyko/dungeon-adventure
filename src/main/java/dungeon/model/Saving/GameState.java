@@ -7,7 +7,7 @@ import java.util.List;
  * Encapsulates the complete game state for saving and loading game progress.
  * This class serializes all necessary information about the dungeon layout,
  * hero status, inventory, and position to enable persistent game saves.
- * 
+ * <p>
  * GameState objects are serialized to an SQLite database for later
  * retrieval, allowing players to resume their adventure from a saved checkpoint.
  * All fields are public to facilitate easy serialization and deserialization.

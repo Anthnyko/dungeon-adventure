@@ -70,7 +70,7 @@ public class InstanceCapture {
     /**
      * Captures the state of all rooms in the dungeon for saving.
      * Returns a 2D array of serialized room data strings.
-     * 
+     * <p>
      * Format per room: "N|S|E|W|Pillar|Monster|Items|Revealed|Events"
      */
     private static String[][] captureRoomData(final Dungeon theDungeon) {

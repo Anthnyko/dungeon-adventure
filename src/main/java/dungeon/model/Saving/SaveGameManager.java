@@ -314,7 +314,7 @@ public class SaveGameManager {
 
     /**
      * Serializes a 2D array of room data strings into a single database-storable string.
-     * Uses semicolons (;) to separate rows and tildes (~) to separate columns.
+     * Uses semicolons ';' to separate rows and tildes '~' to separate columns.
      * 
      * @param roomData the 2D array of room data to serialize
      * @return a serialized string representation of the room data, or an empty string if null
